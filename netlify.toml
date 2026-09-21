@@ -1,4 +1,3 @@
 [build]
-  base = "netlify-deploy"
   publish = "."
   command = "echo 'Static site — no build step required'"
