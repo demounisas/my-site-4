@@ -9,6 +9,7 @@
     "postinstall": "wix sync-types",
     "build:element": "node scripts/build-custom-element.js",
     "dev": "wix dev",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "wix": "wix"
   }
 }
