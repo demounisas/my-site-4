@@ -1,18 +1,30 @@
 """
-Builds the 10 Odoo module pages (dist/odoo-*.html) from dist/index.html.
+Builds the 10 Odoo module pages, the 8 Odoo service pages (dist/odoo-*.html)
+and the company pages (dist/about.html, dist/contact.html) from dist/index.html.
 
 The header, footer, contact section, pop-up and scripts are copied from
 index.html on every run, so after editing the homepage just re-run:
 
     python tools/build_module_pages.py
 
-Page content lives in PAGES below. Each page picks its own hero style and
-its own sequence of section types so no two pages share the same layout.
+Module content lives in PAGES below, service content in service_pages.py,
+About and Contact content in company_pages.py.
+Each page picks its own hero style and its own sequence of section types so
+no two pages share the same layout.
 """
 import base64
 import io
 import os
 import re
+
+from company_pages import COMPANY, COMPANY_MOCKS, contact_cards
+from service_pages import SERVICES, SERVICE_MOCKS
+import crm_page
+import sales_page
+import inventory_page
+import purchase_page
+import project_page
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIST = os.path.join(ROOT, "dist")
@@ -51,18 +63,23 @@ with io.open(os.path.join(ASSETS, "site.css"), "w", encoding="utf-8", newline=""
     f.write(css)
 
 header = between('<header class="nav">', "</header>")
-logo_uri = re.search(r'<img class="brand-logo" src="(data:image[^"]+)"', header).group(1)
-logo_file = "assets/" + extract_data_uri(logo_uri, "unisas-logo")
+logo_uri = re.search(r'<img class="brand-logo" src="([^"]+)"', header).group(1)
+# the homepage may embed the logo or point at assets/unisas-logo.png directly
+logo_file = "assets/" + extract_data_uri(logo_uri, "unisas-logo") if logo_uri.startswith("data:") else logo_uri
 
 final_cta = between('<section class="final-cta" id="get-demo">', "</section>")
 footer = between('<footer class="site-footer">', "</footer>")
 modal = between('<dialog class="consult-modal"', "</dialog>")
 floats = between('<div class="float-actions">', "</div>\n\n")
-script = src[src.rindex("<script>"):src.rindex("</script>") + len("</script>")]
+# the site script is the last <script> on the homepage, ignoring the Wix-embed link fix that may follow it
+_site_src = re.sub(r'<script>\s*/\* When embedded.*?</script>\s*', '', src, flags=re.S)
+script = _site_src[_site_src.rindex("<script>"):_site_src.rindex("</script>") + len("</script>")]
 fonts = between('<link rel="preconnect" href="https://fonts.googleapis.com">', 'display=swap" rel="stylesheet">')
 
 # tile icons, in homepage order
-TILE_ICONS = re.findall(r'<span class="app-ic">(<svg.*?</svg>)</span>', between('<section class="section" id="modules">', "</section>"))
+TILE_ICONS = re.findall(r'<span class="app-ic">(<svg.*?</svg>)</span>', between('id="modules">', "</section>"))
+# service icons, keyed by service (consulting, implementation, ...)
+SERVICE_ICONS = dict(re.findall(r'id="svc-tab-(\w+)".*?<span class="icon-badge">(<svg.*?</svg>)</span>', src, re.S))
 
 
 def rewrite_links(html):
@@ -73,7 +90,28 @@ def rewrite_links(html):
     return html
 
 
-header = rewrite_links(header).replace('<a href="index.html#modules">Solutions</a>', '<a href="index.html#modules" aria-current="page" style="color:var(--text);font-weight:600;">Solutions</a>')
+header = rewrite_links(header)
+def menu_header(dd_id, slug):
+    """Header with the given mega menu (Solutions or Services) and its link to this page highlighted."""
+    btn = 'id="%s">\n        <button class="nav-dd-btn"' % dd_id
+    assert btn in header, "mega menu %s not found in index.html header" % dd_id
+    return (header.replace(btn, btn[:-1] + ' is-current"', 1)
+            .replace('<a href="%s.html">' % slug, '<a href="%s.html" aria-current="page">' % slug, 1))
+
+
+def module_header(slug):
+    return menu_header("nav-dd-solutions", slug)
+
+
+def service_header(slug):
+    return menu_header("nav-dd", slug)
+
+
+def company_header(page):
+    return header.replace('<a href="%s.html">%s</a>' % (page["slug"], page["nav"]),
+                          '<a href="%s.html" aria-current="page" style="color:var(--text);font-weight:600;">%s</a>' % (page["slug"], page["nav"]), 1)
+
+
 footer = rewrite_links(footer)
 
 # ---------------------------------------------------------------- snippets
@@ -128,8 +166,9 @@ def s_bento(d, alt):
 
 def s_compare(d, alt):
     rows = "".join('<tr><th scope="row">%s</th><td class="is-bad">%s</td><td class="is-good">%s</td></tr>' % r for r in d["items"])
+    after = d.get("after") or "With Odoo %s" % d["module"]
     table = ('<div class="mp-table-wrap"><table class="mp-table"><thead><tr><th scope="col">Area</th><th scope="col">%s</th>'
-             '<th scope="col">With Odoo %s</th></tr></thead><tbody>%s</tbody></table></div>' % (d["before"], d["module"], rows))
+             '<th scope="col">%s</th></tr></thead><tbody>%s</tbody></table></div>' % (d["before"], after, rows))
     return section(head(d["title"], d["eyebrow"], sub=d.get("sub", "")) + table, alt)
 
 
@@ -169,14 +208,50 @@ SECTIONS = dict(features=s_features, steps_h=s_steps_h, steps_v=s_steps_v, zigza
                 compare=s_compare, checklist=s_checklist, stats=s_stats, accordion=s_accordion, hub=s_hub, flow=s_flow)
 
 
+def is_service(page):
+    return "svc" in page
+
+
+def is_company(page):
+    return "nav" in page
+
+
+def page_icon(page):
+    if is_company(page):
+        return page["icon_svg"]
+    return SERVICE_ICONS[page["svc"]] if is_service(page) else TILE_ICONS[page["icon"]]
+
+
+def contact_form():
+    """The homepage form section, trimmed for the contact page: no checklist or
+    next-steps list, and the contact details (if filled in) beside the form."""
+    f = re.sub(r'\s*<ul class="final-cta-list">.*?</ul>', "", final_cta, flags=re.S)
+    f = re.sub(r'\s*<p class="svc-incl-label"[^>]*>What happens next</p>\s*<ol class="final-cta-steps">.*?</ol>', "", f, flags=re.S)
+    f = re.sub(r'<h2 class="section-title">.*?</h2>', '<h2 class="section-title">Tell us about your project</h2>', f, count=1, flags=re.S)
+    f = re.sub(r'<p class="section-sub">.*?</p>', '<p class="section-sub">A few lines on your current systems, the teams involved and your timeline help us prepare for the first call.</p>', f, count=1, flags=re.S)
+    cards = contact_cards()
+    if cards:
+        items = "".join('<div><dt class="mono">%s</dt><dd>%s</dd></div>' % (label.upper(), value) for label, value in cards)
+        # insert at the end of the copy column, just before the form card
+        f, n = re.subn(r'(\n\s*</div>\s*<div class="lead-form-card">)', lambda m: '\n        <dl class="contact-list">%s</dl>%s' % (items, m.group(1)), f, count=1)
+        assert n, "final-cta markup changed; update contact_form()"
+    return f
+
+
 def related_block(page):
     chips = ""
     for slug in page["related"]:
         p = BY_SLUG[slug]
-        chips += ('<a class="mp-rel" href="%s.html"><span class="mp-rel-ic">%s</span><span><strong>%s</strong><span>%s</span></span>%s</a>'
-                  % (slug, TILE_ICONS[p["icon"]], p["name"], p["short"], ARROW))
-    return section(head("Works hand in hand with", "CONNECTED MODULES", sub="Every Odoo app shares one database, so %s data flows straight into these modules." % page["name"]) +
-                   '<div class="mp-rel-grid">%s</div>' % chips, alt=False, extra=' id="related"')
+        chips += ('<a class="mp-rel" href="%s.html"><span class="mp-rel-ic%s">%s</span><span><strong>%s</strong><span>%s</span></span>%s</a>'
+                  % (slug, " is-line" if is_service(p) or is_company(p) else "", page_icon(p), p["name"], p["short"], ARROW))
+    if page.get("related_head"):
+        title, eyebrow, sub = page["related_head"]
+        heading = head(title, eyebrow, sub=sub)
+    elif is_service(page):
+        heading = head("Related Odoo services", "MORE SERVICES", sub="One team covers every stage of your Odoo project, so each service picks up where the last one left off.")
+    else:
+        heading = head("Works hand in hand with", "CONNECTED MODULES", sub="Every Odoo app shares one database, so %s data flows straight into these modules." % page["name"])
+    return section(heading + '<div class="mp-rel-grid">%s</div>' % chips, alt=False, extra=' id="related"')
 
 
 def faq_block(page, alt):
@@ -185,15 +260,33 @@ def faq_block(page, alt):
         o = "true" if i == 0 else "false"
         items += ('<div class="faq-item" data-open="%s"><button class="faq-q" aria-expanded="%s">%s%s</button>'
                   '<div class="faq-a-wrap"><div class="faq-a-inner"><p class="faq-a">%s</p></div></div></div>' % (o, o, q, FAQ_ICON, a))
-    return section(head("Questions about Odoo %s" % page["name"], "FAQ") + '<div class="faq-list">%s</div>' % items, alt)
+    title = page.get("faq_title") or ("Questions about %s" % page["name"] if is_service(page) else "Questions about Odoo %s" % page["name"])
+    return section(head(title, "FAQ") + '<div class="faq-list">%s</div>' % items, alt)
 
 
 def hero(page):
+    if page.get("hero_fn"):
+        return page["hero_fn"](globals())
     h = page["hero"]
-    icon = '<span class="mp-hero-ic">%s</span>' % TILE_ICONS[page["icon"]]
-    crumb = '<nav class="mp-crumb mono" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><a href="index.html#modules">Solutions</a><span>/</span><span aria-current="page">%s</span></nav>' % page["name"]
-    ctas = ('<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">%s %s</a>'
-            '<a href="#%s" class="btn btn-ghost">%s</a></div>' % (h["cta"], ARROW, h["cta2_href"], h["cta2"]))
+    if h["style"] == "simple":
+        # heading only: no icon, points, buttons or visual
+        crumb = '<nav class="mp-crumb mono" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span aria-current="page">%s</span></nav>' % page["name"]
+        return ('<section class="mp-hero mp-hero--simple"><div class="mp-hero-copy">%s<p class="eyebrow mono">%s</p><h1 class="mp-h1">%s</h1><p class="mp-lead">%s</p></div></section>'
+                % (crumb, h["eyebrow"], h["title"], h["lead"]))
+    service, company = is_service(page), is_company(page)
+    icon = '<span class="mp-hero-ic%s">%s</span>' % (" is-line" if service or company else "", page_icon(page))
+    if company:
+        parent = ""
+    elif service:
+        parent = '<a href="index.html#services">Services</a><span>/</span>'
+    else:
+        parent = '<a href="index.html#modules">Solutions</a><span>/</span>'
+    crumb = '<nav class="mp-crumb mono" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span>%s<span aria-current="page">%s</span></nav>' % (parent, page["name"])
+    svc = page.get("svc", "unsure" if company else "implementation")
+    # on a page that shows the form inline, the main CTA scrolls to it instead of opening the pop-up
+    no_modal = " data-no-modal" if page.get("form_first") else ""
+    ctas = ('<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="%s"%s>%s %s</a>'
+            '<a href="#%s" class="btn btn-ghost">%s</a></div>' % (svc, no_modal, h["cta"], ARROW, h["cta2_href"], h["cta2"]))
     points = "".join("<li>%s%s</li>" % (CHECK, p) for p in h["points"])
     copy = ('<div class="mp-hero-copy">%s%s<p class="eyebrow mono">%s</p><h1 class="mp-h1">%s</h1><p class="mp-lead">%s</p>'
             '<ul class="mp-hero-points">%s</ul>%s</div>' % (crumb, icon, h["eyebrow"], h["title"], h["lead"], points, ctas))
@@ -276,7 +369,23 @@ MOCKS = {
       <div class="mk-mail-body"><span class="mk-img" style="--c:#EE8A3C"></span><p><b></b><b></b><b class="short"></b></p><span class="mk-btn">Shop the offer</span></div>
       <div class="mk-mail-stats"><div><strong class="mono">4,812</strong><span>Sent</span></div><div><strong class="mono">41%</strong><span>Opened</span></div><div><strong class="mono">9.6%</strong><span>Clicked</span></div></div>
     </div>''',
+    "odoo-pos": '''<div class="mock mk-pos">
+      <div class="mk-pos-order">
+        <div class="mk-pos-head"><span class="mono">ORDER 0412 · TILL 2</span><em class="mk-pill ok">Online</em></div>
+        <div class="mk-pos-line"><span>Cotton kurta <small>x 2</small></span><b class="mono">₹ 2,598</b></div>
+        <div class="mk-pos-line"><span>Silk stole</span><b class="mono">₹ 899</b></div>
+        <div class="mk-pos-line"><span>Loyalty discount</span><b class="mono">− ₹ 175</b></div>
+        <div class="mk-pos-total"><span>Total incl. GST</span><strong class="mono">₹ 3,322</strong></div>
+      </div>
+      <div class="mk-pos-pay">
+        <p class="mono mk-title">PAYMENT</p>
+        <span class="mk-pos-btn">Cash</span><span class="mk-pos-btn">Card</span><span class="mk-pos-btn is-on">UPI QR</span>
+        <div class="mk-pos-note"><strong>Stock updated</strong><span>Chennai store · 2 kurtas left</span></div>
+      </div>
+    </div>''',
 }
+MOCKS.update(SERVICE_MOCKS)
+MOCKS.update(COMPANY_MOCKS)
 
 # ---------------------------------------------------------------- page content
 PAGES = [
@@ -309,126 +418,37 @@ PAGES = [
               ("Can we start with attendance and leave only?", "Yes. Many clients start with Employees, Attendance and Time Off, then add Payroll and Appraisals in a later phase.")]),
 
     dict(slug="odoo-crm", icon=1, name="CRM", short="Leads & pipeline",
-         meta="Odoo CRM implementation: lead capture, pipeline stages, follow-up activities and sales forecasting, configured for your sales team by Unisas.",
-         hero=dict(style="center", eyebrow="ODOO CRM", title="See every lead, every stage and every next step in one pipeline",
-                   lead="We configure Odoo CRM around your sales process, so leads from your website, WhatsApp and calls land in one place and nobody forgets a follow-up.",
-                   points=["Lead capture from web & WhatsApp", "Pipeline stages that match your process", "Forecasts managers can trust"],
+         title="Odoo CRM Implementation for Smarter Sales | Unisas",
+         meta="Odoo CRM implementation by Unisas: lead capture, pipeline stages, sales automation, integrations and reporting, designed around your sales process.",
+         hero=dict(style="split", eyebrow="ODOO CRM IMPLEMENTATION", title="CRM Implementation for Smarter Sales, Powered by Odoo",
+                   lead="We set up Odoo CRM around the way your team sells, so every lead lands in one pipeline, every follow-up is scheduled, and managers can forecast from real deals.",
+                   points=["Lead capture from web, email & WhatsApp", "Pipeline stages that match your process", "Forecasts managers can trust"],
                    cta="Discuss Odoo CRM", cta2="How we set it up", cta2_href="setup"),
-         sections=[
-             ("stats", dict(items=[("Every", "lead source in one inbox"), ("Auto", "follow-up reminders"), ("Live", "pipeline forecast"), ("1-click", "quote from an opportunity")])),
-             ("zigzag", dict(eyebrow="HOW WE SET IT UP", title="From first enquiry to signed deal", extra=' id="setup"', items=[
-                 ("CAPTURE", "Never lose an enquiry", "We connect your website forms, email aliases and WhatsApp so every enquiry becomes a lead automatically, tagged by source.",
-                  ["Website & landing page forms", "Email-to-lead aliases", "Duplicate detection & merging"]),
-                 ("QUALIFY", "Focus on the leads that matter", "Lead scoring and assignment rules route good leads to the right salesperson by region, product or size.",
-                  ["Assignment rules by territory", "Lead scoring on your criteria", "Lost reasons you can report on"]),
-                 ("CLOSE", "Move deals forward, on time", "Scheduled activities, email templates and quotes created from the opportunity keep deals moving.",
-                  ["Activity reminders & to-dos", "Quote directly from the deal", "Won deals flow into Sales"])])),
-             ("checklist", dict(eyebrow="REPORTING", title="Numbers your sales review can rely on", alt=True, sub="Because CRM shares data with Sales and Accounting, reports show what was actually quoted, ordered and invoiced.", items=[
-                 "Pipeline value by stage and salesperson", "Expected revenue and close-date forecast", "Conversion rate by lead source",
-                 "Activity completion by team member", "Lost-deal reasons over time", "Custom dashboards per manager"])),
-         ],
-         related=["odoo-sales", "odoo-email-marketing", "odoo-ecommerce"],
-         faq=[("Can Odoo CRM capture leads from WhatsApp?", "Yes. With a WhatsApp Business integration, incoming chats can create or update leads in Odoo. We set up the connector as part of the project."),
-              ("Can we import our existing leads and customers?", "Yes. We clean and import contacts, companies and open opportunities from Excel or your current CRM before go-live."),
-              ("Is Odoo CRM suitable for a small sales team?", "Yes. It works for teams of two as well as large sales organisations, and you only configure the stages and rules you need.")]),
+         sections=[], build=crm_page.build, hero_fn=crm_page.hero, cta=crm_page.CTA, css=("odoo-ui.css", "crm.css")),
 
     dict(slug="odoo-sales", icon=2, name="Sales", short="Quotes, orders, subscriptions",
-         meta="Odoo Sales implementation: professional quotations, online signatures, sales orders, pricelists and subscriptions linked to inventory and invoicing.",
-         hero=dict(style="split", eyebrow="ODOO SALES", title="Send quotes in minutes and turn them into orders without re-typing",
-                   lead="We set up Odoo Sales with your products, pricelists and templates, so a quote becomes an order, a delivery and an invoice in a single flow.",
-                   points=["Branded quote templates", "Online signature & payment", "Pricelists & discounts by customer"],
-                   cta="Discuss Odoo Sales", cta2="See quote-to-cash", cta2_href="flow"),
-         sections=[
-             ("steps_v", dict(eyebrow="QUOTE TO CASH", title="One document, four steps, zero re-entry", extra=' id="flow"',
-                              sub="Each step picks up the data from the one before it, so your team stops copying numbers between systems.", items=[
-                 ("01", "Quote", "Pick products, apply the customer's pricelist and send a branded quotation by email or WhatsApp."),
-                 ("02", "Confirm", "The customer signs or pays online; the quote becomes a sales order automatically."),
-                 ("03", "Deliver", "Inventory reserves stock and creates the delivery order for your warehouse."),
-                 ("04", "Invoice", "Invoice from the order with the right taxes, then track payment in Accounting.")])),
-             ("bento", dict(eyebrow="FEATURES WE CONFIGURE", title="Built for how you sell", alt=True, wide=(0, 3), items=[
-                 ("Pricelists that do the maths", "Customer-specific prices, quantity breaks, seasonal offers and multi-currency — applied automatically on every quote."),
-                 ("Optional products", "Suggest add-ons and upsells right on the quotation."),
-                 ("Subscriptions", "Recurring plans with automatic renewal invoices."),
-                 ("Sales dashboards", "Revenue by product, salesperson, customer and region, updated live from confirmed orders — no end-of-month export.")])),
-         ],
-         related=["odoo-crm", "odoo-inventory", "odoo-accounting"],
-         faq=[("Can customers accept a quote online?", "Yes. Quotations have a customer portal link where the customer can sign, and optionally pay, to confirm the order."),
-              ("Can we have different prices for dealers and retail customers?", "Yes. Pricelists let you set prices and discounts per customer group, and Odoo applies them automatically."),
-              ("Does Odoo Sales support recurring billing?", "Yes. With Subscriptions, recurring plans generate renewal orders and invoices on schedule.")]),
+         title="Salesforce Implementation Services Customized with Odoo | Unisas",
+         meta="Odoo Sales implementation by Unisas: quotations, online signature and payment, pricelists, and orders connected to inventory and accounting.",
+         hero=dict(style="split", eyebrow="ODOO SALES", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=sales_page.build, hero_fn=sales_page.hero, cta=sales_page.CTA, css=("odoo-ui.css", "sales.css")),
 
     dict(slug="odoo-inventory", icon=3, name="Inventory", short="Stock & warehouses",
-         meta="Odoo Inventory implementation: multi-warehouse stock, barcode operations, reorder rules, lots and serial numbers, and accurate valuation.",
-         hero=dict(style="dark", eyebrow="ODOO INVENTORY", title="Know exactly what you have, where it is, and when to reorder",
-                   lead="We set up Odoo Inventory with your warehouses, locations and routes, so stock levels are accurate in real time and reorders happen before you run out.",
-                   points=["Multi-warehouse & bin locations", "Barcode scanning on mobile", "Automatic reorder rules"],
-                   cta="Discuss Odoo Inventory", cta2="Compare before & after", cta2_href="compare"),
-         sections=[
-             ("bento", dict(eyebrow="WHAT YOU GET", title="Stock control without the spreadsheets", wide=(0, 5), items=[
-                 ("Real-time stock across every location", "Each receipt, transfer and delivery updates quantities instantly, per warehouse and per bin."),
-                 ("Barcode operations", "Receive, pick and pack with a phone or scanner."),
-                 ("Lots & serial numbers", "Full traceability from supplier to customer."),
-                 ("Reorder rules", "Min/max rules create purchase or manufacturing orders."),
-                 ("Routes", "Pick-pack-ship, drop-ship and cross-dock flows."),
-                 ("Stock valuation", "FIFO or average cost, posted to Accounting automatically so your balance sheet matches the warehouse."),
-                 ("Stock reports", "Ageing, movement history and forecasted stock.")])),
-             ("compare", dict(eyebrow="BEFORE & AFTER", title="What changes when inventory moves to Odoo", alt=True, extra=' id="compare"', module="Inventory", before="Spreadsheets / Tally", items=[
-                 ("Stock levels", "Updated at day end, often wrong", "Live after every movement"),
-                 ("Reordering", "Someone notices a shortage", "Rules trigger POs automatically"),
-                 ("Stock counts", "Paper sheets, manual entry", "Barcode cycle counts on mobile"),
-                 ("Traceability", "Hard to find which batch went where", "Lot & serial tracking end to end"),
-                 ("Valuation", "Calculated separately by accounts", "Posted automatically in real time")])),
-         ],
-         related=["odoo-purchase", "odoo-manufacturing", "odoo-ecommerce"],
-         faq=[("Can we move our stock data from Tally into Odoo?", "Yes. We migrate item masters, opening stock by location and valuation, and reconcile the totals with you before go-live."),
-              ("Do we need special barcode hardware?", "No. Odoo's barcode app works on Android phones and standard USB or Bluetooth scanners. Rugged handheld devices are optional."),
-              ("Can Odoo manage several warehouses and branches?", "Yes. You can run multiple warehouses, each with its own locations and routes, and transfer stock between them.")]),
+         title="Inventory Implementation Services Tailored to Your Business with Odoo | Unisas",
+         meta="Odoo Inventory implementation by Unisas: multi-warehouse stock, routes, reordering rules, barcode, lots and serial numbers, data migration and live valuation.",
+         hero=dict(style="split", eyebrow="ODOO INVENTORY", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=inventory_page.build, hero_fn=inventory_page.hero, cta=inventory_page.CTA, css=("odoo-ui.css", "inventory.css")),
 
     dict(slug="odoo-purchase", icon=4, name="Purchase", short="Vendors & POs",
-         meta="Odoo Purchase implementation: RFQs, vendor price comparison, approval workflows, receipts and three-way bill matching configured by Unisas.",
-         hero=dict(style="reverse", eyebrow="ODOO PURCHASE", title="Buy at the right price, with approvals and bills that match",
-                   lead="We configure Odoo Purchase so RFQs, approvals, goods receipts and vendor bills are linked — you always know what was ordered, received and billed.",
-                   points=["RFQ comparison across vendors", "Approval limits by amount", "3-way match: PO, receipt, bill"],
-                   cta="Discuss Odoo Purchase", cta2="See the purchase cycle", cta2_href="cycle"),
-         sections=[
-             ("checklist", dict(eyebrow="CONTROLS WE SET UP", title="Spend control without slowing buyers down", sub="Approval rules and vendor data are configured from your purchase policy, not a generic template.", items=[
-                 "Approval levels by amount or category", "Vendor price lists & lead times", "Blanket orders & purchase agreements",
-                 "Auto-created RFQs from reorder rules", "Receipts with quality checks", "Bills matched to PO and receipt"])),
-             ("steps_h", dict(eyebrow="PURCHASE CYCLE", title="From request to paid bill", alt=True, extra=' id="cycle"', items=[
-                 ("Request", "RFQ created by a buyer or a reorder rule."),
-                 ("Compare", "Vendor quotes side by side on price and lead time."),
-                 ("Receive", "Goods checked in against the PO, partial receipts included."),
-                 ("Pay", "Vendor bill matched and scheduled for payment.")])),
-             ("stats", dict(items=[("3-way", "PO · receipt · bill match"), ("Auto", "RFQs from stock levels"), ("Every", "vendor price in one list"), ("Clear", "approval trail")])),
-         ],
-         related=["odoo-inventory", "odoo-accounting", "odoo-manufacturing"],
-         faq=[("Can Odoo enforce purchase approvals?", "Yes. POs above a limit you set need manager approval, and we can add more levels by amount or department."),
-              ("Can vendors send quotes through a portal?", "Yes. Vendors can view RFQs and update prices through the Odoo portal, or you can record quotes received by email."),
-              ("Does Odoo check bills against what was received?", "Yes. Bill control can be set to billed quantities or received quantities, so you only pay for what arrived.")]),
+         title="Purchase Order Software for Smarter Procurement with Odoo | Unisas",
+         meta="Odoo Purchase implementation by Unisas: RFQs, vendor alternatives, approval limits, reordering, three-way matching with receipts and bills, and supplier data migration.",
+         hero=dict(style="split", eyebrow="ODOO PURCHASE", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=purchase_page.build, hero_fn=purchase_page.hero, cta=purchase_page.CTA, css=("odoo-ui.css", "purchase.css")),
 
     dict(slug="odoo-project", icon=5, name="Project", short="Tasks, Gantt, timesheets",
-         meta="Odoo Project implementation: tasks, Kanban and Gantt planning, timesheets and project profitability for service businesses, set up by Unisas.",
-         hero=dict(style="split", eyebrow="ODOO PROJECT", title="Plan the work, track the hours, and see if the project makes money",
-                   lead="We set up Odoo Project with your stages, templates and billing rules, so tasks, timesheets and invoices stay tied to the same project.",
-                   points=["Kanban, list & Gantt views", "Timesheets from web or mobile", "Profitability per project"],
-                   cta="Discuss Odoo Project", cta2="Explore features", cta2_href="features"),
-         sections=[
-             ("zigzag", dict(eyebrow="HOW TEAMS USE IT", title="Three views of the same project", alt=True, extra=' id="features"', items=[
-                 ("PLAN", "Plan with Gantt and milestones", "Schedule tasks against people's availability and spot conflicts before they happen.",
-                  ["Gantt with dependencies", "Milestones tied to billing", "Project templates for repeat work"]),
-                 ("DO", "Run the day-to-day in Kanban", "Teams move tasks through your stages, comment, attach files and log time from one screen.",
-                  ["Custom stages per project", "Task chatter & mentions", "Customer portal for sign-off"]),
-                 ("MEASURE", "Know if it's profitable", "Timesheets, expenses and invoices roll up into a live profitability view per project.",
-                  ["Planned vs actual hours", "Billable vs non-billable time", "Margin per project & customer"])])),
-             ("features", dict(eyebrow="ALSO INCLUDED", title="Small details that save hours", cols=4, items=[
-                 ("Recurring tasks", "Monthly filings or maintenance created automatically."),
-                 ("Mobile timesheets", "Start/stop timers on the go."),
-                 ("Customer portal", "Clients see progress without status emails."),
-                 ("Billing options", "Fixed price, milestones or time & materials.")])),
-         ],
-         related=["odoo-hr", "odoo-sales", "odoo-accounting"],
-         faq=[("Can we bill clients from timesheets?", "Yes. Projects can be billed on timesheets, milestones or fixed price, and Odoo drafts the invoice from the approved hours."),
-              ("Can clients see their project status?", "Yes. The customer portal lets clients view tasks, progress and documents you choose to share."),
-              ("Does Odoo Project have Gantt charts?", "Yes. Odoo Enterprise includes Gantt planning with dependencies and resource availability.")]),
+         title="Project Management Software for Teams That Deliver, Built on Odoo | Unisas",
+         meta="Odoo Project implementation by Unisas: project management software with tasks, milestones, dependencies, Gantt planning, timesheets and billing, set up around your delivery process.",
+         hero=dict(style="split", eyebrow="ODOO PROJECT", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=project_page.build, hero_fn=project_page.hero, cta=project_page.CTA, css=("odoo-ui.css", "project.css")),
 
     dict(slug="odoo-manufacturing", icon=6, name="Manufacturing", short="BoM, work orders, quality",
          meta="Odoo Manufacturing (MRP) implementation: bills of materials, work orders, work centres, quality checks and production planning by Unisas.",
@@ -535,8 +555,49 @@ PAGES = [
          faq=[("Do we need a separate tool like Mailchimp?", "Usually not. Odoo Email Marketing covers newsletters, segments, A/B tests and tracking, with the advantage of using your CRM and sales data directly."),
               ("Can we automate follow-up emails?", "Yes. Marketing Automation lets you build journeys with triggers, waits, conditions and actions such as assigning a salesperson."),
               ("Will our emails land in the inbox?", "We configure your sending domain with SPF, DKIM and DMARC and advise on list hygiene to protect deliverability.")]),
+
+    dict(slug="odoo-pos", icon=10, name="Point of Sale", short="Retail & restaurant checkout",
+         meta="Odoo Point of Sale implementation for shops and restaurants: fast checkout, cash, card and UPI payments, live stock and accounting, set up by Unisas.",
+         hero=dict(style="reverse", eyebrow="ODOO POINT OF SALE", title="A checkout that updates your stock and books with every sale",
+                   lead="We set up Odoo POS for your shops or restaurant, so every bill updates inventory, customer history and accounting the moment it's paid, across every counter and branch.",
+                   points=["Cash, card & UPI payments", "Live stock across stores", "Keeps selling if the internet drops"],
+                   cta="Discuss Odoo POS", cta2="See a sale end to end", cta2_href="sale"),
+         sections=[
+             ("steps_h", dict(eyebrow="ONE SALE, EVERY APP", title="What happens when a customer pays", extra=' id="sale"', items=[
+                 ("Scan", "Products added by barcode, search or touch screen."),
+                 ("Pay", "Cash, card or UPI, including split payments."),
+                 ("Receipt", "Printed or sent by email, with GST details."),
+                 ("Stock", "Quantities reduced in that store's warehouse."),
+                 ("Books", "Sales and payments posted to Accounting at session close.")])),
+             ("features", dict(eyebrow="WHAT WE CONFIGURE", title="Set up for how your counters run", alt=True, items=[
+                 ("Stores & counters", "Separate POS setups per branch or till, each with its own stock location and cashiers."),
+                 ("Hardware", "Barcode scanners, receipt printers, cash drawers and weighing scales connected and tested."),
+                 ("Payments", "Cash, card terminals and UPI QR payments, reconciled at session close."),
+                 ("Pricing & loyalty", "Pricelists, discounts, gift cards and loyalty points shared with your online store."),
+                 ("Restaurants", "Floor plans, table orders, bill splitting and kitchen order printing."),
+                 ("Cash control", "Opening and closing balances, cash in/out and session reports for each cashier.")])),
+             ("compare", dict(eyebrow="BEFORE & AFTER", title="Standalone billing vs. Odoo POS", module="POS", before="Standalone billing software", items=[
+                 ("Stock", "Updated separately, often at day end", "Reduced with every sale, per store"),
+                 ("Customers", "No purchase history", "Shared with CRM, loyalty and eCommerce"),
+                 ("Accounting", "Sales exported and re-entered", "Posted automatically when the session closes"),
+                 ("Multiple stores", "Each store a separate system", "All stores reporting in one place")])),
+         ],
+         related=["odoo-inventory", "odoo-accounting", "odoo-ecommerce"],
+         faq=[("Does Odoo POS work without internet?", "Yes. Odoo POS keeps taking orders if the connection drops and syncs them once it's back, so the counter doesn't stop."),
+              ("What hardware does Odoo POS support?", "Standard barcode scanners, receipt printers, cash drawers, customer displays and scales. We confirm your devices during scoping and set them up."),
+              ("Can Odoo POS be used in a restaurant?", "Yes. Restaurant mode adds floor plans, table orders, bill splitting and printing orders to the kitchen.")]),
 ]
-BY_SLUG = {p["slug"]: p for p in PAGES}
+ALL_PAGES = PAGES + SERVICES + COMPANY
+
+
+def page_cta(page):
+    """The homepage contact section, with this page's own heading and intro if it sets one."""
+    if not page.get("cta"):
+        return final_cta
+    title, sub = page["cta"]
+    f = re.sub(r'<h2 class="section-title">.*?</h2>', lambda m: '<h2 class="section-title">%s</h2>' % title, final_cta, count=1, flags=re.S)
+    return re.sub(r'<p class="section-sub">.*?</p>', lambda m: '<p class="section-sub">%s</p>' % sub, f, count=1, flags=re.S)
+BY_SLUG = {p["slug"]: p for p in ALL_PAGES}
 
 # ---------------------------------------------------------------- page assembly
 TEMPLATE = """<!doctype html>
@@ -548,7 +609,7 @@ TEMPLATE = """<!doctype html>
 <meta name="description" content="{meta}">
 {fonts}
 <link rel="stylesheet" href="assets/site.css">
-<link rel="stylesheet" href="assets/modules.css">
+<link rel="stylesheet" href="assets/modules.css">{extra_css}
 </head>
 <body>
 <div class="page mp-page">
@@ -568,19 +629,42 @@ TEMPLATE = """<!doctype html>
 </html>
 """
 
-for page in PAGES:
-    out = ""
+SERVICE_LINK = re.compile(r'href="(odoo-(?:consulting|implementation|customization|integration|data-migration|support|training|ai-automation)\.html)"')
+
+# optional: build only the pages named on the command line, e.g. `python tools/build_module_pages.py odoo-project`
+ONLY = set(sys.argv[1:])
+
+for page in ALL_PAGES:
+    if ONLY and page["slug"] not in ONLY:
+        continue
+    # the contact page puts the form straight under the hero
+    out = contact_form() if page.get("form_first") else ""
     for kind, data in page["sections"]:
         html = SECTIONS[kind](data, data.get("alt", False))
         if data.get("extra"):
             html = html.replace('<section class="', '<section%s class="' % data["extra"], 1)
         out += html
-    out += related_block(page)
-    out += faq_block(page, alt=True)
+    if page.get("build"):
+        out += page["build"](globals())
+    if page.get("related"):
+        out += related_block(page)
+    if page.get("faq"):
+        out += faq_block(page, alt=True)
+    if is_company(page):
+        page_header = company_header(page)
+    elif is_service(page):
+        page_header = service_header(page["slug"])
+    else:
+        page_header = module_header(page["slug"])
     html = TEMPLATE.format(
-        title="Odoo %s Implementation | Unisas" % page["name"], meta=page["meta"], fonts=fonts,
-        header=header, hero=hero(page), sections=out, final_cta=final_cta, footer=footer,
-        modal=modal, floats=floats, script=script)
+        title=page.get("title") or "Odoo %s Implementation | Unisas" % page["name"], meta=page["meta"], fonts=fonts,
+        header=page_header, hero=hero(page), sections=out,
+        final_cta="" if page.get("form_first") else page_cta(page), footer=footer,
+        modal=modal, floats=floats,
+        script=script + ('\n<script src="assets/odoo-motion.js" defer></script>' if "odoo-ui.css" in page.get("css", ()) else ""),
+        extra_css="".join('\n<link rel="stylesheet" href="assets/%s">' % c for c in page.get("css", ())))
+    # service pages are not linked yet: service links only set the URL hash
+    html = SERVICE_LINK.sub(r'href="#/\1"', html)
     with io.open(os.path.join(DIST, page["slug"] + ".html"), "w", encoding="utf-8", newline="") as f:
         f.write(html)
     print("wrote", page["slug"] + ".html", len(html) // 1024, "KB")
