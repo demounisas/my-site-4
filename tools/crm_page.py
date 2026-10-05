@@ -8,6 +8,8 @@ section designs. Styles live under "Odoo CRM page" in dist/assets/modules.css.
 hero(g) and build(g) get the build script's globals.
 """
 
+import json
+
 import crm_explorer as ox
 
 TICK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
@@ -196,10 +198,27 @@ def build(g):
                  '<div class="crm-pk-body">%s</div><div class="crm-pk-foot"><span>Need more than CRM? We extend the same project to Sales, Invoicing or Email Marketing.</span>'
                  '<a href="#get-demo" class="link-arrow" data-svc-cta="implementation">Get a scoped quote %s</a></div></div>' % (colsh, g["ARROW"]), "crm-sec--pkg")
 
-    # 9 ---- process: the rollout as an Odoo Project Gantt
+    # 9 ---- process: six phases, and how the client's CRM pipeline takes shape in each
+    phases = [("Discover", "Week 1", "Workshops with your sales team: how leads arrive, who follows them up, and what managers need to see.",
+               "Sales process map", "2 workshops of 2 hours"),
+              ("Design", "Week 2", "Pipeline stages, lead rules, automations and reports agreed on paper before anything is built.",
+               "Design document with your stages", "1 review meeting"),
+              ("Configure", "Weeks 3&ndash;4", "Sales teams, assignment rules, activity types, email templates and dashboards set up on a test database.",
+               "Walkthrough of the test database", "1 hour a week"),
+              ("Migrate &amp; connect", "Weeks 4&ndash;5", "Leads and customers imported from your spreadsheets or old CRM; website forms, email and WhatsApp connected.",
+               "Data check: 2,340 leads and 860 customers", "Your current data exports"),
+              ("Train", "Week 6", "Salespeople and managers learn on their own pipeline, with short guides for daily tasks.",
+               "Every user logs a test deal", "Half a day per team"),
+              ("Go live &amp; hypercare", "Weeks 6&ndash;8", "Switch-over to Odoo, daily check-ins in the first weeks, rules refined as the team settles in.",
+               "Hypercare report after two weeks", "A go-live date")]
+    steps = "".join('<li><button type="button" class="crm-pr-st%s" data-pr="%d" aria-pressed="%s"><span class="mono">%02d</span><b>%s</b><small>%s</small></button></li>'
+                    % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, n, w) for i, (n, w, d, so, you) in enumerate(phases))
     out += sec(head("OUR PROCESS", "What Does the Unisas Odoo CRM Implementation Process Look Like?",
-                    "A clear, phased rollout with sign-off at each step, planned and tracked in Odoo Project so you always see where things stand. "
-                    "Below is a typical plan; your timeline depends on integrations and data.") + ox.gantt(), "crm-sec--gantt")
+                    "Six phases, each ending with something you sign off. Pick a phase to see what happens in it and how your Odoo CRM pipeline looks at that point. "
+                    "A typical rollout takes six to eight weeks; integrations and data decide the rest.", "is-center")
+               + '<div class="crm-pr" data-prbox><ol class="crm-pr-sts">%s</ol><div class="crm-pr-g"><div class="crm-pr-bd ox-solo" data-prboard aria-hidden="true"></div>'
+                 '<div class="crm-pr-c" data-prcard aria-live="polite"></div></div></div>' % steps
+               + '<script type="application/json" id="crm-phases">%s</script>' % json.dumps(phases), "crm-sec--proc")
 
     # 10 ---- results: report mock
     kpis = [("Pipeline value", "By stage, salesperson and expected close month", "M2 18 L10 14 L18 15 L26 9 L34 10 L42 4"),
@@ -301,6 +320,36 @@ SCRIPT = '''<script>
       if(d){e.preventDefault();select(tabs[(i+d+tabs.length)%tabs.length],true);}
     });
   });
+  /* rollout phases: the pipeline takes shape */
+  var pr=document.querySelector('[data-prbox]');
+  if(pr){
+    var PH=JSON.parse(document.getElementById('crm-phases').textContent),pb=[].slice.call(pr.querySelectorAll('[data-pr]')),bd=pr.querySelector('[data-prboard]'),cd=pr.querySelector('[data-prcard]');
+    var DRAFT=['Enquiry?','Talking','Quote sent','Won'],STG=['New','Qualified','Proposition','Won'],TOT=['&#8377; 6,90,000','&#8377; 18,40,000','&#8377; 8,85,000','&#8377; 9,80,000'];
+    var CARDS=[[['Annual support contract','Kaveri Foods','2,10,000','Email','R','#3E7CB1','g'],['CRM for 2 showrooms','Nair Textiles','4,80,000','Website','A','#B5567E','o']],
+               [['ERP for 3 branches','Shree Distributors','12,00,000','WhatsApp','M','#4C9F70','r'],['Quote for 40 POS terminals','Bluebay Retail','6,40,000','Website','A','#B5567E','g']],
+               [['Clinic group onboarding','Sunrise Clinics','5,25,000','Referral','M','#4C9F70','o'],['Warehouse barcode setup','Arun Logistics','3,60,000','Email','R','#3E7CB1','g']],
+               [['Dealer portal','Orbit Motors','9,80,000','Website','R','#3E7CB1','']]];
+    var SRC={Website:'blue',Email:'purple',WhatsApp:'green',Referral:'yellow'};
+    function board(L){
+      var head='<div class="crm-pr-top"><b>'+(L<1?'Pipeline sketch':'Pipeline')+'</b>'+(L>=2?'<span class="ox-team">Sales &middot; Chennai</span>':'')+(L>=5?'<span class="crm-pr-live"><i></i>Live</span>':(L>=2?'<span class="crm-pr-test">Test database</span>':''))+'</div>';
+      var cols=STG.map(function(s,i){var cs=L>=3?CARDS[i]:[];
+        return '<div class="crm-pr-col'+(L<1?' is-draft':'')+'"><p><b>'+(L<1?DRAFT[i]:s)+'</b>'+(L>=5?'<small>'+TOT[i]+'</small>':(L>=3?'<small>'+cs.length+'</small>':''))+'</p>'+
+          (cs.length?cs.map(function(c){return '<div class="crm-pr-card"><b>'+c[0]+'</b><span>&#8377; '+c[2]+'</span><span class="crm-pr-cust">'+c[1]+'</span><span class="crm-pr-foot"><span class="ox-tag ox-tag--'+SRC[c[3]]+'">'+c[3]+'</span>'+
+            (L>=4?(c[6]?'<i class="crm-pr-act is-'+c[6]+'"></i>':'')+'<span class="ox-av is-sm" style="--c:'+c[5]+'">'+c[4]+'</span>':'')+'</span></div>';}).join(''):'<div class="crm-pr-empty">'+(L<1?'':'No records yet')+'</div>')+'</div>';}).join('');
+      var foot=[];
+      if(L>=2)foot.push('Assign by territory','Follow up after 7 days','Quote from template');
+      if(L>=3)foot.push('2,340 leads imported','Website &middot; Email &middot; WhatsApp connected');
+      if(L>=4)foot.push('8 users trained');
+      if(L>=5)foot.push('Won this week &#8377; 9,80,000');
+      return head+'<div class="crm-pr-cols">'+cols+'</div>'+(foot.length?'<p class="crm-pr-chips">'+foot.map(function(f){return '<span>'+f+'</span>';}).join('')+'</p>':'<p class="crm-pr-chips is-note">Stages drafted from your workshops. Nothing is built yet.</p>');}
+    function draw(i){var p=PH[i];bd.innerHTML=board(i);
+      cd.innerHTML='<p class="crm-eyebrow mono">PHASE '+(i+1)+' OF 6 &middot; '+p[1]+'</p><h3>'+p[0]+'</h3><p>'+p[2]+'</p><dl><div><dt>You sign off</dt><dd>'+p[3]+'</dd></div><div><dt>Your team&rsquo;s time</dt><dd>'+p[4]+'</dd></div></dl>'+
+        '<div class="crm-pr-nav"><button type="button" class="btn btn-ghost" data-prgo="-1"'+(i?'':' disabled')+'>&larr; Previous</button><button type="button" class="btn btn-ghost" data-prgo="1"'+(i<5?'':' disabled')+'>Next phase &rarr;</button></div>';}
+    var cur=0;function go(i){cur=i;pb.forEach(function(b,j){b.classList.toggle('is-on',j===i);b.classList.toggle('is-done',j<i);b.setAttribute('aria-pressed',j===i);});draw(i);}
+    pb.forEach(function(b){b.addEventListener('click',function(){go(+b.getAttribute('data-pr'));});});
+    cd.addEventListener('click',function(e){var b=e.target.closest('[data-prgo]');if(b)go(Math.max(0,Math.min(5,cur+(+b.getAttribute('data-prgo')))));});
+    go(0);
+  }
 })();
 </script>
 '''

@@ -377,8 +377,8 @@
 .sl-px-tag{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;margin:22px 0 0;font-size:0.86rem;font-weight:600;color:#1E7B34;}
 .sl-px-tag svg{flex:none;}
 @media (prefers-reduced-motion:no-preference){
-  .sl-px-sig path{stroke-dasharray:640;stroke-dashoffset:640;animation:sl-sign 1.8s .9s ease-out forwards;}
-  .sl-px-stamp{animation:pg-pop .5s 2.5s cubic-bezier(.3,1.6,.5,1) backwards;}
+  .sl-px-sig path{stroke-dasharray:640;stroke-dashoffset:640;animation:sl-sign .7s .4s ease-out forwards;}
+  .sl-px-stamp{animation:pg-pop .35s 1.1s cubic-bezier(.3,1.6,.5,1) backwards;}
 }
 @keyframes sl-sign{to{stroke-dashoffset:0;}}
 @media (max-width:560px){.sl-px-paper{padding:22px 16px 18px;}.sl-px-meta{grid-template-columns:minmax(0,1fr);}.sl-px-co{max-width:58%;}.sl-px-co small{display:none;}

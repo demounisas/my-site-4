@@ -24,6 +24,12 @@ import sales_page
 import inventory_page
 import purchase_page
 import project_page
+import accounting_page
+import manufacturing_page
+import hr_page
+import website_page
+import email_marketing_page
+import pos_page
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -389,33 +395,12 @@ MOCKS.update(COMPANY_MOCKS)
 
 # ---------------------------------------------------------------- page content
 PAGES = [
-    dict(slug="odoo-hr", icon=0, name="HR", short="Employees, attendance, payroll",
-         meta="Odoo HR implementation for attendance, leave, payroll and appraisals. Unisas sets up Odoo Employees so your people data lives in one place.",
-         hero=dict(style="split", eyebrow="ODOO HR / EMPLOYEES", title="One home for every employee record, from offer letter to payslip",
-                   lead="We set up Odoo HR so attendance, leave, payroll and appraisals run from the same employee record — no more chasing spreadsheets at month end.",
-                   points=["Biometric & mobile attendance", "Leave policies by location", "Payroll rules for your structure"],
-                   cta="Discuss Odoo HR", cta2="See the employee lifecycle", cta2_href="lifecycle"),
-         sections=[
-             ("steps_h", dict(eyebrow="EMPLOYEE LIFECYCLE", title="Every stage of the employee journey, connected", extra=' id="lifecycle"', items=[
-                 ("Recruit", "Job positions, applicants and interview stages in one pipeline."),
-                 ("Onboard", "Checklists, documents and equipment handed over on day one."),
-                 ("Attend", "Check-ins from biometric devices, kiosk or mobile."),
-                 ("Leave", "Allocation rules, approvals and balances employees can see."),
-                 ("Pay", "Salary structures, deductions and payslips in bulk."),
-                 ("Grow", "Appraisals, goals and skills tracked over time.")])),
-             ("features", dict(eyebrow="WHAT WE CONFIGURE", title="Set up around how your company actually works", alt=True, items=[
-                 ("Departments & org chart", "Company, branch and department structure with managers, so approvals route to the right person."),
-                 ("Attendance devices", "We connect biometric machines or enable mobile check-in with geolocation."),
-                 ("Leave types & accruals", "Casual, sick, earned and comp-off leave with accrual and carry-forward rules."),
-                 ("Payroll structures", "Salary rules for basic, allowances, PF, ESI and professional tax, validated with your accountant."),
-                 ("Employee self-service", "Staff apply for leave, view payslips and update details without emailing HR."),
-                 ("Appraisal cycles", "Review templates, reminders and manager feedback on a schedule you choose.")])),
-             ("stats", dict(items=[("1", "employee record shared by every app"), ("0", "manual attendance re-entry"), ("Self-service", "for leave & payslips"), ("Payroll", "linked to accounting")])),
-         ],
-         related=["odoo-project", "odoo-accounting", "odoo-crm"],
-         faq=[("Can Odoo connect to our biometric attendance machine?", "Yes. Most common biometric devices can push attendance into Odoo through a connector or scheduled import. We confirm your device model during scoping."),
-              ("Does Odoo payroll handle Indian statutory deductions?", "Odoo payroll supports configurable salary rules, so PF, ESI and professional tax can be set up for your structure. We validate the rules with your accountant before go-live."),
-              ("Can we start with attendance and leave only?", "Yes. Many clients start with Employees, Attendance and Time Off, then add Payroll and Appraisals in a later phase.")]),
+    dict(slug="odoo-hr", icon=0, name="HR", short="Employees, attendance, time off",
+         title="HR Software for Small Businesses Configured to Fit Your Workflows with Odoo | Unisas",
+         meta="Odoo HR implementation for small businesses by Unisas: employee records, onboarding, time off, attendance, approvals, access control, skills and appraisals, configured around your workflows.",
+         hero=dict(style="split", eyebrow="ODOO HR", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=hr_page.build, hero_fn=hr_page.hero, cta=hr_page.CTA, css=("odoo-ui.css", "hr.css"),
+         faq=hr_page.FAQ, faq_title="Frequently Asked Questions About Odoo HR"),
 
     dict(slug="odoo-crm", icon=1, name="CRM", short="Leads & pipeline",
          title="Odoo CRM Implementation for Smarter Sales | Unisas",
@@ -451,141 +436,36 @@ PAGES = [
          sections=[], build=project_page.build, hero_fn=project_page.hero, cta=project_page.CTA, css=("odoo-ui.css", "project.css")),
 
     dict(slug="odoo-manufacturing", icon=6, name="Manufacturing", short="BoM, work orders, quality",
-         meta="Odoo Manufacturing (MRP) implementation: bills of materials, work orders, work centres, quality checks and production planning by Unisas.",
-         hero=dict(style="dark-center", eyebrow="ODOO MANUFACTURING (MRP)", title="Plan production, run the shop floor and control quality in one system",
-                   lead="We set up Odoo MRP with your bills of materials, routings and work centres, so production orders pull the right materials and costs flow to accounting.",
-                   points=["Multi-level BoMs & routings", "Shop-floor tablet view", "Quality checks at each step"],
-                   cta="Discuss Odoo Manufacturing", cta2="See the production flow", cta2_href="mrp-flow"),
-         sections=[
-             ("steps_h", dict(eyebrow="PRODUCTION FLOW", title="From demand to finished goods", extra=' id="mrp-flow"', items=[
-                 ("Demand", "Sales orders or reorder rules create manufacturing orders."),
-                 ("Plan", "Materials reserved, work centres scheduled by capacity."),
-                 ("Produce", "Operators follow instructions on the shop-floor tablet."),
-                 ("Check", "Quality points pass or fail with photos and measurements."),
-                 ("Cost", "Actual material and labour cost posted to accounting.")])),
-             ("compare", dict(eyebrow="BEFORE & AFTER", title="What your production team gains", alt=True, module="MRP", before="Manual / Excel planning", items=[
-                 ("Material planning", "Shortages found on the shop floor", "Components reserved before production starts"),
-                 ("Work instructions", "Printed sheets, often outdated", "Latest instructions on a tablet"),
-                 ("Quality", "Checks recorded on paper", "Quality points with pass/fail and alerts"),
-                 ("Product cost", "Estimated once a year", "Actual cost per manufacturing order")])),
-             ("features", dict(eyebrow="WHAT WE CONFIGURE", title="Set up for your shop floor", items=[
-                 ("Bills of materials", "Multi-level BoMs, variants, by-products and kits."),
-                 ("Work centres & routings", "Capacity, working hours and operation times."),
-                 ("Subcontracting", "Send components out and receive finished goods back.")])),
-         ],
-         related=["odoo-inventory", "odoo-purchase", "odoo-accounting"],
-         faq=[("Does Odoo MRP suit small manufacturers?", "Yes. You can start with simple BoMs and manufacturing orders, then add work centres, routings and quality control as you grow."),
-              ("Can Odoo handle job work / subcontracting?", "Yes. Odoo supports subcontracting, where you send components to a vendor and receive the finished product back into stock."),
-              ("Can operators use tablets on the shop floor?", "Yes. The shop-floor view is designed for tablets, showing work orders, instructions and quality checks step by step.")]),
+         title="Manufacturing ERP Software for End-to-End Production Management with Odoo | Unisas",
+         meta="Odoo Manufacturing ERP implementation by Unisas: bills of materials, work orders, work centres, production planning, quality, traceability and cost control, set up around your production model.",
+         hero=dict(style="split", eyebrow="ODOO MANUFACTURING", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=manufacturing_page.build, hero_fn=manufacturing_page.hero, cta=manufacturing_page.CTA, css=("odoo-ui.css", "manufacturing.css")),
 
     dict(slug="odoo-accounting", icon=7, name="Accounting", short="Invoicing & bank reconciliation",
-         meta="Odoo Accounting implementation: invoicing, GST-ready taxes, bank reconciliation, payables, receivables and financial reports configured by Unisas.",
-         hero=dict(style="split", eyebrow="ODOO ACCOUNTING", title="Invoices, bank and GST reports that reconcile themselves",
-                   lead="We set up Odoo Accounting with your chart of accounts, taxes and bank feeds, so sales, purchases and payroll post automatically and month end takes days, not weeks.",
-                   points=["GST-ready tax setup", "Bank statement matching", "Live P&L and balance sheet"],
-                   cta="Discuss Odoo Accounting", cta2="What we set up", cta2_href="setup"),
-         sections=[
-             ("stats", dict(items=[("Auto", "bank reconciliation suggestions"), ("Live", "P&L & balance sheet"), ("GST", "tax setup & reports"), ("1", "ledger for every app")])),
-             ("accordion", dict(eyebrow="WHAT WE SET UP", title="A finance setup your auditor will like", extra=' id="setup"',
-                                sub="We work with your accountant or CA so the configuration matches how your books are kept today.", items=[
-                 ("Chart of accounts & opening balances", "We map your existing ledgers, import opening balances from Tally or your current system, and reconcile them before go-live."),
-                 ("Taxes & GST", "Tax rates, fiscal positions for inter-state and export sales, and the reports your filings need."),
-                 ("Bank & payments", "Bank statement import or feeds, reconciliation models that auto-match common transactions, and payment follow-ups."),
-                 ("Receivables & payables", "Customer invoices, vendor bills, payment terms, ageing reports and automated reminders."),
-                 ("Reporting", "P&L, balance sheet, cash flow and custom management reports, filterable by branch or analytic account.")])),
-             ("checklist", dict(eyebrow="DAY-TO-DAY", title="Less data entry for your finance team", alt=True, items=[
-                 "Invoices generated from sales orders", "Vendor bills from POs or scanned PDFs", "Payroll entries posted automatically",
-                 "Stock valuation posted in real time", "Analytic accounts by branch or project", "Multi-company & multi-currency"])),
-         ],
-         related=["odoo-sales", "odoo-purchase", "odoo-hr"],
-         faq=[("Can we migrate from Tally to Odoo Accounting?", "Yes. We migrate ledgers, opening balances, open invoices and bills from Tally and reconcile totals with your accountant before cutover."),
-              ("Is Odoo Accounting GST compliant?", "Odoo includes Indian localisation with GST taxes and reports. We configure it for your registrations and check it with your CA."),
-              ("Can Odoo reconcile bank statements automatically?", "Odoo suggests matches between bank lines and invoices or bills, and reconciliation rules can auto-match recurring transactions.")]),
+         title="Best Accounting Software Implementation for Your Business with Odoo | Unisas",
+         meta="Odoo Accounting implementation by Unisas: GST invoicing, vendor bills, bank reconciliation, Tally migration, financial reports and integrations, matched to your finance processes.",
+         hero=dict(style="split", eyebrow="ODOO ACCOUNTING", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=accounting_page.build, hero_fn=accounting_page.hero, cta=accounting_page.CTA, css=("odoo-ui.css", "accounting.css")),
 
-    dict(slug="odoo-ecommerce", icon=8, name="Website & eCommerce", short="Online store tied to stock",
-         meta="Odoo Website and eCommerce implementation: an online store connected to inventory, payments, shipping and accounting, built by Unisas.",
-         hero=dict(style="center", eyebrow="ODOO WEBSITE / ECOMMERCE", title="An online store that already knows your stock, prices and customers",
-                   lead="We build your Odoo store on the same database as your ERP, so products, stock, orders, payments and invoices stay in sync without plugins or exports.",
-                   points=["Live stock on product pages", "Razorpay, UPI & card payments", "Orders create deliveries & invoices"],
-                   cta="Discuss Odoo eCommerce", cta2="See what's connected", cta2_href="hub"),
-         sections=[
-             ("hub", dict(eyebrow="ONE SYSTEM", title="Your store is plugged into everything", extra=' id="hub"', core="Your online store",
-                          sub="No sync jobs or middleware — the website reads and writes the same data your team uses.", items=[
-                 ("Inventory", "live stock"), ("Sales", "orders & pricelists"), ("Accounting", "invoices & payments"),
-                 ("CRM", "customer history"), ("Shipping", "courier labels"), ("Email Marketing", "abandoned carts")])),
-             ("features", dict(eyebrow="STORE FEATURES", title="Everything a growing store needs", alt=True, items=[
-                 ("Drag-and-drop pages", "Edit your website and product pages without a developer."),
-                 ("Payment gateways", "Razorpay, PayU, Stripe and other providers connected to Accounting."),
-                 ("Courier integration", "Shipping rates and labels from your courier partners."),
-                 ("B2B portal", "Customer-specific prices and reorders for dealers."),
-                 ("Promotions", "Coupons, discount codes and loyalty programs."),
-                 ("SEO basics", "Meta tags, clean URLs and a sitemap out of the box.")])),
-             ("steps_v", dict(eyebrow="LAUNCH PLAN", title="From catalogue to first order", items=[
-                 ("01", "Catalogue", "Products, variants, images and categories imported and cleaned."),
-                 ("02", "Design", "Theme and pages built around your brand."),
-                 ("03", "Connect", "Payments, courier and email set up and tested end to end."),
-                 ("04", "Launch", "Go live with training for your team on orders and returns.")])),
-         ],
-         related=["odoo-inventory", "odoo-sales", "odoo-email-marketing"],
-         faq=[("Can Odoo eCommerce accept UPI payments?", "Yes. Through payment providers such as Razorpay you can accept UPI, cards and net banking, with payments recorded in Accounting."),
-              ("Do we need a separate website platform?", "No. Odoo Website hosts your pages and store on the same system as your ERP, so there's nothing to sync."),
-              ("Can we sell to dealers and retail customers on one site?", "Yes. B2B customers can log in to see their own prices and reorder, while retail visitors see public prices.")]),
+    dict(slug="odoo-ecommerce", icon=8, name="Website & eCommerce", short="Website, shop &amp; portal",
+         title="Business Website Development Connected to Your Sales and Operations with Odoo | Unisas",
+         meta="Odoo website implementation by Unisas: a business website connected to CRM, sales, eCommerce and inventory, with SEO, lead capture, migration and support.",
+         hero=dict(style="split", eyebrow="ODOO WEBSITE", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=website_page.build, hero_fn=website_page.hero, cta=website_page.CTA, css=("odoo-ui.css", "website.css")),
 
     dict(slug="odoo-email-marketing", icon=9, name="Email Marketing", short="Campaigns on CRM data",
-         meta="Odoo Email Marketing and Marketing Automation implementation: segmented campaigns and automated journeys built on your CRM and sales data.",
-         hero=dict(style="reverse", eyebrow="ODOO EMAIL MARKETING", title="Campaigns that use what you already know about your customers",
-                   lead="We set up Odoo Email Marketing and Marketing Automation on top of your CRM and sales data, so every campaign reaches the right segment and results feed back into the pipeline.",
-                   points=["Segments from CRM & sales data", "Drag-and-drop email builder", "Automated follow-up journeys"],
-                   cta="Discuss Odoo Email Marketing", cta2="See an automated journey", cta2_href="journey"),
-         sections=[
-             ("flow", dict(eyebrow="MARKETING AUTOMATION", title="An automated journey, built once, running every day", extra=' id="journey"',
-                           sub="Example: a new lead from your website gets nurtured until sales can take over.", items=[
-                 ("trigger", "Lead created from website form"), ("wait", "Wait 1 day"), ("email", "Send product guide"),
-                 ("if", "Opened the guide?"), ("email", "Send case study & offer"), ("action", "Assign to salesperson")])),
-             ("stats", dict(items=[("Segments", "built from real purchase data"), ("A/B", "subject line testing"), ("Live", "open & click tracking"), ("Leads", "created from replies & clicks")])),
-             ("zigzag", dict(eyebrow="WHAT WE SET UP", title="From list to revenue, measured", alt=True, items=[
-                 ("AUDIENCE", "Clean lists and useful segments", "We import and de-duplicate your contacts, set up opt-in and unsubscribe handling, and build segments from CRM and order history.",
-                  ["Import & de-duplicate contacts", "Consent & unsubscribe handling", "Segments by purchase behaviour"]),
-                 ("CAMPAIGNS", "On-brand emails without a designer", "Reusable templates in your brand colours, so your team can send newsletters and offers in minutes.",
-                  ["Branded templates", "A/B testing on subject lines", "Scheduled sends"]),
-                 ("RESULTS", "Know which campaigns bring revenue", "Because emails, leads and orders share one database, you can see which campaigns led to real sales.",
-                  ["Open, click & bounce rates", "Leads & quotes per campaign", "Revenue attributed to campaigns"])])),
-         ],
-         related=["odoo-crm", "odoo-ecommerce", "odoo-sales"],
-         faq=[("Do we need a separate tool like Mailchimp?", "Usually not. Odoo Email Marketing covers newsletters, segments, A/B tests and tracking, with the advantage of using your CRM and sales data directly."),
-              ("Can we automate follow-up emails?", "Yes. Marketing Automation lets you build journeys with triggers, waits, conditions and actions such as assigning a salesperson."),
-              ("Will our emails land in the inbox?", "We configure your sending domain with SPF, DKIM and DMARC and advise on list hygiene to protect deliverability.")]),
+         title="Powerful Email Marketing Software with Odoo | Unisas",
+         meta="Odoo Email Marketing implementation by Unisas: targeted audiences from CRM and sales data, campaign scheduling, Marketing Automation journeys, A/B testing, deliverability and revenue reporting.",
+         hero=dict(style="split", eyebrow="ODOO EMAIL MARKETING", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=email_marketing_page.build, hero_fn=email_marketing_page.hero, cta=email_marketing_page.CTA, css=("odoo-ui.css", "email-marketing.css"),
+         faq=email_marketing_page.FAQ, faq_title="Frequently Asked Questions About Odoo Email Marketing"),
 
     dict(slug="odoo-pos", icon=10, name="Point of Sale", short="Retail & restaurant checkout",
-         meta="Odoo Point of Sale implementation for shops and restaurants: fast checkout, cash, card and UPI payments, live stock and accounting, set up by Unisas.",
-         hero=dict(style="reverse", eyebrow="ODOO POINT OF SALE", title="A checkout that updates your stock and books with every sale",
-                   lead="We set up Odoo POS for your shops or restaurant, so every bill updates inventory, customer history and accounting the moment it's paid, across every counter and branch.",
-                   points=["Cash, card & UPI payments", "Live stock across stores", "Keeps selling if the internet drops"],
-                   cta="Discuss Odoo POS", cta2="See a sale end to end", cta2_href="sale"),
-         sections=[
-             ("steps_h", dict(eyebrow="ONE SALE, EVERY APP", title="What happens when a customer pays", extra=' id="sale"', items=[
-                 ("Scan", "Products added by barcode, search or touch screen."),
-                 ("Pay", "Cash, card or UPI, including split payments."),
-                 ("Receipt", "Printed or sent by email, with GST details."),
-                 ("Stock", "Quantities reduced in that store's warehouse."),
-                 ("Books", "Sales and payments posted to Accounting at session close.")])),
-             ("features", dict(eyebrow="WHAT WE CONFIGURE", title="Set up for how your counters run", alt=True, items=[
-                 ("Stores & counters", "Separate POS setups per branch or till, each with its own stock location and cashiers."),
-                 ("Hardware", "Barcode scanners, receipt printers, cash drawers and weighing scales connected and tested."),
-                 ("Payments", "Cash, card terminals and UPI QR payments, reconciled at session close."),
-                 ("Pricing & loyalty", "Pricelists, discounts, gift cards and loyalty points shared with your online store."),
-                 ("Restaurants", "Floor plans, table orders, bill splitting and kitchen order printing."),
-                 ("Cash control", "Opening and closing balances, cash in/out and session reports for each cashier.")])),
-             ("compare", dict(eyebrow="BEFORE & AFTER", title="Standalone billing vs. Odoo POS", module="POS", before="Standalone billing software", items=[
-                 ("Stock", "Updated separately, often at day end", "Reduced with every sale, per store"),
-                 ("Customers", "No purchase history", "Shared with CRM, loyalty and eCommerce"),
-                 ("Accounting", "Sales exported and re-entered", "Posted automatically when the session closes"),
-                 ("Multiple stores", "Each store a separate system", "All stores reporting in one place")])),
-         ],
-         related=["odoo-inventory", "odoo-accounting", "odoo-ecommerce"],
-         faq=[("Does Odoo POS work without internet?", "Yes. Odoo POS keeps taking orders if the connection drops and syncs them once it's back, so the counter doesn't stop."),
-              ("What hardware does Odoo POS support?", "Standard barcode scanners, receipt printers, cash drawers, customer displays and scales. We confirm your devices during scoping and set them up."),
-              ("Can Odoo POS be used in a restaurant?", "Yes. Restaurant mode adds floor plans, table orders, bill splitting and printing orders to the kitchen.")]),
+         title="Point of Sale Software for Smarter Store Management with Odoo | Unisas",
+         meta="Odoo Point of Sale implementation by Unisas: checkout connected to inventory and accounting, offline mode, pricing and GST, cashier controls, hardware and payments, multi-store loyalty and restaurant workflows.",
+         hero=dict(style="split", eyebrow="ODOO POINT OF SALE", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
+         sections=[], build=pos_page.build, hero_fn=pos_page.hero, cta=pos_page.CTA, css=("odoo-ui.css", "pos.css"),
+         faq=pos_page.FAQ, faq_title="Frequently Asked Questions About Odoo Point of Sale"),
 ]
 ALL_PAGES = PAGES + SERVICES + COMPANY
 
