@@ -174,18 +174,11 @@ def build(g):
              ("Quality", "#B5567E", "QC/00391", "Final test passed", "248 passed, 2 failed for noise and were reworked on Assembly Line 2.", "Quality Checks"),
              ("Inventory", "#1F8A78", "WH/OUT/00231", "Delivered", "250 fans shipped with lot FAN-2610-0042; e-Way bill generated.", "Delivery"),
              ("Accounting", "#B7791F", "INV/2026/00431", "Invoiced and costed", "Invoice posted, and finished-goods value booked at the actual order cost.", "Invoices")]
-    rail = "".join('<li style="--c:%s"><button type="button" data-ch="%d" aria-label="Step %d: %s"><span class="mf-ch-n mono">%d</span><small>%s</small></button></li>'
-                   % (c, i, i + 1, t, i + 1, app) for i, (app, c, d, t, x, sb) in enumerate(chain))
     out += sec(head("CONNECTED WORKFLOW", "How Can Manufacturing ERP Software Connect Your Production Workflow?",
-                    "One sales order sets off every document the factory needs, and each one links back to it. Step through an order and watch the smart buttons on the sales order fill up: "
-                    "that is the whole trail, one click from the order.", "is-center")
-               + '<div class="mf-chain" data-chain><ol class="mf-ch-rail">%s</ol><div class="mf-ch-body">'
-                 '<div class="mf-ch-doc ox-solo" aria-live="polite"><p class="mf-ch-app mono" data-ch-app></p><h3 data-ch-title></h3><p class="mf-ch-ref mono" data-ch-ref></p><p data-ch-text></p>'
-                 '<div class="mf-ch-btns"><button type="button" class="ox-sbtn" data-ch-prev>Back</button><button type="button" class="ox-pbtn" data-ch-next>Next step</button></div></div>'
-                 '<div class="ox mf-ox mf-ch-so"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Sales Orders</a><span>S00231</span></span></div><span></span><span></span></div>'
-                 '<div class="mf-ch-sheet"><div class="mf-smart" data-ch-smart></div><h4>S00231</h4><dl class="mf-ch-dl"><div><dt>Customer</dt><dd>Shree Distributors</dd></div><div><dt>Delivery</dt><dd>Oct 30</dd></div>'
-                 '<div><dt>Product</dt><dd>[FAN-A48] Aero 48 Ceiling Fan</dd></div><div><dt>Quantity</dt><dd>250.00 Units</dd></div></dl><ol class="mf-ch-log" data-ch-log></ol></div></div></div></div>'
-                 % rail + data("mf-chain", chain), "mf-sec--chain")
+                    "One sales order sets off every document the factory needs, and each one links back to it, so the whole trail is one click from the order.", "is-center")
+               + '<ol class="pl-grid" style="--cols:4">%s</ol>'
+                 % "".join('<li style="--c:%s"><span class="pl-n">%02d &middot; %s</span><b>%s</b><em>%s</em><p>%s</p></li>' % (c, i + 1, app, t, d, x) for i, (app, c, d, t, x, sb) in enumerate(chain)),
+               "mf-sec--chain")
 
     # 3 ---- the explorer: MOs, BoM, work centres, planning
     menu = "".join('<button type="button" class="mf-menu%s" data-mx-menu="%s" aria-pressed="%s">%s</button>' % (" is-on" if k == "wc" else "", k, "true" if k == "wc" else "false", n)
@@ -210,17 +203,19 @@ def build(g):
                ("sub", "Subcontracting", "Send components to a job worker and receive the product back", False),
                ("byp", "By-Products", "Record scrap aluminium and offcuts that go back to stock", False),
                ("mps", "Master Production Schedule", "Plan production weeks ahead from a demand forecast", False)]
-    tl = "".join('<li><label class="mf-set"><span class="mf-set-t"><b>%s</b><small>%s</small></span><input type="checkbox" data-set="%s"%s><span class="mf-sw" aria-hidden="true"></span></label></li>'
+    _tl = "".join('<li><label class="mf-set"><span class="mf-set-t"><b>%s</b><small>%s</small></span><input type="checkbox" data-set="%s"%s><span class="mf-sw" aria-hidden="true"></span></label></li>'
                  % (n, x, k, " checked" if on else "") for k, n, x, on in toggles)
-    steps = [("1", "Manufacture (1 step)"), ("2", "Pick components and then manufacture (2 steps)"), ("3", "Pick components, manufacture and then store products (3 steps)")]
-    rl = "".join('<label class="mf-radio"><input type="radio" name="mf-steps" value="%s"%s><span>%s</span></label>' % (k, " checked" if k == "2" else "", n) for k, n in steps)
+    route = [("Sales order or reorder rule", "Creates the manufacturing order"), ("Components reserved", "Shortages show before work starts"),
+             ("Pick components", "Stores move them to the production area (2 steps)"), ("Work orders", "One per operation, at its work centre, timed on a tablet"),
+             ("Quality checks", "Inside the operation, with pass and fail rules"), ("Finished goods by lot", "Recorded against the order and put into stock")]
     out += sec(head("CONFIGURED AROUND YOU", "How Does Unisas Configure Manufacturing Workflows Around Your Business?",
-                    "We set Odoo's switches to match how your factory actually runs, not the other way round. Change the settings as we would in a workshop "
-                    "and see the flow one manufacturing order will follow.", "is-center")
-               + '<div class="mf-cfg" data-cfg><div class="ox mf-ox mf-cfg-set"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Settings</a><span>Manufacturing</span></span></div><span></span><span></span></div>'
-                 '<div class="mf-cfg-body"><p class="mf-cfg-h">Operations</p><ul class="mf-sets">%s</ul><p class="mf-cfg-h">Warehouse &middot; Chennai Plant</p><div class="mf-radios" role="radiogroup" aria-label="Manufacture steps">%s</div></div></div>'
-                 '<div class="mf-cfg-out ox-solo"><p class="mf-cfg-oh"><b>What one manufacturing order follows</b><small data-cfg-count></small></p><ol class="mf-route" data-cfg-route></ol><p class="mf-cfg-note" data-cfg-note></p></div></div>'
-                 % (tl, rl), "mf-sec--cfg")
+                    "We set the system to match how your factory actually runs, not the other way round. In the design workshop we decide each option with you, "
+                    "and that decides the flow every manufacturing order follows.", "is-center")
+               + '<div class="pl-2"><div class="pl-card"><p class="pl-k">Decided in the workshop &middot; example fan plant</p><div class="pl-scroll"><table class="pl-table"><tbody>%s'
+                 '<tr><th>Manufacture steps<br><small class="pl-muted">Pick components, then manufacture</small></th><td class="is-c"><span class="pl-chip">2 steps</span></td></tr></tbody></table></div></div>'
+                 '<div class="pl-card"><p class="pl-k">The flow one manufacturing order follows</p><ol class="pl-steps">%s</ol></div></div>'
+                 % ("".join('<tr><th>%s<br><small class="pl-muted">%s</small></th><td class="is-c"><span class="pl-chip%s">%s</span></td></tr>' % (n, x, " is-ok" if on else "", "Yes" if on else "Not needed") for k, n, x, on in toggles),
+                    "".join('<li><span class="pl-n">%d</span><b>%s</b><p>%s</p></li>' % (i + 1, a, b) for i, (a, b) in enumerate(route))), "mf-sec--cfg")
 
     # 5 ---- Manufacturing with Inventory, Purchase and Quality: one shortage, end to end
     apps = [("mrp", "Manufacturing", "#0E7C86"), ("inv", "Inventory", "#1F8A78"), ("pur", "Purchase", "#3E7CB1"), ("qc", "Quality", "#B5567E")]
@@ -286,19 +281,16 @@ def build(g):
     cols8 = [("Parent Product", "Product", "FAN-A48"), ("Component Code", "BoM Lines / Component", "CAP-2.5UF"), ("Qty", "BoM Lines / Quantity", "1"),
              ("Unit", "BoM Lines / Product Unit of Measure", "Nos"), ("Operation", "Operations / Operation", "Final assembly"),
              ("Work Centre", "Operations / Work Center", "Assembly Line 1"), ("Std Time (min)", "Operations / Default Duration", "1.5"), ("Rev", "", "C")]
-    mrows = "".join('<tr><td><b>%s</b><small>%s</small></td><td class="ox-muted">&rarr;</td><td>%s</td></tr>' % (c, ex, f or '<span class="mf-skip">To import, select a field&hellip;</span>') for c, f, ex in cols8)
+    mrows = "".join('<tr><th>%s<br><small class="pl-muted">e.g. %s</small></th><td class="is-c">&rarr;</td><td>%s</td></tr>' % (c, ex, f or '<span class="pl-chip is-gold">Kept as a note on the BoM</span>') for c, f, ex in cols8)
     order = [("Units of measure", "Nos, kg, m, sets", "14"), ("Products &amp; components", "With internal reference and HSN", "1,860"), ("Work centres", "Costs per hour, capacity", "6"),
              ("Bills of materials", "Lines and operations", "212"), ("Opening stock", "By location, lot and serial", "3,940 lines"), ("Open orders &amp; WIP", "Started work recreated as MOs", "37")]
     out += sec(head("DATA MIGRATION", "How Does Unisas Handle Manufacturing Data Migration?",
                     "BoMs are where migrations fail: codes that don't match, units written three ways, work centres that changed names. We load in a fixed order and test every file before it goes in. "
-                    "Try it with a BoM export from Excel.", "is-center")
-               + '<div class="mf-mig"><div class="ox mf-ox" data-imp><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Bills of Materials</a><span>Import a File</span></span></div><span></span>'
-                 '<span class="mf-imp-btns"><button type="button" class="ox-pbtn" data-imp-test>Test</button><button type="button" class="ox-sbtn" data-imp-go disabled>Import</button></span></div>'
-                 '<div class="mf-imp-file"><span class="mf-xls">XLS</span><b>bom_aero_breeze_turbo.xlsx</b><small>62 rows &middot; Sheet1</small><button type="button" class="ox-sbtn" data-imp-fix hidden>Apply cleansing rules</button></div>'
-                 '<div class="mf-imp-msg" data-imp-msg aria-live="polite"></div>'
-                 '<div class="ox-scroll"><table class="ox-table mf-imp-t"><thead><tr><th>File Column</th><th></th><th>Odoo Field</th></tr></thead><tbody>%s</tbody></table></div></div>'
-                 '<ol class="mf-load ox-solo"><li class="mf-load-h"><b>Load order</b><small>Each file depends on the one before it</small></li>%s</ol></div>'
-                 % (mrows, "".join('<li><span class="mono">%02d</span><span><b>%s</b><small>%s</small></span><em>%s</em></li>' % (i + 1, a, b, c) for i, (a, b, c) in enumerate(order))),
+                    "Here is a BoM export from Excel.", "is-center")
+               + '<div class="pl-2 is-w"><div class="pl-card"><p class="pl-k">Column mapping &middot; bom_aero_breeze_turbo.xlsx</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Your column</th><th></th><th>Becomes</th></tr></thead><tbody>%s</tbody></table></div>'
+                 '<p style="margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px"><span class="pl-chip is-bad">Found: units written as Nos, nos and pcs</span><span class="pl-chip is-ok">&#10003; Cleaned and re-tested: 62 rows ready</span></p></div>'
+                 '<div class="pl-card"><p class="pl-k">Load order &middot; each file depends on the one before it</p><ol class="pl-steps">%s</ol></div></div>'
+                 % (mrows, "".join('<li><span class="pl-n">%d</span><b>%s</b><em>%s</em><p>%s</p></li>' % (i + 1, a, c, b) for i, (a, b, c) in enumerate(order))),
                "mf-sec--mig")
 
     # 9 ---- visibility, traceability, cost
@@ -340,11 +332,10 @@ def build(g):
              ("Accounts", "Finished-goods value equals MO actual cost", "pass", "")]
     out += sec(head("TESTING", "How Does Unisas Test Manufacturing Workflows Before Go-Live?",
                     "We run your real products through test cycles in a copy of your database. Each person tests the steps they will do on day one, and every failure is fixed and re-run before sign-off.", "is-center")
-               + '<div class="mf-test" data-test><div class="ox mf-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Go-live testing</a><span data-test-cycle>Test cycle 1</span></span></div><span></span>'
-                 '<span class="mf-test-btns"><button type="button" class="ox-pbtn" data-test-run>Run test cycle</button></span></div>'
-                 '<div class="ox-scroll"><table class="ox-table mf-test-t"><thead><tr><th>Role</th><th>Scenario</th><th>Result</th></tr></thead><tbody data-test-rows></tbody></table></div></div>'
-                 '<div class="mf-sign ox-solo"><p class="mf-sign-h"><b>Sign-off</b><small data-test-sum>Not run yet</small></p><ul data-test-sign></ul><p class="mf-sign-res" data-test-res aria-live="polite"></p></div></div>'
-                 + data("mf-tests", tests), "mf-sec--test")
+               + '<div class="pl-card" style="max-width:1000px;margin:0 auto"><p class="pl-k">Test cycle 1 &middot; 8 scenarios, 2 failed, both fixed and passed in cycle 2</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Role</th><th>Scenario</th><th class="is-c">Cycle 1</th><th class="is-c">Cycle 2</th></tr></thead><tbody>%s</tbody></table></div></div>'
+                 % "".join('<tr><th>%s</th><td>%s%s</td><td class="is-c"><span class="pl-chip %s">%s</span></td><td class="is-c"><span class="pl-chip is-ok">Pass</span></td></tr>'
+                           % (r, t, '<br><small class="pl-muted"><b>Fix:</b> %s</small>' % n if n else "", "is-ok" if st == "pass" else "is-bad", "Pass" if st == "pass" else "Fail") for r, t, st, n in tests),
+               "mf-sec--test")
 
     # 11 ---- what's included
     base = [("Discover &amp; design", ["Process workshops on the shop floor", "Production model, routes and steps agreed", "BoM and routing structure designed", "Fit-gap with effort for every gap"]),
@@ -376,22 +367,16 @@ def build(g):
                 "Colour changes were logged as equipment failures. We added a 'Colour change' loss reason so OEE now shows setup time correctly."),
                ("done", "Label printer on the packing line", "Stores", "Normal", 0, "",
                 "Re-paired the printer with the IoT Box after a network change and printed a test lot label.")]
-    stages = [("new", "New"), ("prog", "In Progress"), ("done", "Solved")]
-    tk = ""
-    for k, n in stages:
-        cards = "".join('<button type="button" class="mf-tk" data-tk="%d"><b>%s</b><small>%s</small><span class="mf-tk-f"><span class="mf-pri mf-pri--%s">%s</span>%s</span></button>'
-                        % (i, t[1], t[2], t[3].lower(), t[3], '<span class="mf-sla mf-sla--%s">SLA %dh</span>' % (t[5], t[4]) if t[5] else '<span class="mf-sla is-ok">Solved</span>')
-                        for i, t in enumerate(tickets) if t[0] == k)
-        tk += '<div class="mf-tk-col"><p class="mf-tk-h"><b>%s</b><small>%d</small></p>%s</div>' % (n, sum(1 for t in tickets if t[0] == k), cards)
+    stl = {"new": ("New", ""), "prog": ("In progress", " is-gold"), "done": ("Solved", " is-ok")}
     plans = [("First 4 weeks", "Hypercare", "A consultant on the floor or on call during every shift change, fixing issues the same day."),
              ("Every month", "Support desk", "Tickets with response times by priority, small changes and new BoMs included."),
              ("Every quarter", "Improvement review", "OEE, cost variance and late orders reviewed with you, and the next improvements planned.")]
     out += sec(head("AFTER GO-LIVE", "How Does Unisas Support Manufacturing Operations After Go-Live?",
-                    "Production does not stop for software questions. Our support desk runs in Odoo Helpdesk with response times by priority. Open a ticket to see how it was solved.", "is-center")
-               + '<div class="mf-sup"><div class="ox mf-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Helpdesk</a><span>Manufacturing Support</span></span></div><span></span><span></span></div>'
-                 '<div class="mf-tk-board">%s</div><div class="mf-tk-det" data-tk-det aria-live="polite"><p class="ox-muted">Select a ticket to see the resolution.</p></div></div>'
-                 '<ol class="mf-plans">%s</ol></div>' % (tk, "".join('<li><small class="mono">%s</small><b>%s</b><span>%s</span></li>' % p for p in plans))
-               + data("mf-tickets", tickets), "mf-sec--sup")
+                    "Production does not stop for software questions. Our support desk answers by priority. Here are real kinds of tickets and how they were solved.", "is-center")
+               + '<ol class="pl-grid" style="--cols:3">%s</ol><ul class="pl-grid" style="--cols:3;margin-top:16px">%s</ul>'
+                 % ("".join('<li><span class="pl-n">%s</span><b>%s</b><p>%s</p></li>' % (n, t, x) for n, t, x in plans),
+                    "".join('<li><p style="margin:0;display:flex;gap:6px;flex-wrap:wrap"><span class="pl-chip%s">%s</span><span class="pl-chip%s">%s</span></p><b>%s</b><em>%s</em><p>%s</p></li>'
+                            % (stl[t[0]][1], stl[t[0]][0], " is-bad" if t[3] == "Urgent" else "", t[3], t[1], t[2], t[6]) for t in tickets)), "mf-sec--sup")
 
     # 13 ---- plan your implementation
     out += sec('<div class="mf-plan2"><div>%s<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan my manufacturing ERP %s</a></div></div>'
@@ -423,21 +408,6 @@ JS = r'''<script>
     function zd(i){var z=Z[i];zb.querySelector('[data-z-area]').innerHTML=z[1];zb.querySelector('[data-z-title]').innerHTML=z[2];zb.querySelector('[data-z-story]').innerHTML='&ldquo;'+z[3]+'&rdquo;';
       zb.querySelector('[data-z-why]').innerHTML=z[4];zb.querySelector('[data-z-fix]').innerHTML=z[5];}
     zs.forEach(function(b){b.addEventListener('click',function(){press(zs,b);zd(+b.getAttribute('data-zone'));});});zd(0);}
-
-  /* --- 2 document chain --- */
-  var ch=document.querySelector('[data-chain]');
-  if(ch){var C=J('mf-chain'),cur=0,rb=[].slice.call(ch.querySelectorAll('[data-ch]'));
-    function cd(){var c=C[cur];
-      rb.forEach(function(b,i){b.parentNode.classList.toggle('is-done',i<cur);b.parentNode.classList.toggle('is-cur',i===cur);b.setAttribute('aria-current',i===cur?'step':'false');});
-      ch.querySelector('[data-ch-app]').innerHTML=c[0];ch.querySelector('[data-ch-app]').style.color=c[1];ch.querySelector('[data-ch-title]').innerHTML=c[3];
-      ch.querySelector('[data-ch-ref]').innerHTML=c[2];ch.querySelector('[data-ch-text]').innerHTML=c[4];
-      var cnt={};for(var i=1;i<=cur;i++){cnt[C[i][5]]=(cnt[C[i][5]]||0)+(C[i][5]==='Work Orders'?4:1);}
-      ch.querySelector('[data-ch-smart]').innerHTML=Object.keys(cnt).map(function(k){return '<span class="mf-sb is-new"><b>'+cnt[k]+'</b>'+k+'</span>';}).join('')||'<span class="mf-sb is-empty">No linked documents yet</span>';
-      ch.querySelector('[data-ch-log]').innerHTML=C.slice(0,cur+1).map(function(c,i){return '<li style="--c:'+c[1]+'"'+(i===cur?' class="is-new"':'')+'><b class="mono">'+c[2]+'</b><span>'+c[3]+'</span></li>';}).reverse().join('');
-      ch.querySelector('[data-ch-prev]').disabled=cur===0;var nx=ch.querySelector('[data-ch-next]');nx.textContent=cur===C.length-1?'Start again':'Next step';}
-    ch.querySelector('[data-ch-next]').addEventListener('click',function(){cur=cur===C.length-1?0:cur+1;cd();});
-    ch.querySelector('[data-ch-prev]').addEventListener('click',function(){if(cur>0){cur--;cd();}});
-    rb.forEach(function(b,i){b.addEventListener('click',function(){cur=i;cd();});});cd();}
 
   /* --- 3 manufacturing explorer --- */
   var mx=document.querySelector('[data-mx]');
@@ -564,26 +534,6 @@ JS = r'''<script>
     mx.addEventListener('change',function(e){if(e.target.matches('[data-bq]')){var v=Math.max(1,Math.min(5000,parseInt(e.target.value,10)||1));st.bq=v;render();var i=body.querySelector('[data-bq]');if(i)i.focus();}});
     render();}
 
-  /* --- 4 settings --- */
-  var cf=document.querySelector('[data-cfg]');
-  if(cf){function cfd(){var on={};cf.querySelectorAll('[data-set]').forEach(function(i){on[i.getAttribute('data-set')]=i.checked;});
-      var steps=cf.querySelector('input[name="mf-steps"]:checked').value,R2=[];
-      if(on.mps)R2.push(['plan','Master Production Schedule','Weekly demand forecast creates the order']);
-      else R2.push(['plan','Sales order or reordering rule','Triggers the manufacturing order']);
-      if(on.sub)R2.push(['sub','Resupply Subcontractor','Components for plating sent to the job worker, then received back']);
-      if(steps!=='1')R2.push(['pick','Pick Components','WH/PC: stock to WH/Pre-Production']);
-      R2.push(['mo','Manufacturing Order','WH/MO: components consumed, finished goods produced'+(on.lot?', lot FAN-2610-0042':'')]);
-      if(on.wo)R2.push(['wo','Work Orders','Blade pressing, Final assembly, Powder coating, Run test &amp; pack'+(on.qc?' &middot; quality checks at 2 steps':'')]);
-      else if(on.qc)R2.push(['wo','Quality check','One check on the order before it is closed']);
-      if(on.byp)R2.push(['byp','By-product','Aluminium offcuts, 0.08 kg per fan, back to stock']);
-      if(steps==='3')R2.push(['store','Store Finished Product','WH/SFP: WH/Post-Production to stock']);
-      R2.push(['stock','WH/Stock','Ready to deliver'+(on.lot?' by lot':'')]);
-      cf.querySelector('[data-cfg-route]').innerHTML=R2.map(function(r,i){return '<li class="mf-r-'+r[0]+'" style="--i:'+i+'"><b>'+r[1]+'</b><small>'+r[2]+'</small></li>';}).join('');
-      var docs=R2.filter(function(r){return /pick|mo|store|sub/.test(r[0]);}).length;
-      cf.querySelector('[data-cfg-count]').textContent=docs+' document'+(docs>1?'s':'')+' per order';
-      cf.querySelector('[data-cfg-note]').innerHTML=steps==='1'?'<b>1 step</b> suits a small plant where stores and production share the same floor.':(steps==='2'?'<b>2 steps</b> suits plants with a separate store: components are picked to the line before work starts.':'<b>3 steps</b> adds a check-in of finished goods, useful when a separate team inspects or packs them.');}
-    cf.addEventListener('change',cfd);cfd();}
-
   /* --- 5 connected apps --- */
   var cx=document.querySelector('[data-cx]');
   if(cx){var step=0,fail=false;
@@ -641,18 +591,6 @@ JS = r'''<script>
       md.querySelectorAll('[data-bt]').forEach(function(b){b.classList.toggle('is-on',m[4]['BoM type'].indexOf(b.getAttribute('data-bt'))===0||(b.getAttribute('data-bt')==='Manufacture this product'&&/^BoM per/.test(m[4]['BoM type'])));});}
     mt.forEach(function(t,i){t.addEventListener('click',function(){mdd(i);});t.addEventListener('keydown',function(e){var d={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];if(d){e.preventDefault();var k=(i+d+mt.length)%mt.length;mdd(k);mt[k].focus();}});});mdd(0);}
 
-  /* --- 8 import --- */
-  var im=document.querySelector('[data-imp]');
-  if(im){var msg=im.querySelector('[data-imp-msg]'),go=im.querySelector('[data-imp-go]'),fix=im.querySelector('[data-imp-fix]'),fixed=false;
-    function show(){msg.className='mf-imp-msg';msg.innerHTML='<p>Click <b>Test</b> to check the file before anything is imported.</p>';}
-    im.querySelector('[data-imp-test]').addEventListener('click',function(){
-      if(!fixed){msg.className='mf-imp-msg is-err';msg.innerHTML='<p><b>The file has 3 errors.</b> Nothing was imported.</p><ul><li>Row 14: No matching record found for name ‘CAP-2.5UF’ in field ‘Component’</li><li>Row 22: Value ‘Nos’ not found in selection field ‘Product Unit of Measure’</li><li>Row 31: No matching record found for name ‘Paint Booth’ in field ‘Work Center’</li></ul>';fix.hidden=false;go.disabled=true;}
-      else{msg.className='mf-imp-msg is-ok';msg.innerHTML='<p><b>Everything seems valid.</b> 62 rows ready: 3 BoMs, 47 lines, 12 operations.</p>';go.disabled=false;go.className='ox-pbtn';}});
-    fix.addEventListener('click',function(){fixed=true;fix.hidden=true;msg.className='mf-imp-msg';msg.innerHTML='<p>Cleansing rules applied: <b>CAP-2.5UF &rarr; CAP-25</b>, <b>Nos &rarr; Units</b>, <b>Paint Booth &rarr; Paint Shop</b>. Test again.</p>';
-      im.querySelectorAll('.mf-imp-t tbody tr').forEach(function(tr,i){if(i===1||i===3||i===5)tr.classList.add('is-fixed');});});
-    go.addEventListener('click',function(){msg.className='mf-imp-msg is-ok';msg.innerHTML='<p><b>62 records successfully imported.</b> BoMs for Aero 48, Breeze 36 and Turbo 40 are live in Bills of Materials.</p>';go.disabled=true;go.className='ox-sbtn';});
-    show();}
-
   /* --- 9 reports --- */
   var vs=document.querySelector('[data-vis]');
   if(vs){var TR=J('mf-trace'),CO=J('mf-cost'),OE=J('mf-oee'),vb=vs.querySelector('[data-vis-body]'),vt=[].slice.call(vs.querySelectorAll('[data-vt]')),closed={},per=false,oi=4;
@@ -684,36 +622,11 @@ JS = r'''<script>
     vs.addEventListener('keydown',function(e){if(e.key==='Enter'){var t=e.target.closest&&e.target.closest('[data-tr]');if(t){e.preventDefault();t.click();}}});
     vd();}
 
-  /* --- 10 test cycles --- */
-  var ts=document.querySelector('[data-test]');
-  if(ts){var T=J('mf-tests'),cyc=1,res=T.map(function(){return '';}),busy=false,runBtn=ts.querySelector('[data-test-run]');
-    var roles=T.map(function(t){return t[0];}).filter(function(r,i,a){return a.indexOf(r)===i;});
-    function td(){ts.querySelector('[data-test-rows]').innerHTML=T.map(function(t,i){var r=res[i],l=r==='pass'?'<span class="mf-b mf-b--dn">Passed</span>':(r==='fail'?'<span class="mf-b mf-b--fl">Failed</span>':(r==='run'?'<span class="mf-b mf-b--ip">Running&hellip;</span>':'<span class="mf-b mf-b--dr">Not run</span>'));
-        return '<tr class="is-'+(r||'idle')+'"><td>'+t[0]+'</td><td>'+t[1]+(r==='fail'||(cyc===2&&t[3]&&r==='pass')?'<small class="mf-t-note">'+(r==='fail'?'Issue: ':'Fixed: ')+t[3]+'</small>':'')+'</td><td>'+l+'</td></tr>';}).join('');
-      var p=res.filter(function(r){return r==='pass';}).length,f=res.filter(function(r){return r==='fail';}).length;
-      ts.querySelector('[data-test-cycle]').textContent='Test cycle '+cyc;
-      ts.querySelector('[data-test-sum]').textContent=p+f?p+' passed, '+f+' failed':'Not run yet';
-      ts.querySelector('[data-test-sign]').innerHTML=roles.map(function(r){var mine=T.map(function(t,i){return t[0]===r?res[i]:null;}).filter(function(x){return x!==null;});
-        var ok=mine.every(function(x){return x==='pass';});return '<li class="'+(ok?'is-ok':'')+'"><span class="mf-sign-ic">'+(ok?'&#10003;':'')+'</span>'+r+'</li>';}).join('');
-      var all=p===T.length;ts.querySelector('.mf-sign').classList.toggle('is-ready',all);
-      ts.querySelector('[data-test-res]').innerHTML=all?'<b>Ready for go-live.</b> Every role has signed off its scenarios.':(f?'Two issues found. Fix them and run cycle 2.':'Run the cycle to test with real data.');}
-    runBtn.addEventListener('click',function(){if(busy)return;if(res.every(function(r){return r==='pass';})){cyc=1;res=T.map(function(){return '';});td();runBtn.textContent='Run test cycle';return;}
-      busy=true;runBtn.disabled=true;var second=res.some(function(r){return r==='fail';});if(second)cyc=2;res=T.map(function(){return '';});
-      var i=0;(function next(){if(i>0)res[i-1]=second?'pass':T[i-1][2];if(i>=T.length){busy=false;runBtn.disabled=false;runBtn.textContent=res.every(function(r){return r==='pass';})?'Start over':'Fix issues and run cycle 2';td();return;}
-        res[i]='run';td();i++;setTimeout(next,260);})();});
-    td();}
-
   /* --- 11 package --- */
   var pk=document.querySelector('[data-pk]');
   if(pk){var box=pk.closest('.mf-pkg');pk.addEventListener('change',function(){var w=0,n=[];pk.querySelectorAll('input:checked').forEach(function(i){w+=+i.getAttribute('data-add');n.push(i.closest('label').querySelector('b').innerHTML);});
       box.querySelector('[data-pk-sum]').innerHTML=(n.length?'Core + '+n.length+' app'+(n.length>1?'s':''):'Core scope')+' &middot; '+(10+Math.ceil(w*0.8))+' to '+(12+w)+' weeks';
       box.querySelector('[data-pk-apps]').innerHTML=['Manufacturing','Inventory','Purchase','Accounting'].concat(n).join(' &middot; ');});}
-
-  /* --- 12 helpdesk --- */
-  var tkb=document.querySelector('[data-tk-det]');
-  if(tkb){var TK=J('mf-tickets'),tks=[].slice.call(document.querySelectorAll('[data-tk]'));
-    tks.forEach(function(b){b.addEventListener('click',function(){tks.forEach(function(x){x.classList.toggle('is-on',x===b);});var t=TK[+b.getAttribute('data-tk')];
-      tkb.innerHTML='<p class="mf-f-k">'+t[2]+' &middot; '+t[3]+' priority</p><h4>'+t[1]+'</h4><p>'+t[6]+'</p>';});});}
 
   /* --- 13 planner --- */
   var pn=document.querySelector('[data-planner]');

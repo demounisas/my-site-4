@@ -78,9 +78,9 @@ def build(g):
     # 1 ---- gaps between checkout, inventory and accounting
     out += sec(head("THE GAPS", "Is Your Point of Sale Creating Gaps Between Checkout, Inventory and Accounting?",
                     "A standalone billing machine knows what was sold. Your stock sheet and your books find out later, if someone re-types it. "
-                    "Ring up a few sales, close the day and count the gaps. Then try the same day on Odoo.", "is-center")
+                    "Ring up a few sales, close the day and count the gaps. Then try the same day on a connected POS.", "is-center")
                + '<div class="ps-gap" data-p1box><div class="ps-mode" role="group" aria-label="System"><button type="button" class="is-on" data-p1mode="old" aria-pressed="true">Standalone billing</button>'
-                 '<button type="button" data-p1mode="odoo" aria-pressed="false">Odoo Point of Sale</button></div>'
+                 '<button type="button" data-p1mode="odoo" aria-pressed="false">Connected POS</button></div>'
                  '<div class="ps-gap-g"><div class="ps-gp ox-solo"><p class="ps-gp-h"><i style="--c:#B8325A"></i>Checkout</p><div data-p1="pos"></div></div>'
                  '<div class="ps-gp ox-solo"><p class="ps-gp-h"><i style="--c:#1F8A78"></i>Inventory</p><div data-p1="inv"></div></div>'
                  '<div class="ps-gp ox-solo"><p class="ps-gp-h"><i style="--c:#B7791F"></i>Accounting</p><div data-p1="acc"></div></div></div>'
@@ -117,15 +117,14 @@ def build(g):
              "price": ["Flexible Pricelists", "Member, festive and wholesale prices chosen on the order"], "loyal": ["Loyalty, Gift Cards &amp; eWallet", "Points earned and spent in store and online"],
              "tips": ["Tips", "Tip added on the payment screen and tracked per employee"], "scale": ["Weighing Scale", "Products marked &lsquo;To Weigh With Scale&rsquo; read the weight from the IoT Box"]}
     presets = [["Boutique", [0, 1, 4, 5]], ["Supermarket", [0, 1, 5, 7]], ["Caf&eacute;", [0, 2, 6]], ["Wholesale counter", [1, 3, 4]]]
-    ql = "".join('<li><label class="ps-qa"><input type="checkbox" data-p3="%d"><span class="ps-sw" aria-hidden="true"></span><span>%s</span></label></li>' % (i, q[0]) for i, q in enumerate(qs))
     out += sec(head("YOUR STORE, YOUR SETUP", "How Does Unisas Configure POS Around the Way Your Store Actually Operates?",
-                    "We start from how your counter works: who checks out, what customers buy and how they pay. Each answer switches on a specific Odoo POS setting. "
-                    "Describe a store, or pick a preset, and watch the settings change.", "is-center")
-               + '<div class="ps-cfg" data-p3box><div class="ps-cfg-l"><div class="ps-pre" role="group" aria-label="Store type">%s</div><ul class="ps-qas">%s</ul></div>'
-                 '<div class="ox ps-ox">%s<ul class="ps-sets" data-p3sets></ul><p class="ps-sets-n" data-p3n aria-live="polite"></p></div></div>'
-                 % ("".join('<button type="button" class="ps-chip" data-p3pre="%d">%s</button>' % (i, p[0]) for i, p in enumerate(presets)), ql,
-                    ox_head("Point of Sale", "Settings &middot; T. Nagar"))
-               + data("ps-qs", qs) + data("ps-sets", setts) + data("ps-pre", presets), "ps-sec--cfg")
+                    "We start from how your counter works: who checks out, what customers buy and how they pay. Each answer switches on a specific setting.", "is-center")
+               + '<div class="pl-2 is-w"><div class="pl-card"><p class="pl-k">What we ask &rarr; what we switch on</p><div class="pl-scroll"><table class="pl-table"><tbody>%s</tbody></table></div></div>'
+                 '<div class="pl-card"><p class="pl-k">Typical setups</p><ul class="pl-steps">%s</ul></div></div>'
+                 % ("".join('<tr><th>%s</th><td><ul class="pl-chips">%s</ul><small class="pl-muted">%s</small></td></tr>'
+                            % (q[0], "".join('<li class="pl-chip">%s</li>' % setts[k][0] for k in q[1]), "; ".join(setts[k][1] for k in q[1])) for q in qs),
+                    "".join('<li><span class="pl-n">%d</span><b>%s</b><p>%s</p></li>' % (i + 1, pr[0], ", ".join(qs[j][0].lower() for j in pr[1]).capitalize() + ".") for i, pr in enumerate(presets))),
+               "ps-sec--cfg")
 
     # 4 ---- offline
     out += sec(head("OFFLINE MODE", "Can Odoo Keep Your Checkout Running Even When the Internet Goes Down?",
@@ -145,17 +144,15 @@ def build(g):
     pls = [["Public Pricelist", 0, "List prices"], ["Nila Members", 10, "10% off for loyalty members"], ["Wholesale (10+ pcs)", 22, "Boutique resellers, min. 10 pieces"]]
     out += sec(head("PRODUCTS, PRICES &amp; RULES", "How Does Unisas Set Up Products, Pricing, Taxes and POS-Specific Rules?",
                     "Each product carries its POS category, barcode, variants and GST rate; pricelists, promotions and discount limits sit on top. "
-                    "Change the pricelist, switch on the festive promotion, and try a discount bigger than a cashier is allowed to give.", "is-center")
-               + '<div class="ps-price" data-p5box><div class="ox ps-ox">%s<div class="ps-pf"><div class="ps-pf-img" aria-hidden="true"></div><div><h3>Linen Kurta &ndash; Mustard</h3>'
-                 '<dl><div><dt>Sales Price</dt><dd>&#8377; 1,499.00 <small>tax included</small></dd></div><div><dt>Customer Taxes</dt><dd><span class="ps-tag">GST 12%%</span></dd></div>'
-                 '<div><dt>POS Category</dt><dd>Kurtas</dd></div><div><dt>Barcode</dt><dd class="mono">8901234500217</dd></div><div><dt>Variants</dt><dd><span class="ps-tag">S</span><span class="ps-tag">M</span><span class="ps-tag">L</span><span class="ps-tag">XL</span></dd></div>'
-                 '<div><dt>Available in POS</dt><dd><span class="ps-cb is-on">%s</span></dd></div></dl></div></div>'
-                 '<div class="ps-rules"><label><span>Pricelist</span><select data-p5pl>%s</select></label>'
-                 '<label class="ps-rl"><input type="checkbox" data-p5promo><span class="ps-sw" aria-hidden="true"></span><span><b>Festive promotion</b><small>Buy 2 kurtas, get 10%% off them</small></span></label>'
-                 '<label><span>Cashier discount on the order <b data-p5dv>0%%</b></span><input type="range" min="0" max="20" value="0" data-p5d></label></div></div>'
-                 '<div class="ps-tk ox-solo" aria-live="polite" data-p5tk></div></div>'
-                 % (ox_head("Products", "Linen Kurta &ndash; Mustard"), TICK, "".join('<option value="%d">%s</option>' % (i, p[0]) for i, p in enumerate(pls)))
-               + data("ps-lines", lines) + data("ps-pls", pls), "ps-sec--price")
+                    "Here is how that looks for one product in a boutique.", "is-center")
+               + '<div class="pl-2"><div class="pl-card"><p class="pl-k">What each product carries &middot; Linen Kurta, Mustard</p><div class="pl-scroll"><table class="pl-table"><tbody>'
+                 '<tr><th>Sales price</th><td>&#8377; 1,499.00, tax included</td></tr><tr><th>GST</th><td><span class="pl-chip">GST 12%%</span></td></tr><tr><th>POS category</th><td>Kurtas</td></tr>'
+                 '<tr><th>Barcode</th><td class="mono">8901234500217</td></tr><tr><th>Variants</th><td><ul class="pl-chips"><li class="pl-chip">S</li><li class="pl-chip">M</li><li class="pl-chip">L</li><li class="pl-chip">XL</li></ul></td></tr></tbody></table></div></div>'
+                 '<div class="pl-card"><p class="pl-k">Rules that sit on top</p><ul class="pl-steps">%s'
+                 '<li><span class="pl-n">%d</span><b>Festive promotion</b><em>Automatic</em><p>Buy 2 kurtas, get 10%% off them, applied on the order without the cashier doing anything.</p></li>'
+                 '<li><span class="pl-n">%d</span><b>Discount limit</b><em>Up to 10%%</em><p>Cashiers can give up to 10%% on an order. Anything above needs the store manager&rsquo;s PIN.</p></li></ul></div></div>'
+                 % ("".join('<li><span class="pl-n">%d</span><b>%s</b><em>%s</em><p>%s</p></li>' % (i + 1, x[0], "List price" if not x[1] else "%d%% off" % x[1], x[2]) for i, x in enumerate(pls)), len(pls) + 1, len(pls) + 2),
+               "ps-sec--price")
 
     # 6 ---- inventory and accounting
     orders = [["Order 00042-001-0001", "10:12", "Cash", 3096], ["Order 00042-001-0002", "10:47", "UPI", 12500], ["Order 00042-001-0003", "11:30", "Card", 2499],
@@ -179,17 +176,17 @@ def build(g):
     acts = ["Sell and take payment", "Discount up to 10%", "Discount above 10% or change a price", "Refund an order", "Open the cash drawer without a sale", "Close the register"]
     out += sec(head("PAYMENTS, CASHIERS &amp; CONTROLS", "How Should Your POS Handle Payments, Cashiers and Store-Level Controls?",
                     "Cashiers sign in with their own PIN, so every order, refund and discount is traceable to a person. Managers approve the risky actions, "
-                    "and the register only closes once cash is counted. Switch employee, then count the drawer.", "is-center")
-               + '<div class="ps-ctl" data-p7box><div class="ps-ctl-l ox-solo"><p class="ps-ctl-h">Who is at the counter?</p><div class="ps-emps" role="group" aria-label="Employee">%s</div><ul class="ps-perm" data-p7perm></ul></div>'
-                 '<div class="ps-close ox-solo"><p class="ps-close-h"><b>Closing Register</b><small>POS/00042 &middot; 8 orders &middot; &#8377; 31,185.00</small></p>'
-                 '<table class="ps-close-t"><thead><tr><th>Payment Method</th><th class="ox-num">Expected</th><th class="ox-num">Counted</th><th class="ox-num">Difference</th></tr></thead><tbody>'
-                 '<tr><td><b>Cash</b><small>Opening &#8377; 5,000.00 + sales &#8377; 7,491.00</small></td><td class="ox-num">&#8377; 12,491.00</td><td class="ox-num"><input type="number" value="12291" step="1" data-p7c aria-label="Counted cash"></td><td class="ox-num" data-p7d></td></tr>'
-                 '<tr><td><b>Card</b><small>Razorpay terminal</small></td><td class="ox-num">&#8377; 6,897.00</td><td class="ox-num">&#8377; 6,897.00</td><td class="ox-num">&#8377; 0.00</td></tr>'
-                 '<tr><td><b>UPI</b><small>QR on customer display</small></td><td class="ox-num">&#8377; 16,797.00</td><td class="ox-num">&#8377; 16,797.00</td><td class="ox-num">&#8377; 0.00</td></tr></tbody></table>'
-                 '<p class="ps-close-r" data-p7r aria-live="polite"></p><div class="ps-close-f"><button type="button" class="ox-pbtn" data-p7go>Close Register</button><button type="button" class="ox-sbtn">Daily Sale</button></div></div></div>'
-                 % "".join('<button type="button" class="ps-emp%s" data-p7="%d" aria-pressed="%s"><span class="ox-av" style="--c:%s">%s</span><span><b>%s</b><small>%s</small></span></button>'
-                           % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", e[2], e[0][0], e[0], e[1]) for i, e in enumerate(emps))
-               + data("ps-emps", emps) + data("ps-acts", acts), "ps-sec--ctl")
+                    "and the register only closes once cash is counted.", "is-center")
+               + '<div class="pl-2"><div class="pl-card"><p class="pl-k">Who can do what at the counter</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th></th>%s</tr></thead><tbody>%s</tbody></table></div>'
+                 '<p class="pl-muted" style="margin:10px 0 0;font-size:0.84rem">&times; means the action needs a manager&rsquo;s PIN.</p></div>'
+                 '<div class="pl-card"><p class="pl-k">Closing the register &middot; 8 orders, &#8377; 31,185</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Payment</th><th class="is-c">Expected</th><th class="is-c">Counted</th><th class="is-c">Difference</th></tr></thead><tbody>'
+                 '<tr><th>Cash</th><td class="is-c">&#8377; 12,491</td><td class="is-c">&#8377; 12,291</td><td class="is-c"><span class="pl-chip is-bad">&minus; &#8377; 200</span></td></tr>'
+                 '<tr><th>Card</th><td class="is-c">&#8377; 6,897</td><td class="is-c">&#8377; 6,897</td><td class="is-c"><span class="pl-chip is-ok">0</span></td></tr>'
+                 '<tr><th>UPI</th><td class="is-c">&#8377; 16,797</td><td class="is-c">&#8377; 16,797</td><td class="is-c"><span class="pl-chip is-ok">0</span></td></tr></tbody></table></div>'
+                 '<p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem">Small differences are allowed with a note. Above &#8377; 200, only a manager can close, and the difference is posted to the books with the reason.</p></div></div>'
+                 % ("".join('<th class="is-c">%s<br><small>%s</small></th>' % (e[0], e[1]) for e in emps),
+                    "".join('<tr><th>%s</th>%s</tr>' % (a, "".join('<td class="is-c">%s</td>' % ('<span class="pl-chip is-ok">&#10003;</span>' if e[3][i] else '<span class="pl-chip is-bad">&times;</span>') for e in emps)) for i, a in enumerate(acts))),
+               "ps-sec--ctl")
 
     # 8 ---- hardware and payment integrations
     devs = [["scan", "Barcode scanner", "USB or Bluetooth, works as a keyboard", ["Scan a product, a loyalty card and a coupon", "Nomenclature for price-embedded barcodes"], 14, 62],
@@ -232,11 +229,10 @@ def build(g):
             "cafe": ["Combos: a drink and a snack at one price", "Self-order kiosk or QR menu at the table", "Order number on the customer display", "Fast cash with quick-amount buttons"],
             "groc": ["Scale reads weight into the line", "Price-embedded barcodes for packed items", "Lots and expiry dates on perishables", "Loyalty and weekly offers on fast movers"]}
     out += sec(head("YOUR SELLING ENVIRONMENT", "How Does Unisas Adapt POS Workflows for Retail, Restaurants or Other Selling Environments?",
-                    "The same Odoo POS runs a boutique, a restaurant, a caf&eacute; counter or a grocery till; what changes is the workflow on the screen. Pick a setting and try it.", "is-center")
-               + '<div class="ps-env" data-p10box><div class="ps-env-tabs" role="group" aria-label="Selling environment">%s</div><div class="ps-env-g"><div class="ps-env-ui ox-solo" data-p10ui></div>'
-                 '<div class="ps-env-c ox-solo"><p class="ps-gi-h">What we configure</p><ul data-p10c></ul></div></div></div>'
-                 % "".join('<button type="button" class="ps-et%s" data-p10="%s" aria-pressed="%s">%s</button>' % (" is-on" if i == 0 else "", k, "true" if i == 0 else "false", n) for i, (k, n) in enumerate(envs))
-               + data("ps-cfgs", cfgs), "ps-sec--env")
+                    "The same POS runs a boutique, a restaurant, a caf&eacute; counter or a grocery till; what changes is the workflow at the counter. Here is what we set up for each.", "is-center")
+               + '<ul class="pl-grid" style="--cols:4">%s</ul>'
+                 % "".join('<li><b>%s</b><ul class="pl-ticks ps-env-t">%s</ul></li>' % (n, "".join("<li>%s</li>" % c for c in cfgs[k])) for k, n in envs),
+               "ps-sec--env")
 
     # 11 ---- insights
     rep = {"store": [["T. Nagar", 412000, 318], ["Anna Nagar", 296000, 241], ["Coimbatore", 188000, 167], ["Flagship caf&eacute;", 74000, 902]],
@@ -402,17 +398,6 @@ JS = r'''<script>
     q.addEventListener('input',function(){st.scr='reg';render();});
     fx.innerHTML='<li class="is-wait"><span>Validate a payment to see the stock, loyalty, session and accounting updates.</span></li>';render();})();
 
-  /* --- 3 settings --- */
-  (function(){var bx=document.querySelector('[data-p3box]');if(!bx)return;var Q=J('ps-qs'),S=J('ps-sets'),PR=J('ps-pre'),ul=bx.querySelector('[data-p3sets]'),prev={};
-    function draw(){var on={};[].forEach.call(bx.querySelectorAll('[data-p3]'),function(c){if(c.checked)Q[+c.getAttribute('data-p3')][1].forEach(function(k){on[k]=1;});});
-      ul.innerHTML=Object.keys(S).map(function(k){return '<li class="'+(on[k]?'is-on':'')+(on[k]&&!prev[k]?' is-new':'')+'"><span class="ps-sw'+(on[k]?' is-on':'')+'" aria-hidden="true"></span><span><b>'+S[k][0]+'</b><small>'+S[k][1]+'</small></span></li>';}).join('');
-      var n=Object.keys(on).length;bx.querySelector('[data-p3n]').innerHTML=n?'<b>'+n+' of '+Object.keys(S).length+'</b> settings switched on for this store. Everything else stays off, so the register stays simple.':'Tick what is true for your store.';prev=on;}
-    bx.addEventListener('change',draw);
-    [].forEach.call(bx.querySelectorAll('[data-p3pre]'),function(b){b.addEventListener('click',function(){var s=PR[+b.getAttribute('data-p3pre')][1];
-      [].forEach.call(bx.querySelectorAll('[data-p3pre]'),function(x){x.classList.toggle('is-on',x===b);});
-      [].forEach.call(bx.querySelectorAll('[data-p3]'),function(c){c.checked=s.indexOf(+c.getAttribute('data-p3'))>-1;});draw();});});
-    bx.querySelector('[data-p3pre="0"]').click();})();
-
   /* --- 4 offline --- */
   (function(){var bx=document.querySelector('[data-p4box]');if(!bx)return;var net=bx.querySelector('[data-p4net]'),T=['Cotton Kurta','Silk Stole + Jhumkas','Block-print Saree','Tote Bag','Linen Kurta x2','Phulkari Dupatta'],AM=[1299,1348,2199,349,2998,1199];
     var st={n:0,local:[],srv:[['Order 00042-002-0001','10:12',3096,'Synced']],t:12};
@@ -426,19 +411,6 @@ JS = r'''<script>
     bx.querySelector('[data-p4sell]').addEventListener('click',function(){var i=st.n%T.length;st.n++;st.t+=7;var o=['Order 00042-002-'+('000'+(st.n+1)).slice(-4),'10:'+('0'+(st.t%60)).slice(-2),AM[i],''];
       if(net.checked){o[3]='new';st.srv.push(o);}else st.local.push(o);draw();});
     net.addEventListener('change',function(){draw();setTimeout(sync,RED?0:400);});draw();})();
-
-  /* --- 5 pricing --- */
-  (function(){var bx=document.querySelector('[data-p5box]');if(!bx)return;var L=J('ps-lines'),PL=J('ps-pls'),pl=bx.querySelector('[data-p5pl]'),pr=bx.querySelector('[data-p5promo]'),d=bx.querySelector('[data-p5d]'),tk=bx.querySelector('[data-p5tk]');
-    function draw(){var p=PL[+pl.value],dv=+d.value,promo=pr.checked,kq=L.filter(function(l){return l[4];}).reduce(function(a,l){return a+l[2];},0),sub=0,tax={},rows='';
-      bx.querySelector('[data-p5dv]').textContent=dv+'%';
-      L.forEach(function(l){var unit=l[1]*(1-p[1]/100),t=unit*l[2];rows+='<p><span>'+l[0]+'<small>'+l[2]+' &times; '+inr(unit)+(p[1]?' &middot; '+p[0]:'')+'</small></span><b>'+inr(t)+'</b></p>';sub+=t;
-        if(promo&&l[4]&&kq>=2){var pd=t*0.1;rows+='<p class="is-promo"><span>Festive promotion: 10% on kurtas</span><b>&minus; '+inr(pd)+'</b></p>';sub-=pd;t-=pd;}
-        tax[l[3]]=(tax[l[3]]||0)+t;});
-      var need=dv>10,disc=need?0:sub*dv/100;if(dv&&!need){rows+='<p class="is-promo"><span>Cashier discount '+dv+'%</span><b>&minus; '+inr(disc)+'</b></p>';Object.keys(tax).forEach(function(r){tax[r]*=1-dv/100;});}
-      var tot=sub-disc,gst=Object.keys(tax).map(function(r){var g=tax[r]-tax[r]/(1+r/100);return '<p class="is-sm"><span>GST '+r+'% (CGST + SGST)</span><span>'+inr(g)+'</span></p>';}).join('');
-      tk.innerHTML='<p class="ps-tk-h"><b>Order preview</b><small>'+p[2]+'</small></p>'+rows+'<p class="is-tot"><span>Total</span><b>'+inr(tot)+'</b></p>'+gst+
-        (need?'<div class="ps-pin"><b>Manager approval needed</b><span>Discounts above 10% need Ravi&rsquo;s PIN. The cashier&rsquo;s '+dv+'% has not been applied.</span></div>':'');}
-    bx.addEventListener('input',draw);bx.addEventListener('change',draw);draw();})();
 
   /* --- 6 session close --- */
   (function(){var bx=document.querySelector('[data-p6box]');if(!bx)return;var O=J('ps-orders'),MV=J('ps-moves'),b=bx.querySelector('[data-p6b]'),tabs=[].slice.call(bx.querySelectorAll('[data-p6t]')),closed=false,cur=0;
@@ -455,20 +427,6 @@ JS = r'''<script>
     tabs.forEach(function(t){t.addEventListener('click',function(){press(tabs,t);cur=+t.getAttribute('data-p6t');draw();});});
     bx.querySelector('[data-p6close]').addEventListener('click',function(e){closed=true;e.target.disabled=true;e.target.textContent='Closed';draw();});draw();})();
 
-  /* --- 7 controls --- */
-  (function(){var bx=document.querySelector('[data-p7box]');if(!bx)return;var E=J('ps-emps'),A=J('ps-acts'),eb=[].slice.call(bx.querySelectorAll('[data-p7]')),cur=0,c=bx.querySelector('[data-p7c]'),done=false;
-    function perm(){bx.querySelector('[data-p7perm]').innerHTML=A.map(function(a,i){var ok=E[cur][3][i];return '<li class="'+(ok?'is-ok':'is-no')+'">'+(ok?TK:NO)+'<span>'+a+'</span>'+(ok?'':'<small>needs manager PIN</small>')+'</li>';}).join('');}
-    function close(){var d=(+c.value||0)-12491,r=bx.querySelector('[data-p7r]'),go=bx.querySelector('[data-p7go]'),mgr=E[cur][3][5];
-      bx.querySelector('[data-p7d]').innerHTML='<span class="'+(d?'is-bad':'is-ok')+'">'+(d<0?'&minus; ':'')+inr(Math.abs(d))+'</span>';
-      if(done){r.innerHTML=TK+' Register closed by '+E[cur][0]+'. '+(d?'Difference of '+inr(Math.abs(d))+' posted to Cash Difference with the note.':'No difference.');r.className='ps-close-r is-ok';go.disabled=true;return;}
-      go.disabled=!mgr;
-      r.className='ps-close-r'+(Math.abs(d)>200?' is-bad':'');
-      r.innerHTML=!mgr?E[cur][0]+' can&rsquo;t close the register. Switch to the cashier or manager.':(Math.abs(d)>200?'Difference above the &#8377; 200 limit: only a manager can close, with a note.':(d?'Small difference: allowed, and recorded with a note.':'Cash matches. Ready to close.'));
-      if(Math.abs(d)>200&&E[cur][1]!=='Store Manager')go.disabled=true;}
-    eb.forEach(function(b){b.addEventListener('click',function(){press(eb,b);cur=+b.getAttribute('data-p7');perm();close();});});
-    c.addEventListener('input',function(){done=false;close();});
-    bx.querySelector('[data-p7go]').addEventListener('click',function(){done=true;close();});perm();close();})();
-
   /* --- 8 hardware --- */
   (function(){var bx=document.querySelector('[data-p8box]');if(!bx)return;var D=J('ps-devs'),pins=[].slice.call(bx.querySelectorAll('[data-p8]')),card=bx.querySelector('[data-p8card]'),cur=0,tested={};
     function draw(){var d=D[cur],t=tested[cur];card.innerHTML='<p class="ps-hw-h"><span class="ps-dev-i is-'+d[0]+'" aria-hidden="true"></span><span><b>'+d[1]+'</b><small>'+d[2]+'</small></span></p><ul class="ps-hw-l">'+
@@ -482,32 +440,6 @@ JS = r'''<script>
     function draw(i){var s=S[i];bx.querySelector('[data-p9steps]').innerHTML=s[1].map(function(x,j){return '<li style="--i:'+j+'"><span class="ps-st-n">'+(j+1)+'</span><span><small>'+x[0]+'</small><b>'+x[1]+'</b><em>'+x[2]+'</em></span></li>';}).join('');
       bx.querySelector('[data-p9pts]').textContent=num(1240+s[2]);}
     bt.forEach(function(b){b.addEventListener('click',function(){press(bt,b);draw(+b.getAttribute('data-p9'));});});draw(0);})();
-
-  /* --- 10 environments --- */
-  (function(){var bx=document.querySelector('[data-p10box]');if(!bx)return;var C=J('ps-cfgs'),ui=bx.querySelector('[data-p10ui]'),tb=[].slice.call(bx.querySelectorAll('[data-p10]')),cur='retail',
-      tables={},kit=[],size=null,combo=[],wt=0;
-    var TB=[['T1',2,14,22],['T2',2,34,22],['T3',4,58,22],['T4',4,82,22],['T5',6,22,68],['T6',4,50,68],['T7',2,76,68]];
-    function draw(){var h='';
-      if(cur==='retail')h='<p class="ps-ui-h">Chanderi Kurta Set &middot; choose a size</p><div class="ps-var">'+['S','M','L','XL'].map(function(s){return '<button type="button" class="'+(size===s?'is-on':'')+'" data-sz="'+s+'">'+s+'<small>'+({S:2,M:0,L:1,XL:3})[s]+' here</small></button>';}).join('')+'</div>'+
-        (size?'<p class="ps-ui-r">'+(size==='M'?'<b>M is out of stock here.</b> Anna Nagar has 3: order now, Ship Later to the customer.':'<b>Added:</b> Chanderi Kurta Set ('+size+') &middot; &#8377; 2,499.00')+'</p>':'<p class="ps-ui-r ps-muted">Variants come from one product, so stock and sales report per size.</p>');
-      if(cur==='rest')h='<p class="ps-ui-h">Main Floor &middot; tap a table to seat guests and send the order</p><div class="ps-floor">'+TB.map(function(t){var s=tables[t[0]]||0;return '<button type="button" class="ps-tb is-s'+s+(t[1]>4?' is-big':'')+'" style="--x:'+t[2]+';--y:'+t[3]+'" data-tb="'+t[0]+'"><b>'+t[0]+'</b><small>'+(s===0?t[1]+' seats':(s===1?'Ordered':'Bill'))+'</small></button>';}).join('')+'</div>'+
-        '<div class="ps-kit">'+(kit.length?kit.slice(-3).reverse().map(function(k){return '<span><b>'+k[0]+'</b>'+k[1]+'</span>';}).join(''):'<span class="ps-muted">Kitchen tickets appear here.</span>')+'</div>';
-      if(cur==='cafe'){var items=[['Filter Coffee',60,'d'],['Masala Chai',50,'d'],['Vada (2)',70,'s'],['Paneer Puff',65,'s']],t=combo.reduce(function(a,c){return a+c[1];},0),
-          dr=combo.filter(function(c){return c[2]==='d';})[0],sn=combo.filter(function(c){return c[2]==='s';})[0],save=dr&&sn?dr[1]+sn[1]-99:0;
-        h='<p class="ps-ui-h">Counter order &middot; a drink and a snack together is a &#8377; 99 combo</p><div class="ps-cafe">'+items.map(function(it,i){return '<button type="button" data-cf="'+i+'"><b>'+it[0]+'</b><small>'+inr(it[1],0)+'</small></button>';}).join('')+'</div>'+
-          '<p class="ps-ui-r">'+(combo.length?combo.map(function(c){return c[0];}).join(' + ')+' &middot; <b>'+inr(t-save,0)+'</b>'+(save?' <span class="ps-tag">Combo: &minus; '+inr(save,0)+'</span>':''):'Tap items to build the order.')+'</p>'+
-          (combo.length?'<p class="ps-ui-r"><span class="ps-onum">Order #'+(40+combo.length)+'</span> on the customer display &middot; <button type="button" class="ps-link" data-cfc>Clear</button></p>':'');}
-      if(cur==='groc')h='<p class="ps-ui-h">Tomatoes (loose) &middot; &#8377; 40.00 / kg &middot; To Weigh With Scale</p><div class="ps-scale"><span class="ps-scale-d mono">'+wt.toFixed(3)+' kg</span><button type="button" class="ox-pbtn" data-wg>Place on scale</button></div>'+
-        '<p class="ps-ui-r">'+(wt?'<b>Line added:</b> Tomatoes '+wt.toFixed(3)+' kg &times; &#8377; 40.00 = <b>'+inr(wt*40)+'</b>':'The weight is read from the scale through the IoT Box; no typing.')+'</p>';
-      ui.innerHTML=h;bx.querySelector('[data-p10c]').innerHTML=C[cur].map(function(x,i){return '<li style="--i:'+i+'">'+TK+x+'</li>';}).join('');}
-    ui.addEventListener('click',function(e){var a;
-      if((a=e.target.closest('[data-sz]')))size=a.getAttribute('data-sz');
-      if((a=e.target.closest('[data-tb]'))){var k=a.getAttribute('data-tb'),s=((tables[k]||0)+1)%3;tables[k]=s;var MENU=['2 Filter Coffee &middot; 1 Ghee Roast','1 Mini Meals &middot; 1 Lime Soda','2 Masala Dosa &middot; 2 Filter Coffee','1 Paneer Butter Masala &middot; 4 Rotis','3 Mini Meals &middot; 1 Rose Milk','1 Veg Biryani &middot; 1 Raita','2 Idli Vada &middot; 2 Chai'];if(s===1)kit.push([k,MENU[+k.slice(1)-1]]);}
-      if((a=e.target.closest('[data-cf]'))){var it=[['Filter Coffee',60,'d'],['Masala Chai',50,'d'],['Vada (2)',70,'s'],['Paneer Puff',65,'s']][+a.getAttribute('data-cf')];combo.push(it);}
-      if(e.target.closest('[data-cfc]'))combo=[];
-      if(e.target.closest('[data-wg]')){wt=0.6+Math.round(Math.random()*500)/1000;}
-      draw();});
-    tb.forEach(function(b){b.addEventListener('click',function(){press(tb,b);cur=b.getAttribute('data-p10');draw();});});draw();})();
 
   /* --- 11 insights --- */
   (function(){var bx=document.querySelector('[data-p11box]');if(!bx)return;var R=J('ps-rep'),g=bx.querySelector('[data-p11g]'),mb=[].slice.call(bx.querySelectorAll('[data-p11m]')),m='rev';

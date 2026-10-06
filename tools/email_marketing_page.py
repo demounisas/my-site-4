@@ -12,6 +12,7 @@ under the fictional brand "Amudha Spices". Shared Odoo look: odoo-ui.css. Page s
 hero(g) and build(g) get the build script's globals.
 """
 import json
+import re
 
 import crm_explorer as ox
 
@@ -89,7 +90,7 @@ def build(g):
                     "with sending it to the right segment at the hour they read email.", "is-center")
                + '<div class="em-aim" data-e1box><div class="em-aim-l"><div class="em-camps" role="group" aria-label="Campaign">%s</div>'
                  '<div class="em-aim-card ox-solo"><div class="em-mode" role="group" aria-label="Sending method"><button type="button" class="is-on" data-e1mode="all" aria-pressed="true">Everyone, one time</button>'
-                 '<button type="button" data-e1mode="seg" aria-pressed="false">Odoo segment, best time</button></div>'
+                 '<button type="button" data-e1mode="seg" aria-pressed="false">Targeted segment, best time</button></div>'
                  '<div class="em-dots" data-e1dots aria-hidden="true"></div><ul class="em-leg">%s</ul><p class="em-when" data-e1when></p></div></div>'
                  '<div class="em-aim-r ox-solo" aria-live="polite"><p class="mono">ONE SEND, 12,300 CONTACTS</p><ul class="em-kpis" data-e1kpis></ul><p class="em-aim-msg" data-e1msg></p></div></div>'
                  % (pressed("em-camp", "data-e1", camps, lambda c: "<b>%s</b><small>%s</small>" % (c[0], c[1])), leg)
@@ -207,13 +208,14 @@ def build(g):
              ["Report", "Marketing manager", "Reviews results each Monday.",
               [["24H Stat Mailing Reports", "Results emailed to the owner a day after sending"], ["Reporting &rsaquo; Mailings", "Pivot by campaign, list and month"],
                ["CRM &amp; Sales", "Pipeline and revenue grouped by UTM campaign"]]]]
-    st = "".join('<li><button type="button" class="em-st%s" data-e5="%d" aria-pressed="%s"><span class="mono">%02d</span><b>%s</b><small>%s</small></button></li>'
-                 % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, s[0], s[1]) for i, s in enumerate(steps))
+    def plain(n):
+        n = re.sub(r"^(Settings|Reporting|Campaigns) &rsaquo; ", "", n)
+        return n[:1].upper() + n[1:]
     out += sec(head("YOUR MARKETING PROCESS", "How Does Unisas Configure Email Campaigns Around Your Marketing Process?",
-                    "Your team already has a way of planning, approving and reporting campaigns. We set up Odoo so each step has an owner, a place in the system and a record of what was done. "
-                    "Click a step to see what we configure.", "is-center")
-               + '<div class="em-proc" data-e5box><ol class="em-sts">%s</ol><div class="ox em-ox">%s<div class="em-cfg" data-e5card aria-live="polite"></div></div></div>'
-                 % (st, ox_head("Email Marketing", "Configuration")) + data("em-steps", steps), "em-sec--proc")
+                    "Your team already has a way of planning, approving and reporting campaigns. We give each step an owner, a place in the system and a record of what was done.", "is-center")
+               + '<ol class="pl-grid" style="--cols:4">%s</ol>'
+                 % "".join('<li><span class="pl-n">%02d</span><b>%s</b><em>%s</em><p>%s</p><ul class="pl-ticks em-pl-t">%s</ul></li>'
+                           % (i + 1, x[0], x[1], x[2], "".join("<li><span><b>%s:</b> %s</span></li>" % (plain(c[0]), c[1]) for c in x[3])) for i, x in enumerate(steps)), "em-sec--proc")
 
     # 6 ---- CRM and customer activity
     flows = [["A retailer clicks &lsquo;Order for my store&rsquo;", [["em", "Email Marketing", "Opened and clicked", "Diwali trade offer &middot; Sri Murugan Stores &middot; 07:42"],
@@ -268,16 +270,18 @@ def build(g):
             ["c", "b", "Mail: Clicked", "Server Action", "Add to list &lsquo;First-order intent&rsquo;", 1, "Immediately after", 197, 0],
             ["d", "b", "Mail: Not clicked", "Email", "Your code expires in 48 hours", 4, "3 Days after", 301, 0],
             ["e", "a", "Mail: Not opened", "Email", "Resend with a new subject line", 3, "2 Days after", 484, 0]]
+    trig = {"Beginning of workflow": "Start", "Mail: Opened": "If opened", "Mail: Clicked": "If clicked", "Mail: Not clicked": "If not clicked", "Mail: Not opened": "If not opened"}
+    order8 = ["a", "b", "c", "d", "e"]
+    by = {x[0]: x for x in acts}
+    depth = {"a": 0, "b": 1, "c": 2, "d": 2, "e": 1}
     out += sec(head("AUTOMATED JOURNEYS", "How Does Unisas Build and Configure Automated Customer Journeys?",
-                    "This is an Odoo Marketing Automation campaign for new subscribers. Each activity waits for a trigger on the one above it: opened, not opened, clicked. "
-                    "Press <b>Start</b>, then move through the first week and watch 1,000 subscribers flow through it.", "is-center")
-               + '<div class="ox em-ox em-ma" data-e8box><div class="ox-nav"><span class="ox-app">%s<b>Marketing Automation</b></span><span class="ox-menu">Campaigns</span><span class="ox-menu">Reporting</span><span class="ox-menu">Configuration</span></div>'
-                 '<div class="em-ma-bar"><span class="ox-crumb ox-crumb--stack"><a>Campaigns</a><span>Welcome &amp; first order</span></span><span class="em-ma-btns" data-e8btns></span>'
-                 '<span class="ox-sbar"><span class="ox-sb" data-e8s="draft">New</span><span class="ox-sb" data-e8s="run">Running</span><span class="ox-sb" data-e8s="stop">Stopped</span></span></div>'
-                 '<div class="em-ma-sheet"><dl class="em-ma-f"><div><dt>Target</dt><dd>Contact</dd></div><div><dt>Unicity based on</dt><dd>Email</dd></div>'
-                 '<div class="is-wide"><dt>Filter</dt><dd><span class="em-dom">Mailing List is <b>Newsletter</b></span><span class="em-dom">Created on is in the <b>last 24 hours</b></span><span class="em-dom">Blacklist is <b>not set</b></span></dd></div></dl>'
-                 '<div class="em-ma-sum" data-e8sum></div><div class="em-ma-tree" data-e8tree></div></div></div>' % app_icon
-               + data("em-acts", acts), "em-sec--ma")
+                    "Here is a welcome journey we build for new subscribers. Each step waits for a trigger on the one above it: opened, not opened, clicked. "
+                    "These are the numbers after the first week for 1,000 subscribers.", "is-center")
+               + '<div class="pl-card" style="max-width:900px;margin:0 auto"><p class="pl-k">Welcome &amp; first order &middot; newsletter sign-ups in the last 24 hours</p><ul class="pl-steps">%s</ul>'
+                 '<p style="margin:14px 0 0;display:flex;flex-wrap:wrap;gap:6px"><span class="pl-chip is-ok">1,000 completed in 7 days</span><span class="pl-chip">2,265 emails sent</span><span class="pl-chip is-gold">197 showed first-order intent</span></p></div>'
+                 % "".join('<li style="margin-left:%dpx"><span class="pl-n">%d</span><b>%s</b><em>%s &middot; %s</em><p>%s &middot; reached <b>%s</b></p></li>'
+                           % (depth[k] * 28, i + 1, by[k][4], trig[by[k][2]], by[k][6], "Email" if by[k][3] == "Email" else "Automatic action", "{:,}".format(by[k][7])) for i, k in enumerate(order8)),
+               "em-sec--ma")
 
     # 9 ---- measure
     mails = [["Diwali trade offer: 15% off gift boxes", "Retailer offers", "07 Oct", 1736, 98.6, 52.4, 4.1, 18.7, 1.4, 46, 31, 1840000],
@@ -299,23 +303,18 @@ def build(g):
              ["amudhaspices.in/trade/bulk-order", "Diwali 2026", "Email", "Diwali trade offer", 141],
              ["amudhaspices.in/recipes/chettinad-sambar", "Sambar Mix launch", "Email", "New: Chettinad Sambar Mix", 388],
              ["wa.me/919800000000", "Diwali 2026", "Email", "Diwali trade offer", 37]]
-    lt = "".join('<tr><td>%s</td><td>%s</td><td>%s</td><td class="ox-num">%d</td></tr>' % (l[0], l[1], l[3], l[4]) for l in links)
     ab = {"n": 1736, "a": "Diwali gift boxes: 15% off for your store", "b": "Your Diwali shelf, sorted: gift boxes at trade price",
           "res": {"open": [44.1, 51.8, "%"], "click": [12.3, 11.6, "%"], "lead": [9, 13, ""], "rev": [310000, 422000, "inr"]}}
     out += sec(head("TRACKING, TESTING &amp; REPORTING", "How Does Unisas Configure Tracking, Testing and Campaign Reporting?",
                     "We switch on A/B testing for subject lines and offers, tag every link with the campaign, and set the reports your team reads each week. "
-                    "Set up the test below, run it and see which version Odoo sends to everyone else.", "is-center")
-               + '<div class="em-ab" data-e10box><div class="ox em-ox">%s<div class="em-ab-b"><label class="em-abl"><input type="checkbox" data-e10on checked><span class="em-cbx" aria-hidden="true">%s</span><b>Allow A/B Testing</b></label>'
-                 '<div class="em-ab-in" data-e10in><label class="em-abr"><span>Test on <b data-e10pv>20</b>%% of the recipients</span><input type="range" min="10" max="50" step="5" value="20" data-e10p></label>'
-                 '<label class="em-abr"><span>Winner Selection</span><select data-e10w><option value="open">Highest Open Rate</option><option value="click">Highest Click Rate</option>'
-                 '<option value="lead">Leads</option><option value="rev">Revenues</option><option value="manual">Manual</option></select></label>'
-                 '<div class="em-vers"><div><small>Version A &middot; Subject</small><b>%s</b></div><div><small>Version B &middot; Subject</small><b>%s</b></div></div>'
-                 '<p class="em-ab-note" data-e10note></p><button type="button" class="ox-pbtn" data-e10run>Send test versions</button><div class="em-ab-res" data-e10res aria-live="polite"></div></div></div></div>'
-                 '<div class="em-ab-r"><div class="ox em-ox">%s<div class="ox-scroll"><table class="ox-table em-lt"><thead><tr><th>Target URL</th><th>Campaign</th><th>Source</th><th class="ox-num">Clicks</th></tr></thead><tbody>%s</tbody></table></div></div>'
-                 '<ul class="em-rep ox-solo"><li><b>24H stat report</b><span>Emailed to the mailing&rsquo;s owner one day after sending</span></li><li><b>Mailing analysis</b><span>Pivot by campaign, list and month: sent, opened, clicked, bounced</span></li>'
-                 '<li><b>Pipeline by campaign</b><span>CRM grouped by UTM campaign and source</span></li><li><b>Revenue by campaign</b><span>Sales analysis filtered by campaign</span></li></ul></div></div>'
-                 % (ox_head("Diwali trade offer", "A/B Tests"), TICK, ab["a"], ab["b"], ox_head("Email Marketing", "Link Tracker"), lt)
-               + data("em-ab", ab), "em-sec--ab", "ab-test")
+                    "Here is how one test played out.", "is-center")
+               + '<div class="pl-2"><div class="pl-card"><p class="pl-k">A/B test &middot; Diwali trade offer to %s retailers</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th></th><th>Subject line</th><th class="is-c">Open rate</th><th class="is-c">Leads</th></tr></thead><tbody>'
+                 '<tr><th>A</th><td>%s</td><td class="is-c">44.1%%</td><td class="is-c">9</td></tr><tr><th>B</th><td>%s</td><td class="is-c"><span class="pl-chip is-ok">51.8%%</span></td><td class="is-c"><span class="pl-chip is-ok">13</span></td></tr></tbody></table></div>'
+                 '<p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem">Tested on 20%% of the list, winner chosen by open rate. <b>Version B</b> went to the other 1,389 retailers on Tue 13 Oct, 07:30.</p></div>'
+                 '<div class="pl-card"><p class="pl-k">Every link tagged with its campaign</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Link</th><th>Campaign</th><th class="is-c">Clicks</th></tr></thead><tbody>%s</tbody></table></div>'
+                 '<p class="pl-k" style="margin-top:18px">Reports your team reads each week</p><ul class="pl-ticks"><li>Results emailed to the mailing owner a day after sending</li><li>Mailing analysis by campaign, list and month</li><li>Pipeline and revenue grouped by campaign</li></ul></div></div>'
+                 % ("{:,}".format(ab["n"]), ab["a"], ab["b"], "".join('<tr><td style="font-size:0.84rem;word-break:break-all">%s</td><td>%s</td><td class="is-c">%d</td></tr>' % (l[0], l[1], l[4]) for l in links)),
+               "em-sec--ab", "ab-test")
 
     # 11 ---- deliverability and unsubscriptions
     recs = [["SPF", "TXT", "@", "v=spf1 include:_spf.odoo.com ~all", 12, "Tells inboxes Odoo may send for amudhaspices.in"],
@@ -531,12 +530,6 @@ JS = r'''<script>
       render();});
     render();})();
 
-  /* --- 5 process --- */
-  (function(){var bx=document.querySelector('[data-e5box]');if(!bx)return;var S=J('em-steps'),bt=[].slice.call(bx.querySelectorAll('[data-e5]')),card=bx.querySelector('[data-e5card]');
-    function draw(i){var s=S[i];card.innerHTML='<div class="em-cfg-h"><span class="ox-av" style="--c:#B5541B">'+s[1][0]+'</span><span><b>'+s[0]+' &middot; '+s[1]+'</b><small>'+s[2]+'</small></span></div>'+
-      '<ul class="em-cfg-l">'+s[3].map(function(x,j){return '<li style="--i:'+j+'"><span class="em-sw is-on" aria-hidden="true"></span><span><b>'+x[0]+'</b><small>'+x[1]+'</small></span></li>';}).join('')+'</ul>';}
-    bt.forEach(function(b){b.addEventListener('click',function(){press(bt,b);draw(+b.getAttribute('data-e5'));});});draw(0);})();
-
   /* --- 6 CRM flow --- */
   (function(){var bx=document.querySelector('[data-e6box]');if(!bx)return;var F=J('em-flows'),bt=[].slice.call(bx.querySelectorAll('[data-e6]')),cur=0,tm=[];
     function run(){tm.forEach(clearTimeout);tm=[];var f=F[cur],red=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -558,20 +551,6 @@ JS = r'''<script>
       var n=Object.keys(ans).length,s=Object.keys(ans).filter(function(k){return ans[k];}).length;bx.querySelector('[data-e7score]').textContent=s+' / '+R.length;
       bx.querySelector('[data-e7msg]').innerHTML=n<R.length?(R.length-n)+' to go.':(s>=6?'You know when to automate. Let&rsquo;s plan your journeys.':'The rule: same message and moment for everyone is a mailing; timing per person is automation.');});})();
 
-  /* --- 8 marketing automation --- */
-  (function(){var bx=document.querySelector('[data-e8box]');if(!bx)return;var A=J('em-acts'),st={s:'draft',day:0};
-    function card(a){var done=st.s!=='draft'&&st.day>=a[5],sch=st.s!=='draft'&&!done,kids=A.filter(function(x){return x[1]===a[0];});
-      return '<div class="em-act'+(done?' is-done':'')+'"><div class="em-act-c"><span class="em-act-i is-'+(a[3]==='Email'?'mail':'srv')+'" aria-hidden="true"></span><span class="em-act-t"><b>'+a[4]+'</b><small>'+a[3]+' &middot; '+a[6]+' '+(a[1]?'<em>'+a[2]+'</em>':a[2])+'</small></span>'+
-        '<span class="em-act-n">'+(done?'<span class="is-ok">'+num(a[7])+'<small>Success</small></span><span class="is-rej">'+num(a[8])+'<small>Rejected</small></span>':(sch?'<span class="is-sch">Scheduled<small>day '+a[5]+'</small></span>':'<span class="ox-muted">&mdash;</span>'))+'</span></div>'+
-        (kids.length?'<div class="em-act-k">'+kids.map(card).join('')+'</div>':'')+'</div>';}
-    function draw(){bx.querySelector('[data-e8btns]').innerHTML=st.s==='draft'?'<button type="button" class="ox-pbtn" data-e8="start">Start</button>':(st.s==='run'?'<button type="button" class="ox-pbtn" data-e8="day"'+(st.day>=7?' disabled':'')+'>Next day &rarr;</button><button type="button" class="ox-sbtn" data-e8="stop">Stop</button>':'<button type="button" class="ox-sbtn" data-e8="reset">Reset</button>');
-      [].forEach.call(bx.querySelectorAll('[data-e8s]'),function(x){x.classList.toggle('is-cur',x.getAttribute('data-e8s')===st.s);});
-      var p=st.s==='draft'?0:1000,mails=A.filter(function(a){return a[3]==='Email'&&st.s!=='draft'&&st.day>=a[5];}).reduce(function(t,a){return t+a[7];},0);
-      bx.querySelector('[data-e8sum]').innerHTML='<span><b>'+num(st.day>=7?0:p)+'</b>Running</span><span><b>'+num(st.day>=7?p:0)+'</b>Completed</span><span><b>'+num(mails)+'</b>Emails sent</span><span class="em-day">'+(st.s==='draft'?'Not started':'Day '+st.day+' of 7')+'<i style="--p:'+(st.day/7*100)+'"></i></span>';
-      bx.querySelector('[data-e8tree]').innerHTML=A.filter(function(a){return !a[1];}).map(card).join('')+'<p class="em-add">Add child activity: <span>Opened</span><span>Not opened</span><span>Replied</span><span>Clicked</span><span>Not clicked</span><span>Bounced</span></p>';}
-    bx.addEventListener('click',function(e){var b=e.target.closest('[data-e8]');if(!b)return;var k=b.getAttribute('data-e8');
-      if(k==='start'){st.s='run';st.day=0;}if(k==='day')st.day=Math.min(7,st.day+1);if(k==='stop')st.s='stop';if(k==='reset'){st.s='draft';st.day=0;}draw();});draw();})();
-
   /* --- 9 measure --- */
   (function(){var bx=document.querySelector('[data-e9box]');if(!bx)return;var M=J('em-mails'),rows=[].slice.call(bx.querySelectorAll('[data-e9]')),card=bx.querySelector('[data-e9card]');
     function draw(i){var m=M[i],sent=m[3],rcv=Math.round(sent*m[4]/100),op=Math.round(sent*m[5]/100),cl=Math.round(sent*m[7]/100);
@@ -580,22 +559,6 @@ JS = r'''<script>
         '<ul class="em-fun">'+F.map(function(f){return '<li><span>'+f[0]+'</span><i style="--p:'+(f[1]/sent*100)+'"></i><b>'+num(f[1])+'</b></li>';}).join('')+'</ul>'+
         '<div class="em-money"><span><b>'+m[9]+'</b>Leads</span><span><b>'+m[10]+'</b>Quotations</span><span><b>'+inr(m[11])+'</b>Revenues</span><span><b>'+inr(Math.round(m[11]/sent))+'</b>per email sent</span></div>';}
     rows.forEach(function(r){r.addEventListener('click',function(){rows.forEach(function(x){x.classList.toggle('is-on',x===r);});draw(+r.getAttribute('data-e9'));});});draw(0);})();
-
-  /* --- 10 A/B --- */
-  (function(){var bx=document.querySelector('[data-e10box]');if(!bx)return;var D=J('em-ab'),on=bx.querySelector('[data-e10on]'),pin=bx.querySelector('[data-e10p]'),w=bx.querySelector('[data-e10w]'),res=bx.querySelector('[data-e10res]');
-    var LB={open:'Open rate',click:'Click rate',lead:'Leads',rev:'Revenues'};
-    function fmt(v,u){return u==='%'?v.toFixed(1)+'%':(u==='inr'?inr(v):v);}
-    function note(){var p=+pin.value,t=Math.round(D.n*p/100);bx.querySelector('[data-e10pv]').textContent=p;
-      bx.querySelector('[data-e10note]').innerHTML='Each version goes to <b>'+num(Math.round(t/2))+'</b> retailers. The winner goes to the other <b>'+num(D.n-t)+'</b> on <b>Tue 13 Oct, 07:30</b>.';
-      bx.querySelector('[data-e10in]').classList.toggle('is-off',!on.checked);res.innerHTML='';}
-    function pick(win){var t=Math.round(D.n*(+pin.value)/100);res.insertAdjacentHTML('beforeend','<p class="em-win">'+TK+' Version <b>'+win+'</b> wins. Final mailing sent to the remaining <b>'+num(D.n-t)+'</b> recipients.</p>');}
-    function run(){var k=w.value,show=k==='manual'?['open','click','lead','rev']:[k];
-      res.innerHTML=show.map(function(m){var r=D.res[m],mx=Math.max(r[0],r[1]);return '<div class="em-abm"><small>'+LB[m]+'</small>'+['A','B'].map(function(v,i){return '<p class="'+(k!=='manual'&&r[i]===mx?'is-win':'')+'"><span>'+v+'</span><i style="--p:'+(r[i]/mx*100)+'"></i><b>'+fmt(r[i],r[2])+'</b></p>';}).join('')+'</div>';}).join('');
-      if(k==='manual')res.insertAdjacentHTML('beforeend','<p class="em-pickw">Pick the winner: <button type="button" class="ox-sbtn" data-e10pick="A">Send version A</button><button type="button" class="ox-sbtn" data-e10pick="B">Send version B</button></p>');
-      else{var r=D.res[k];pick(r[0]>r[1]?'A':'B');}}
-    on.addEventListener('change',note);pin.addEventListener('input',note);w.addEventListener('change',function(){res.innerHTML='';});
-    bx.querySelector('[data-e10run]').addEventListener('click',function(){if(on.checked)run();});
-    res.addEventListener('click',function(e){var b=e.target.closest('[data-e10pick]');if(!b)return;var p=res.querySelector('.em-pickw');if(p)p.remove();pick(b.getAttribute('data-e10pick'));});note();})();
 
   /* --- 11 deliverability & unsubscribe --- */
   (function(){var bx=document.querySelector('[data-e11box]');if(!bx)return;var R=J('em-recs'),ring=bx.querySelector('[data-e11ring]');

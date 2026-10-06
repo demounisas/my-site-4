@@ -77,13 +77,13 @@ def build(g):
             ("Get a quote", 25, 32, "Quote requests", "The button opens an email client. Half the requests never arrive, and none are tracked.",
              "A quote request becomes a CRM opportunity with the product, quantity and page it came from."),
             ("Products", 52, 54, "Live prices and stock", "Prices are typed into the page and go out of date. Stock is never shown.",
-             "Product pages read prices and stock from Odoo, so what the site shows is what you can deliver."),
+             "Product pages read live prices and stock, so what the site shows is what you can deliver."),
             ("Chat", 89, 84, "Live conversations", "No chat, or a plug-in whose conversations live outside your systems.",
              "Live Chat answered by sales, with the conversation saved on the contact and turned into a lead in one click."),
             ("Contact form", 36, 74, "Lead capture", "The form emails an inbox. Nobody owns the follow-up.",
              "Each form submission creates a lead, tagged with its source and campaign and assigned to a salesperson."),
             ("Visitors", 74, 70, "Who is looking", "You know how many people visited, not who or what they looked at.",
-             "Odoo tracks known visitors and the pages they viewed, so sales can call the dealer who read the price list twice.")]
+             "The site tracks known visitors and the pages they viewed, so sales can call the dealer who read the price list twice.")]
     pin_html = "".join('<button type="button" class="wb-pin%s" data-p1="%d" style="--x:%d;--y:%d" aria-label="%s" aria-pressed="%s">%d</button>'
                        % (" is-on" if i == 0 else "", i, x, y, n, "true" if i == 0 else "false", i + 1) for i, (n, x, y, *_r) in enumerate(pins))
     page = ('<div class="wb-mock"><div class="wb-m-nav"><b>Kaveri Fans</b><span></span><span></span><span></span><em>Sign in</em></div>'
@@ -95,7 +95,7 @@ def build(g):
                     "A brochure website looks good and stops there. A business website takes enquiries, quotes, orders and questions, and hands each one to the right person. "
                     "Click a numbered spot and switch between the two.", "is-center")
                + '<div class="wb-bro" data-p1box><div class="wb-bro-l">%s<div class="wb-mode" role="group" aria-label="Website type"><button type="button" class="is-on" data-p1mode="bro" aria-pressed="true">Brochure website</button>'
-                 '<button type="button" data-p1mode="odoo" aria-pressed="false">Odoo website</button></div></div>'
+                 '<button type="button" data-p1mode="odoo" aria-pressed="false">Business website</button></div></div>'
                  '<div class="wb-p1-card ox-solo" aria-live="polite"><p class="mono" data-p1k></p><h3 data-p1n></h3><p data-p1t></p><p class="wb-p1-score" data-p1s></p></div></div>'
                  % browser("yourcompany.in", page) + data("wb-pins", pins), "wb-sec--bro")
 
@@ -204,11 +204,12 @@ def build(g):
            ("Customers &amp; dealers", "2,310", "Into Contacts, portal invitations later"), ("Newsletter subscribers", "8,900", "With consent dates"), ("Redirects", "412", "Every old URL that had traffic")]
     out += sec(head("MIGRATION", "How Does Unisas Handle Existing Website Migration and Data Transition?",
                     "The risk in a website move is losing the search rankings your old URLs earned. We map every URL that had traffic to its new page with a 301 redirect before launch. "
-                    "Map the remaining URLs and create the redirects.", "is-center")
-               + '<div class="wb-mig" data-p8box><div class="ox wb-ox">%s<div class="ox-scroll"><table class="ox-table wb-url-t"><thead><tr><th>Old URL (WordPress)</th><th></th><th>New URL in Odoo</th><th>Status</th></tr></thead><tbody data-p8rows></tbody></table></div>'
-                 '<div class="wb-rw" data-p8rw></div></div><ul class="wb-inv ox-solo"><li class="wb-inv-h"><b>What moves across</b><small>From a 6-year-old WordPress site</small></li>%s</ul></div>'
-                 % (ox_head("Website", "Redirect map", '<span><button type="button" class="ox-pbtn" data-p8go disabled>Create Redirects</button></span>'),
-                    "".join('<li><span>%s<small>%s</small></span><b>%s</b></li>' % (a, c, b) for a, b, c in inv)) + data("wb-urls", urls), "wb-sec--mig")
+                    "Retired pages return a clean 410 so search engines drop them.", "is-center")
+               + '<div class="pl-2 is-w"><div class="pl-card"><p class="pl-k">Redirect map &middot; old WordPress URLs</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Old URL</th><th></th><th>New URL</th><th class="is-c">Type</th></tr></thead><tbody>%s</tbody></table></div></div>'
+                 '<div class="pl-card"><p class="pl-k">What moves across &middot; 6-year-old WordPress site</p><ul class="pl-steps">%s</ul></div></div>'
+                 % ("".join('<tr><td class="mono" style="font-size:0.8rem;word-break:break-all">%s</td><td class="is-c">&rarr;</td><td class="mono" style="font-size:0.8rem;word-break:break-all">%s</td><td class="is-c"><span class="pl-chip%s">%s</span></td></tr>'
+                            % (o, n, " is-bad" if n == "410 Gone" else " is-ok", "Gone" if n == "410 Gone" else "301") for o, n in [(u[0], u[2] if u[1] == "auto" else u[2][0]) for u in urls]),
+                    "".join('<li><span class="pl-n">%d</span><b>%s</b><em>%s</em><p>%s</p></li>' % (i + 1, a, b, c) for i, (a, b, c) in enumerate(inv))), "wb-sec--mig")
 
     # 9 ---- before go-live: checklist and audit rings
     checks = [("Domain &amp; SSL", "Domain pointed to Odoo and HTTPS certificate active", 1, "bp", 10),
@@ -304,9 +305,9 @@ JS = r'''<script>
 
   /* --- 1 brochure vs Odoo --- */
   (function(){var bx=document.querySelector('[data-p1box]');if(!bx)return;var P=J('wb-pins'),pins=[].slice.call(bx.querySelectorAll('[data-p1]')),mb=[].slice.call(bx.querySelectorAll('[data-p1mode]')),cur=0,mode='bro';
-    function draw(){var p=P[cur];bx.classList.toggle('is-odoo',mode==='odoo');bx.querySelector('[data-p1k]').textContent=(mode==='odoo'?'ODOO WEBSITE · ':'BROCHURE WEBSITE · ')+p[0].toUpperCase();
+    function draw(){var p=P[cur];bx.classList.toggle('is-odoo',mode==='odoo');bx.querySelector('[data-p1k]').textContent=(mode==='odoo'?'BUSINESS WEBSITE · ':'BROCHURE WEBSITE · ')+p[0].toUpperCase();
       bx.querySelector('[data-p1n]').innerHTML=p[3];bx.querySelector('[data-p1t]').innerHTML=mode==='odoo'?p[5]:p[4];
-      bx.querySelector('[data-p1s]').innerHTML=mode==='odoo'?'<b>6 of 6</b> jobs done by the website, each recorded in Odoo.':'<b>0 of 6</b> jobs done. Every one still needs a phone call or an email.';}
+      bx.querySelector('[data-p1s]').innerHTML=mode==='odoo'?'<b>6 of 6</b> jobs done by the website, each one recorded and assigned.':'<b>0 of 6</b> jobs done. Every one still needs a phone call or an email.';}
     pins.forEach(function(b){b.addEventListener('click',function(){press(pins,b);cur=+b.getAttribute('data-p1');draw();});});
     mb.forEach(function(b){b.addEventListener('click',function(){press(mb,b);mode=b.getAttribute('data-p1mode');draw();});});draw();})();
 
@@ -455,19 +456,6 @@ JS = r'''<script>
       li.classList.add(ok?'is-ok':'is-no');li.querySelector('.wb-q-why').innerHTML=(ok?'&#10003; ':'Answer: <b>'+L[R[i][1]]+'</b>. ')+R[i][2];
       var n=Object.keys(ans).length,s=Object.keys(ans).filter(function(k){return ans[k]===R[k][1];}).length;bx.querySelector('[data-p7score]').textContent=s+' / '+R.length;
       bx.querySelector('[data-p7msg]').innerHTML=n<R.length?(R.length-n)+' left to answer.':(s>=6?'<b>Spot on.</b> You would scope this project the way we do.':'Three of seven are plain configuration, which surprises most people. That is money saved.');});})();
-
-  /* --- 8 redirects --- */
-  (function(){var bx=document.querySelector('[data-p8box]');if(!bx)return;var U=J('wb-urls'),pick={},go=bx.querySelector('[data-p8go]');
-    function draw(){var left=0;bx.querySelector('[data-p8rows]').innerHTML=U.map(function(u,i){var to,stt;
-        if(u[1]==='auto'){to='<span class="mono">'+u[2]+'</span>';stt='<span class="wb-b is-ok">Matched</span>';}
-        else{var v=pick[i];if(!v)left++;to='<select data-p8="'+i+'" aria-label="New URL"><option value="">Choose&hellip;</option>'+u[2].map(function(o){return '<option'+(v===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select>';
-          stt=v?(v==='410 Gone'?'<span class="wb-b is-gone">410 Gone</span>':'<span class="wb-b is-ok">Mapped</span>'):'<span class="wb-b is-todo">To map</span>';}
-        return '<tr><td class="mono">'+u[0]+'</td><td class="ox-muted">&rarr;</td><td>'+to+'</td><td>'+stt+'</td></tr>';}).join('');go.disabled=left>0;}
-    bx.addEventListener('change',function(e){var s=e.target.closest('[data-p8]');if(s){pick[+s.getAttribute('data-p8')]=s.value;draw();bx.querySelector('[data-p8rw]').innerHTML='';}});
-    go.addEventListener('click',function(){var rows=U.map(function(u,i){var to=u[1]==='auto'?u[2]:pick[i];return [u[0],to];}).filter(function(r){return r[0]!==r[1];});
-      bx.querySelector('[data-p8rw]').innerHTML='<p class="wb-rw-h"><b>Website &rsaquo; Configuration &rsaquo; Rewrite</b><small>'+rows.length+' records created</small></p><table class="wb-rw-t"><thead><tr><th>Action</th><th>URL from</th><th>URL to</th></tr></thead><tbody>'+
-        rows.map(function(r){return '<tr><td>'+(r[1]==='410 Gone'?'404 Not Found':'301 Moved permanently')+'</td><td class="mono">'+r[0]+'</td><td class="mono">'+(r[1]==='410 Gone'?'&mdash;':r[1])+'</td></tr>';}).join('')+'</tbody></table><p class="wb-rw-ok">Search engines follow the 301s to the new pages, so rankings carry over.</p>';});
-    draw();})();
 
   /* --- 9 go-live --- */
   (function(){var bx=document.querySelector('[data-p9box]');if(!bx)return;var C=J('wb-checks'),pub=bx.querySelector('[data-p9pub]'),crit=C.filter(function(c){return c[2];}).length;

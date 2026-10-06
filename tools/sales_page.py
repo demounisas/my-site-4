@@ -93,13 +93,11 @@ def build(g):
             ("Divya (Accounts)", "#4C9F70", "10:31", "Invoice for Kaveri Foods: was the discount 10% or 12%? The order email says one thing, the quote another."),
             ("Rahul (Sales)", "#8E4F83", "10:48", "Customer wants the signed copy again. Does anyone have the final PDF?"),
             ("Anita (Manager)", "#C98600", "11:05", "Can someone send me this month's confirmed orders? Need it before the review.")]
-    feed = "".join('<div class="sl-chat-msg"><span class="ox-av" style="--c:%s">%s</span><div><p><b>%s</b><small>%s</small></p><p>%s</p></div></div>'
-                   % (c, n[0], n, t, x) for n, c, t, x in msgs)
+    feed = "".join('<li><p>&ldquo;%s&rdquo;</p><small>%s &middot; %s</small></li>' % (x, n, t) for n, c, t, x in msgs)
     signs = ["Prices and discounts live in old emails and spreadsheets", "Orders are confirmed without checking stock",
              "Accounts re-types orders into invoices", "Nobody can find the latest signed quote", "Reports are built by hand every month"]
     out += sec('<div class="sl-ready"><div>%s<ul class="sl-signs">%s</ul><p class="sl-note">If two or more sound familiar, your sales process is ready for one connected system.</p></div>'
-               '<div class="sl-chat ox-solo" aria-label="Example team chat showing common sales problems"><div class="sl-chat-head"><span class="sl-chat-hash">#</span><b>sales-team</b><small>5 new messages</small></div>%s'
-               '<div class="sl-chat-input">Message #sales-team&hellip;</div></div></div>'
+               '<div class="pl-card"><p class="pl-k">Heard in one morning</p><ul class="pl-quotes">%s</ul></div></div>'
                % (head("READINESS CHECK", "Is Your Sales Process Ready for a More Connected System?",
                        "Most teams don't notice the cost of disconnected sales until it shows up in messages like these."),
                   "".join('<li>%s%s</li>' % (CROSS, s) for s in signs), feed), "sl-sec--ready")

@@ -534,3 +534,7 @@ button.pu-dc:focus-visible{outline:2px solid var(--ox-teal);outline-offset:1px;}
 @media (max-width:700px){.pu-hx-steps{grid-template-columns:minmax(0,1fr);row-gap:14px;padding-left:22px;}
   .pu-hx-steps::before{display:block;left:21px;right:auto;top:20px;bottom:20px;width:3px;height:auto;background:linear-gradient(180deg,#3E7CB1,#8E4F83 50%,#10AE51);}
   .pu-hx-step{padding-left:40px;}.pu-hx-ic{position:absolute;left:-20px;top:14px;margin:0;width:36px;height:36px;}}
+.pu-lim>li{grid-template-columns:minmax(0,1fr);}
+.pu-lim>li>b{grid-column:1;}
+.pu-lim .pl-flow{margin:6px 0 2px;}
+.pu-lim p{grid-column:1;}

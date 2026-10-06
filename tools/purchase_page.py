@@ -223,15 +223,16 @@ def build(g):
              ("Late receipt follow-up", "Expected Arrival passed", "Activity scheduled for Arjun on P00040", True),
              ("Blanket order call-off", "Weekly, Monday 08:00", "1,000 cartons released from BO/2026/0012", True),
              ("Update vendor price on confirm", "Purchase order confirmed", "Pricelist updated: Kovai Chemicals, &#8377; 640/L", False)]
-    rrows = "".join('<li><div><b>%s</b><small>When: %s</small><span class="pu-rule-last">%s</span></div>'
-                    '<label class="pu-sw"><input type="checkbox"%s aria-label="Active: %s"><i></i></label></li>' % (n, w, l, " checked" if on else "", n) for n, w, l, on in rules)
+    limits = [("Up to " + inr(100000, False), ["Buyer", "Sent to vendor"], "Small orders go straight out."),
+              (inr(100000, False) + " to " + inr(LIMIT * 2, False), ["Buyer", "Purchase Manager", "Sent to vendor"], "One approval, from desk or phone."),
+              ("Above " + inr(LIMIT * 2, False), ["Buyer", "Purchase Manager", "Finance Director", "Sent to vendor"], "Two approvals before the vendor sees it.")]
+    lrows = "".join('<li><b>%s</b><ol class="pl-flow">%s</ol><p>%s</p></li>'
+                    % (a, "".join('<li><span class="pl-chip%s">%s</span></li>' % (" is-ok" if k == len(r) - 1 else "", x) for k, x in enumerate(r)), n) for a, r, n in limits)
     out += sec(head("AUTOMATION", "How Can Unisas Automate Purchase Approvals, Reordering and Procurement Workflows?",
-                    "Approvals follow your limits, reorders raise themselves and vendors get reminded without anyone sending an email. Move the amount to see the approval route Odoo applies.", "is-center")
-               + '<div class="pu-auto"><div class="pu-appr ox-solo" data-appr><p class="pu-appr-h"><small>New purchase order</small><b data-appr-amt></b></p>'
-                 '<input type="range" min="20000" max="2500000" step="10000" value="761100" data-appr-range aria-label="Purchase order amount">'
-                 '<div class="pu-appr-scale"><span>&#8377; 20k</span><span>&#8377; 1L</span><span>&#8377; 5L</span><span>&#8377; 25L</span></div>'
-                 '<ol class="pu-route" data-appr-route aria-live="polite"></ol><p class="pu-appr-note" data-appr-note></p></div>'
-                 '<div class="pu-rules ox-solo"><div class="pu-rules-h"><span class="ox-crumb ox-crumb--stack"><a>Settings / Technical</a><span>Automation Rules</span></span></div><ul>%s</ul></div></div>' % rrows,
+                    "Approvals follow your limits, reorders raise themselves and vendors get reminded without anyone sending an email. Here is a typical setup we agree with you.", "is-center")
+               + '<div class="pu-auto"><div class="pl-card"><p class="pl-k">Approval route by order value</p><ul class="pl-steps pu-lim">%s</ul></div>'
+                 '<div class="pl-card"><p class="pl-k">What runs on its own</p><ul class="pl-steps">%s</ul></div></div>'
+                 % (lrows, "".join('<li><span class="pl-n">%d</span><b>%s</b><p><b>When:</b> %s. <span class="pl-muted">Example: %s</span></p></li>' % (k + 1, n, w, l) for k, (n, w, l, on) in enumerate(rules))),
                "pu-sec--auto")
 
     # 6 ---- connected: three-way match
@@ -296,7 +297,7 @@ def build(g):
     # 9 ---- data migration: Merge Contacts + what moves
     dupes = [("Sri Lakshmi Metals", "slm.sales@gmail.com", "33ABCFS1234K1ZP", 41), ("SRI LAKSHMI METALS PVT LTD", "accounts@srilakshmimetals.in", "33ABCFS1234K1ZP", 128),
              ("Srilakshmi Metal", "", "33abcfs1234k1zp", 6)]
-    drows = "".join('<tr><td><span class="ox-cb is-on"></span></td><td><b>%s</b><small>%s</small></td><td class="mono">%s</td><td class="ox-num">%d</td></tr>' % (n, e or "No email", v, c)
+    drows = "".join('<tr><th>%s<br><small class="pl-muted">%s</small></th><td class="mono">%s</td><td class="is-c">%d</td></tr>' % (n, e or "No email", v, c)
                     for n, e, v, c in dupes)
     moved = [("Vendors", "412 &rarr; 386", "26 duplicates merged"), ("Vendor pricelists", "1,940 lines", "Quantity breaks and lead times"),
              ("Open purchase orders", "63", "With pending quantities"), ("Pending receipts", "27", "Matched to their POs"),
@@ -307,14 +308,10 @@ def build(g):
            ("Reconcile &amp; sign off", "Open POs and payables tallied to your books before cut-over.")]
     out += sec(head("DATA MIGRATION", "How Does Unisas Handle Supplier and Purchase Data Migration?",
                     "Duplicate vendors and old prices spoil RFQs from the first day. We clean and de-duplicate them before anything goes into Odoo, then reconcile what is still open.", "is-center")
-               + '<div class="pu-mig">%s<div class="ox pu-ox" data-merge><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb">Merge Contacts</span></div></div>'
-                 '<div class="pu-merge"><p class="pu-merge-info">The selected contacts will be merged into one. Every document linked to them will move to the destination contact.</p>'
-                 '<div class="ox-scroll"><table class="ox-table pu-merge-t"><thead><tr><th></th><th>Name</th><th>GSTIN</th><th class="ox-num">Documents</th></tr></thead><tbody data-merge-rows>%s</tbody></table></div>'
-                 '<p class="pu-merge-dest"><b>Destination Contact</b><span class="pu-sel">SRI LAKSHMI METALS PVT LTD</span></p>'
-                 '<div class="pu-merge-btns"><button type="button" class="ox-pbtn" data-merge-go>Merge Contacts</button><span class="ox-sbtn">Skip these contacts</span></div>'
-                 '<p class="pu-merge-res" data-merge-res role="status" aria-live="polite"></p></div></div>'
-                 '<ul class="pu-moved ox-solo"><li class="pu-moved-h"><b>What moves to Odoo</b><small>Sample from a 3-plant manufacturer</small></li>%s</ul></div>'
-                 % (steps(mig), drows, "".join('<li><span>%s<small>%s</small></span><b>%s</b></li>' % (a, c, b) for a, b, c in moved)), "pu-sec--mig")
+               + '<div class="pu-mig">%s<div class="pl-card"><p class="pl-k">One vendor, three records</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Name</th><th>GSTIN</th><th class="is-c">Documents</th></tr></thead><tbody>%s</tbody></table></div>'
+                 '<p style="margin:12px 0 0"><span class="pl-chip is-ok">&#10003; Merged into SRI LAKSHMI METALS PVT LTD &middot; 175 documents, one GSTIN</span></p></div>'
+                 '<div class="pl-card"><p class="pl-k">What moves across</p><ul class="pl-steps">%s</ul></div></div>'
+                 % (steps(mig), drows, "".join('<li><span class="pl-n">%d</span><b>%s</b><em>%s</em><p>%s</p></li>' % (k + 1, a, b, c) for k, (a, b, c) in enumerate(moved))), "pu-sec--mig")
 
     # 10 ---- what's included: a purchase order from Unisas
     scope = [("Setup", [("Purchase policy &amp; approval workshop", "Who buys what, limits and sign-offs mapped"),
@@ -547,19 +544,6 @@ JS = r'''<script>
     q.addEventListener('input',function(){st.open=null;render();});
     render();}
 
-  /* --- 5 approval route --- */
-  var ap=document.querySelector('[data-appr]');
-  if(ap){var rg=ap.querySelector('[data-appr-range]'),rt=ap.querySelector('[data-appr-route]');
-    function adraw(){var v=+rg.value,s=[['done','Buyer','Creates the PO from the vendor\'s best offer']];
-      if(v<=100000){s.push(['done','Auto-confirmed','Within the buyer\'s own limit']);}
-      else{s.push(['wait','Purchase Manager','Approves in Odoo or from the mobile notification']);if(v>LIMIT*2)s.push(['wait','Finance Director','Second level for orders above '+inr(LIMIT*2,false)]);}
-      s.push(['end','Sent to vendor','PO emailed, receipt created in Inventory']);
-      ap.querySelector('[data-appr-amt]').textContent=inr(v,false);
-      rt.innerHTML=s.map(function(x){return '<li class="is-'+x[0]+'"><i></i><div><b>'+x[1]+'</b><small>'+x[2]+'</small></div></li>';}).join('');
-      ap.querySelector('[data-appr-note]').innerHTML=v<=100000?'Small orders go straight out. No one waits for a signature on a box of cartons.':v>LIMIT*2?'Two approvals. Each approver gets an Odoo activity, and the order cannot go to the vendor until both have signed off.':'One approval by the Purchase Manager, as set in Purchase Settings.';
-      rg.style.setProperty('--p',((v-rg.min)/(rg.max-rg.min)*100).toFixed(1)+'%');}
-    rg.addEventListener('input',adraw);adraw();}
-
   /* --- 6 three-way match --- */
   var tw=document.querySelector('[data-tw]');
   if(tw){var L=[['Steel chair frame',100,1850],['Gas lift cylinder',100,690]],t={rec:0,bill:0};
@@ -596,13 +580,6 @@ JS = r'''<script>
     function vdraw(i){var r=RQ[i],k=cv.querySelector('[data-v-kind]');k.textContent=r[1];k.className='pu-v-kind pu-tag pu-tag--'+r[2];
       cv.querySelector('[data-v-req]').innerHTML=r[0];cv.querySelector('[data-v-how]').innerHTML=r[3];cv.querySelector('[data-v-with]').textContent=r[4];cv.querySelector('[data-v-eff]').textContent=r[5];}
     rb.forEach(function(b){b.addEventListener('click',function(){press(rb,b);vdraw(+b.getAttribute('data-req'));});});vdraw(0);}
-
-  /* --- 9 merge contacts --- */
-  var mg=document.querySelector('[data-merge]');
-  if(mg){var mb=mg.querySelector('[data-merge-go]'),mr=mg.querySelector('[data-merge-res]'),rows0=mg.querySelector('[data-merge-rows]').innerHTML;
-    mb.addEventListener('click',function(){if(mb.getAttribute('data-done')){mg.querySelector('[data-merge-rows]').innerHTML=rows0;mr.className='pu-merge-res';mr.textContent='';mb.textContent='Merge Contacts';mb.removeAttribute('data-done');return;}
-      mg.querySelector('[data-merge-rows]').innerHTML='<tr><td><span class="ox-cb is-on"></span></td><td><b>SRI LAKSHMI METALS PVT LTD</b><small>accounts@srilakshmimetals.in</small></td><td class="mono">33ABCFS1234K1ZP</td><td class="ox-num"><b>175</b></td></tr>';
-      mr.className='pu-merge-res is-ok';mr.innerHTML='3 contacts merged. 175 POs, receipts and bills now point to one vendor with one GSTIN.';mb.textContent='Show the duplicates again';mb.setAttribute('data-done','1');});}
 
   /* --- 11 go-live readiness --- */
   var ub=document.querySelector('[data-uatbox]');

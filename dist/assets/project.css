@@ -510,3 +510,5 @@ span.pj-fav{cursor:default;}
 @media (max-width:480px){.pj-q li{flex-direction:column;align-items:flex-start;}.pj-q-res{flex-direction:column;align-items:flex-start;gap:6px;}}
 
 @media (prefers-reduced-motion:reduce){.pj-effect li,.pj-chain li,.pj-role-card>*,.pj-panel,.pj-ph-card>div,.pj-bill-apps li.is-hot,.pj-app-card.is-hot{animation:none;}.pj-gt .ox-gt-bar,.pj-uat-bar i,.pj-upd-prog i b,.pj-ph-prog i b{transition:none;}}
+.pj-sec--roles .pl-grid .pl-ticks{gap:6px;}
+.pj-sec--roles .pl-grid .pl-ticks li{font-size:0.86rem;}

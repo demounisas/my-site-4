@@ -502,3 +502,4 @@ label>input[type=checkbox]:has(+.ps-sw){position:absolute;opacity:0;width:1px;he
 @media (max-width:1000px){.ps-hv{padding-left:clamp(24px,5vw,80px);}}
 @media (max-width:620px){.ps-hv{padding:20px 16px 70px;}.ps-hv-dev{width:100%;}.ps-hv-tab{transform:none;padding:8px;border-radius:18px;}.ps-hv-prn{width:112px;right:8px;}.ps-hv-paper{width:96px;font-size:8.5px;}
   .ps-hv-term{width:88px;left:6px;}.ps-hx-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+.ps-env-t{gap:8px;margin-top:6px;}.ps-env-t li{font-size:0.88rem;}

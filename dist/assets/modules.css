@@ -422,3 +422,59 @@
 .mk-pos-note span{color:var(--text-muted);}
 @media (max-width:520px){.mk-pos{grid-template-columns:minmax(0,1fr);}}
 
+
+/* ---------- plain sections: headings that don't name Odoo get no Odoo app screens, only these Unisas-styled blocks ---------- */
+.pl-card{padding:clamp(18px,2.4vw,26px);border-radius:18px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-2);min-width:0;text-align:left;}
+.pl-k{margin:0 0 14px;font-size:0.74rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--pl-a,var(--navy-700));}
+.pl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.pl-muted{color:var(--text-muted);}
+/* grid of cards with an accent top edge */
+.pl-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:16px;}
+.pl-grid>li{display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:16px;background:var(--surface);border:1px solid var(--border);border-top:4px solid var(--c,var(--pl-a,var(--navy-700)));box-shadow:var(--shadow-1);text-align:left;min-width:0;}
+.pl-grid .pl-n{font:700 0.78rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--c,var(--pl-a,var(--navy-700)));}
+.pl-grid b{font-size:1.02rem;color:var(--text);}
+.pl-grid em{font-style:normal;font-size:0.86rem;font-weight:600;color:var(--c,var(--pl-a,var(--navy-700)));}
+.pl-grid p{margin:0;font-size:0.9rem;line-height:1.55;color:var(--text-muted);}
+.pl-grid .pl-foot{margin-top:auto;padding-top:10px;border-top:1px dashed var(--border);font-size:0.84rem;}
+/* numbered steps */
+.pl-steps{list-style:none;margin:0;padding:0;display:grid;gap:0;}
+.pl-steps>li{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:4px 14px;padding:14px 0;border-top:1px solid var(--border);align-items:start;}
+.pl-steps>li:first-child{border-top:0;padding-top:0;}
+.pl-steps .pl-n{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--pl-at,var(--navy-tint));color:var(--pl-a,var(--navy-700));font-weight:700;font-size:0.86rem;grid-row:span 2;}
+.pl-steps b{color:var(--text);}
+.pl-steps p{grid-column:2/-1;margin:0;font-size:0.9rem;line-height:1.55;color:var(--text-muted);}
+.pl-steps em{grid-row:1;grid-column:3;font-style:normal;font-size:0.76rem;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--gold-tint);color:#8A6D12;white-space:nowrap;}
+/* quote cards (what people say today) */
+.pl-quotes{list-style:none;margin:0;padding:0;display:grid;gap:12px;}
+.pl-quotes li{position:relative;padding:14px 16px 14px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--warning);box-shadow:var(--shadow-1);text-align:left;}
+.pl-quotes p{margin:0;font-size:0.94rem;line-height:1.5;color:var(--text);}
+.pl-quotes small{display:block;margin-top:6px;font-size:0.8rem;font-weight:600;color:var(--text-muted);}
+/* chips and chip flows */
+.pl-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none;}
+.pl-chip{display:inline-block;padding:4px 11px;border-radius:999px;background:var(--pl-at,var(--navy-tint));color:var(--pl-a,var(--navy-700));font-size:0.8rem;font-weight:600;}
+.pl-chip.is-ok{background:var(--success-tint);color:var(--success);}
+.pl-chip.is-bad{background:var(--warning-tint);color:var(--warning);}
+.pl-chip.is-gold{background:var(--gold-tint);color:#8A6D12;}
+.pl-flow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;}
+.pl-flow>li{position:relative;}
+.pl-flow>li+li::before{content:"\2192";position:absolute;left:-18px;top:50%;transform:translateY(-52%);color:var(--text-muted);}
+/* plain table */
+.pl-table{width:100%;border-collapse:collapse;font-size:0.92rem;text-align:left;}
+.pl-table th,.pl-table td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+.pl-table thead th{font-size:0.74rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);vertical-align:bottom;}
+.pl-table tbody th{font-weight:600;color:var(--text);}
+.pl-table tbody tr:last-child>*{border-bottom:0;}
+.pl-table .is-c{text-align:center;white-space:nowrap;}
+/* tick / cross lists */
+.pl-ticks{list-style:none;margin:0;padding:0;display:grid;gap:10px;}
+.pl-ticks li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;font-size:0.94rem;line-height:1.5;color:var(--text);}
+.pl-ticks li::before{content:"\2713";display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--success-tint);color:var(--success);font-size:0.78rem;font-weight:700;}
+.pl-ticks.is-x li::before{content:"\00D7";background:var(--warning-tint);color:var(--warning);font-size:1rem;}
+/* two columns */
+.pl-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(18px,2.6vw,28px);align-items:start;}
+.pl-2.is-w{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);}
+@media (max-width:1000px){.pl-grid{grid-template-columns:repeat(min(var(--cols,3),2),minmax(0,1fr));}}
+@media (max-width:900px){.pl-2,.pl-2.is-w{grid-template-columns:minmax(0,1fr);}}
+@media (max-width:600px){.pl-grid{grid-template-columns:minmax(0,1fr);}.pl-steps>li{grid-template-columns:36px minmax(0,1fr);}.pl-steps em{grid-row:auto;grid-column:2;justify-self:start;}}
+.pl-grid p b,.pl-steps p b{font-size:inherit;color:var(--text);}
+.pl-grid li li b{font-size:inherit;}

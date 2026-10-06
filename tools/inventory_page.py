@@ -243,21 +243,15 @@ def build(g):
              ("mrp", "CHN/MO/00213", "Built into Height-adjustable desk", "Sep 29 &middot; 1 unit"),
              ("out", "CHN/OUT/00031", "Delivered to Bluebay Retail Pvt Ltd", "Oct 01 &middot; 1 unit"),
              ("ret", "Warranty", "Covered until Oct 2028", "Linked to the customer invoice")]
-    trows = "".join('<li class="iv-tr--%s"><i></i><div><b>%s</b><span>%s</span><small>%s</small></div></li>' % t for t in trace)
     cfgs = [("GS1 or your own barcodes", "Products, locations, lots and packages all scannable."),
             ("Lots with expiry dates", "FEFO picking so the oldest batch leaves first."),
             ("Serial numbers", "One record per unit, from vendor to customer to warranty."),
             ("Labels that print", "Product, lot and location labels for your Zebra or office printer.")]
     out += sec(head("BARCODE &amp; TRACEABILITY", "How Can Unisas Configure Barcode, Lot and Serial Number Tracking?",
-                    "Scan a receipt on the phone below the way your team will in the Odoo Barcode app, then follow one serial number end to end.", "is-center")
-               + '<div class="iv-bc"><div class="iv-phone ox-solo" data-bc><div class="iv-ph-notch"></div><div class="iv-ph-screen">'
-                 '<div class="iv-ph-top"><span>&larr;</span><b>CHN/IN/00009</b><span class="iv-ph-dots">&#8942;</span></div>'
-                 '<div class="iv-ph-src"><small>Receipt from</small><b>Sri Lakshmi Metals</b><small>To CHN/Stock</small></div>'
-                 '<div class="iv-ph-lines" data-bc-lines></div><p class="iv-ph-msg" data-bc-msg>Scan a product, lot or serial number</p>'
-                 '<div class="iv-ph-btns"><button type="button" class="iv-ph-scan" data-bc-scan>%s<span>Scan next barcode</span></button>'
-                 '<button type="button" class="iv-ph-val" data-bc-val disabled>Validate</button></div></div></div>'
-                 '<div class="iv-trace ox-solo"><p class="iv-trace-h"><span>Traceability</span><b>SN-MTR-000481</b><small>Desk frame motor</small></p><ol>%s</ol></div>'
-                 '<ul class="iv-bc-cfg">%s</ul></div>' % (SCAN, trows, "".join('<li><b>%s</b><span>%s</span></li>' % c for c in cfgs)), "iv-sec--bc")
+                    "We decide with you what gets a barcode, which products need lots or serial numbers, and what labels you print. Then any unit can be traced from vendor to customer.", "is-center")
+               + '<div class="pl-2"><ul class="pl-grid" style="--cols:2">%s</ul><div class="pl-card"><p class="pl-k">One serial number, end to end &middot; SN-MTR-000481</p><ol class="pl-steps">%s</ol></div></div>'
+                 % ("".join('<li><span class="pl-n">%02d</span><b>%s</b><p>%s</p></li>' % (i + 1, t, x) for i, (t, x) in enumerate(cfgs)),
+                    "".join('<li><span class="pl-n">%d</span><b>%s</b><em>%s</em><p>%s</p></li>' % (i + 1, w, d, r) for i, (k, r, w, d) in enumerate(trace))), "iv-sec--bc")
 
     # 7 ---- connected with sales, purchase, manufacturing: Forecasted report
     lines = [("purchase", "P00034", "Sri Lakshmi Metals", "Oct 06", 60, "Incoming"), ("sales", "S00482", "Bluebay Retail", "Oct 03", -24, "Reserved"),
@@ -317,21 +311,16 @@ def build(g):
            ("Reconcile", "Quantity and value matched warehouse by warehouse before cutover.")]
     maps = [("Item Code", "Internal Reference"), ("Item Name", "Name"), ("UOM", "Unit of Measure"), ("Godown", "Location"),
             ("Batch No", "Lot/Serial Number"), ("Closing Qty", "Counted Quantity"), ("Rate", "Cost")]
-    mrows2 = "".join('<tr><td>%s</td><td>%s</td><td><span class="iv-map">%s</span></td></tr>' % (a, ARROW_R, b) for a, b in maps)
+    mrows2 = "".join('<tr><th>%s</th><td class="is-c">&rarr;</td><td>%s</td></tr>' % (a, b) for a, b in maps)
     rec = [("Chennai", 1842, 4823600), ("Bengaluru", 412, 1094500), ("Coimbatore", 233, 386200)]
-    rrows = "".join('<tr><td>%s</td><td class="ox-num">%s</td><td class="ox-num">%s</td><td><span class="iv-ok">%sMatched</span></td></tr>'
-                    % (w, "{:,}".format(q), inr(v), TICK) for w, q, v in rec)
+    rrows = "".join('<tr><th>%s</th><td class="is-c">%s</td><td class="is-c">%s</td></tr>'
+                    % (w, "{:,}".format(q), inr(v)) for w, q, v in rec)
     out += sec(head("DATA MIGRATION", "How Does Unisas Handle Inventory Data Migration and Validation?",
                     "Bad opening stock spoils a good implementation. We test every import and reconcile every warehouse before you go live.", "is-center")
-               + '<div class="iv-mig">%s<div class="ox iv-ox" data-imp><div class="ox-cp"><div class="ox-cp-l"><button type="button" class="ox-new" data-imp-go disabled>Import</button>'
-                 '<button type="button" class="ox-sbtn" data-imp-test>Test</button><span class="ox-crumb">Import a File</span></div></div>'
-                 '<div class="iv-imp"><p class="iv-imp-file">%s<b>tally_closing_stock_30Sep.xlsx</b><small>2,487 rows</small></p>'
-                 '<table class="iv-imp-map"><thead><tr><th>File Column</th><th></th><th>Odoo Field</th></tr></thead><tbody>%s</tbody></table>'
-                 '<div class="iv-imp-msg" data-imp-msg role="status" aria-live="polite"><p class="is-idle">Press <b>Test</b> to check the file before importing.</p></div></div></div>'
-                 '<div class="iv-rec ox-solo"><p class="iv-rec-h"><b>Opening stock reconciliation</b><small>Tally closing 30 Sep vs Odoo opening 01 Oct</small></p>'
-                 '<table><thead><tr><th>Warehouse</th><th class="ox-num">Units</th><th class="ox-num">Value</th><th></th></tr></thead><tbody>%s</tbody>'
-                 '<tfoot><tr><td>Total</td><td class="ox-num">2,487</td><td class="ox-num">%s</td><td><span class="iv-ok">%sSigned off</span></td></tr></tfoot></table></div></div>'
-                 % (steps(mig), ic('<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13l6 5M15 13l-6 5"/>', 18, 1.7), mrows2, rrows, inr(sum(v for _w, _q, v in rec)), TICK),
+               + '<div class="iv-mig">%s<div class="pl-card"><p class="pl-k">Column mapping &middot; tally_closing_stock_30Sep.xlsx</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Your file</th><th></th><th>Becomes</th></tr></thead><tbody>%s</tbody></table></div></div>'
+                 '<div class="pl-card"><p class="pl-k">Opening stock reconciliation</p><p class="pl-muted" style="margin:-6px 0 10px;font-size:0.86rem">Tally closing 30 Sep vs new opening 01 Oct</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Warehouse</th><th class="is-c">Units</th><th class="is-c">Value</th></tr></thead><tbody>%s</tbody>'
+                 '<tfoot><tr><th>Total</th><td class="is-c"><b>2,487</b></td><td class="is-c"><b>%s</b></td></tr></tfoot></table></div><p style="margin:12px 0 0"><span class="pl-chip is-ok">&#10003; All warehouses matched &middot; signed off</span></p></div></div>'
+                 % (steps(mig), mrows2, rrows, inr(sum(v for _w, _q, v in rec))),
                "iv-sec--mig")
 
     # 10 ---- visibility & valuation: costing method switch
@@ -470,24 +459,6 @@ JS = r'''<script>
       rrender();});
     rrender();}
 
-  /* --- barcode scan simulation --- */
-  var bc=document.querySelector('[data-bc]');
-  if(bc){var L=[{n:'Ergo task chair',c:'FURN-0101',d:24,q:0},{n:'Desk frame motor',c:'COMP-2210',d:3,q:0,sn:[]},{n:'Seat foam adhesive',c:'COMP-0450',d:6,q:0,lot:''}],
-      S=[[0,'Package PACK0000123 scanned: 24 × Ergo task chair',function(){L[0].q=24;}],
-         [1,'Product COMP-2210 scanned. Scan a serial number.',null],
-         [1,'Serial SN-MTR-000481 recorded',function(){L[1].q=1;L[1].sn.push('SN-MTR-000481');}],
-         [1,'Serial SN-MTR-000482 recorded',function(){L[1].q=2;L[1].sn.push('SN-MTR-000482');}],
-         [1,'Serial SN-MTR-000483 recorded',function(){L[1].q=3;L[1].sn.push('SN-MTR-000483');}],
-         [2,'Lot LOT-2026-0912 scanned, expiry 03/2027',function(){L[2].q=6;L[2].lot='LOT-2026-0912';}]],
-      k=0,lines=bc.querySelector('[data-bc-lines]'),msg=bc.querySelector('[data-bc-msg]'),scan=bc.querySelector('[data-bc-scan]'),val=bc.querySelector('[data-bc-val]'),hot=-1;
-    function bdraw(done){lines.innerHTML=L.map(function(l,i){var ok=l.q>=l.d;return '<div class="iv-ph-line'+(ok?' is-ok':'')+(i===hot?' is-hot':'')+'"><div><b>'+l.n+'</b><small>'+l.c+(l.sn&&l.sn.length?' · '+l.sn[l.sn.length-1]:'')+(l.lot?' · '+l.lot:'')+'</small></div><span>'+l.q+' / '+l.d+'</span></div>';}).join('')+
-      (done?'<p class="iv-ph-done">Validated. Stored in CHN/Stock/Shelf A-02 and D-02 by putaway rules.</p>':'');}
-    scan.addEventListener('click',function(){if(k>=S.length)return;var s=S[k++];hot=s[0];if(s[2])s[2]();msg.textContent=s[1];msg.classList.remove('is-err');
-      if(k>=S.length){val.disabled=false;scan.disabled=true;msg.textContent='All lines complete. Ready to validate.';}bdraw();});
-    val.addEventListener('click',function(){val.disabled=true;hot=-1;msg.textContent='CHN/IN/00009: Done';bdraw(true);
-      setTimeout(function(){L.forEach(function(l){l.q=0;if(l.sn)l.sn=[];if(l.lot!==undefined)l.lot='';});k=0;scan.disabled=false;scan.querySelector('span').textContent='Scan again';msg.textContent='Scan a product, lot or serial number';bdraw();},4200);});
-    bdraw();}
-
   /* --- forecast filter --- */
   var fc=document.querySelector('[data-fcr]');
   if(fc){var tabs=[].slice.call(fc.querySelectorAll('[data-fc]')),links=[].slice.call(document.querySelectorAll('[data-fc-link]'));
@@ -496,12 +467,6 @@ JS = r'''<script>
       links.forEach(function(l){l.classList.toggle('is-on',l.getAttribute('data-fc-link')===k);});}
     tabs.forEach(function(b){b.addEventListener('click',function(){pick(b.getAttribute('data-fc'));});});
     links.forEach(function(l){l.addEventListener('mouseenter',function(){pick(l.getAttribute('data-fc-link'));});l.addEventListener('mouseleave',function(){pick('all');});});}
-
-  /* --- import test --- */
-  var im=document.querySelector('[data-imp]');
-  if(im){var box=im.querySelector('[data-imp-msg]'),go=im.querySelector('[data-imp-go]'),test=im.querySelector('[data-imp-test]');
-    test.addEventListener('click',function(){box.innerHTML='<p class="is-warn"><b>Row 214:</b> unit “Nos” not found, mapped to “Units”.</p><p class="is-warn"><b>Row 377:</b> duplicate Item Code FURN-0420 merged with row 112.</p><p class="is-ok">Everything else seems valid. 2,487 rows ready to import.</p>';go.disabled=false;});
-    go.addEventListener('click',function(){box.innerHTML='<p class="is-ok"><b>2,487 records imported</b> across 3 warehouses. Opening stock reconciled below.</p>';go.disabled=true;});}
 
   /* --- valuation FIFO vs AVCO --- */
   var vl=document.querySelector('[data-val]');

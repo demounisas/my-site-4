@@ -229,25 +229,22 @@ def build(g):
                  '<li><b>Recurring tasks</b><span>Monthly maintenance or GST filings are created on schedule. <i>Repeat every 1 month</i></span></li>'
                  '<li><b>Activities</b><span>Calls and to-dos on a task, with reminders when they fall due.</span></li></ul></div></div>', "pj-sec--dep")
 
-    # 5 ---- timesheets, sales and accounting
+    # 5 ---- timesheets, sales and accounting (plain: no Odoo screens under this heading)
+    chain = [("#EE8A3C", "Sales order", "S00482 confirmed", "120 hours of fit-out design sold at &#8377; 2,500 an hour. The project and its 11 tasks are created from a template."),
+             ("#1F9E80", "Timesheets", "64 hours logged", "The team logs time on tasks from web or mobile. Each hour counts as delivered on the sales order."),
+             ("#8E4F83", "Invoice", "40 hours invoiced", "The invoice is drafted from the logged hours, and billed hours are locked so nobody edits them."),
+             ("#264E86", "Profitability", "50% margin", "Revenue, labour cost and purchases for the project update as work is logged and billed.")]
+    prof = [("Timesheets (120 h sold)", inr(160000), inr(60000), inr(100000)), ("Materials", inr(348000), inr(0), inr(348000)),
+            ("<b>Revenue</b>", "<b>" + inr(508000) + "</b>", "<b>" + inr(60000) + "</b>", "<b>" + inr(448000) + "</b>"),
+            ("Labour (64 h)", "&minus;" + inr(70400), "", ""), ("Purchases", "&minus;" + inr(185000), "", ""),
+            ("<b>Margin</b>", '<b style="color:var(--success)">' + inr(252600) + "</b>", "", "<b>50%</b>")]
     out += sec(head("CONNECTED TO SALES &amp; ACCOUNTING", "How Does Unisas Connect Project Management With Timesheets, Sales and Accounting?",
-                    "A confirmed sales order creates the project. Hours logged on tasks become billable, the invoice is drafted from them, and the project's profitability updates as you go. "
-                    "Log some work and invoice it.", "is-center")
-               + '<div class="pj-bill" data-bill><div class="ox pj-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Sales Orders</a><span>S00482</span></span></div>'
-                 '<span></span><span class="ox-sbar is-mini pj-bill-sb"><span class="ox-sb">Quotation</span><span class="ox-sb">Quotation Sent</span><span class="ox-sb is-cur">Sales Order</span></span></div>'
-                 '<div class="pj-bill-btns"><button type="button" class="ox-pbtn" data-bill-do="log">Log 8 hours on a task</button><button type="button" class="ox-sbtn" data-bill-do="inv">Create Invoice</button>'
-                 '<button type="button" class="ox-sbtn pj-bill-reset" data-bill-do="reset">Reset</button></div>'
-                 '<div class="pj-bill-sheet"><div class="pj-smarts" data-bill-smart></div><p class="pj-doc-kind">Sales Order</p><h3>S00482</h3>'
-                 '<dl class="ox-fields"><div><dt>Customer</dt><dd>Shree Distributors</dd></div><div><dt>Project</dt><dd><span class="pj-link">Office Fit-out: Chennai HQ</span></dd></div>'
-                 '<div><dt>Invoice Status</dt><dd data-bill-is></dd></div><div><dt>Payment Terms</dt><dd>15 Days</dd></div></dl>'
-                 '<div class="ox-ftabs"><span class="is-on">Order Lines</span><span>Other Info</span></div>'
-                 '<div class="ox-scroll"><table class="pj-lines"><thead><tr><th>Product</th><th class="ox-num">Quantity</th><th class="ox-num">Delivered</th><th class="ox-num">Invoiced</th><th class="ox-num">Unit Price</th><th class="ox-num">Amount</th></tr></thead>'
-                 '<tbody data-bill-lines></tbody></table></div></div></div>'
-                 '<div class="pj-prof ox-solo"><p class="pj-prof-h"><b>Profitability</b><small>Office Fit-out: Chennai HQ</small></p><div class="ox-scroll"><table class="pj-prof-t" data-bill-prof></table></div>'
-                 '<ol class="pj-bill-apps" aria-live="polite">'
-                 '<li data-bill-app="sales" style="--c:#EE8A3C"><b>Sales</b><span data-bill-txt></span></li>'
-                 '<li data-bill-app="ts" style="--c:#1F9E80"><b>Timesheets</b><span data-bill-txt></span></li>'
-                 '<li data-bill-app="acc" style="--c:#8E4F83"><b>Accounting</b><span data-bill-txt></span></li></ol></div></div>', "pj-sec--bill")
+                    "A confirmed sales order creates the project. Hours logged on tasks become billable, the invoice is drafted from them, and the project's profitability updates as you go.", "is-center")
+               + '<ol class="pl-grid" style="--cols:4">%s</ol>'
+                 '<div class="pl-card" style="max-width:820px;margin:20px auto 0"><p class="pl-k">Office Fit-out: Chennai HQ &middot; profitability</p><div class="pl-scroll"><table class="pl-table">'
+                 '<thead><tr><th></th><th class="is-c">Expected</th><th class="is-c">To invoice</th><th class="is-c">Invoiced</th></tr></thead><tbody>%s</tbody></table></div></div>'
+                 % ("".join('<li style="--c:%s"><span class="pl-n">%02d &middot; %s</span><b>%s</b><p>%s</p></li>' % (c, k + 1, t, e, x) for k, (c, t, e, x) in enumerate(chain)),
+                    "".join('<tr><th>%s</th><td class="is-c">%s</td><td class="is-c">%s</td><td class="is-c">%s</td></tr>' % r for r in prof)), "pj-sec--bill")
 
     # 6 ---- planning: Gantt + project update
     out += sec(head("PLANNING &amp; PROGRESS", "Can Odoo Help You Plan Resources, Deadlines and Project Progress?",
@@ -274,18 +271,16 @@ def build(g):
               ["See task progress and documents", "Approve work or request changes", "Comment on a task by email or portal"], ["See internal notes or hours cost", "See other clients"]),
              ("ac", "Accounts", "Invoicing: Billing", "Sales orders ready to invoice",
               ["Invoice timesheets and milestones", "Check delivered against invoiced hours"], ["Edit tasks or plans"])]
-    rtabs = "".join('<button type="button" class="pj-role%s" data-role="%d" aria-pressed="%s"><b>%s</b><small>%s</small></button>'
-                    % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", r[1], r[2]) for i, r in enumerate(roles))
     reqs = [("Stages and milestones per project type", "cfg"), ("Clients approve work in the portal", "cfg"), ("Project templates for repeat jobs", "cfg"),
             ("Extra fields: site address, PO number, region", "studio"), ("Your own task report and client status PDF", "studio"),
             ("Stage gate: no handover until the checklist is complete", "custom"), ("Sync tasks with a client's Jira", "custom")]
     lab = {"cfg": "Configuration", "studio": "Studio", "custom": "Customization"}
     out += sec(head("DATA, ROLES &amp; CUSTOMIZATION", "How Does Unisas Handle Project Data, Roles and Workflow Customization?",
                     "Each person sees what their role needs and nothing more. We configure first, use Odoo Studio for light changes, and write code only when the process truly needs it.", "is-center")
-               + '<div class="pj-roles" data-roles><div class="pj-role-tabs" role="group" aria-label="Roles">%s</div><div class="pj-role-card ox-solo" aria-live="polite" data-role-card></div>'
-                 '<div class="pj-reqs ox-solo"><p class="pj-effect-h">Typical requests and how we meet them</p><ul>%s</ul></div></div>'
-                 '<script type="application/json" id="pj-roles">%s</script>'
-               % (rtabs, "".join('<li><span>%s</span><i class="pj-tag pj-tag--%s">%s</i></li>' % (t, k, lab[k]) for t, k in reqs), json.dumps(roles)), "pj-sec--roles")
+               + '<ul class="pl-grid" style="--cols:4">%s</ul><div class="pl-card" style="margin-top:20px"><p class="pl-k">Typical requests and how we meet them</p><div class="pl-scroll"><table class="pl-table"><tbody>%s</tbody></table></div></div>'
+               % ("".join('<li><b>%s</b><em>%s</em><p>Lands on: %s</p><ul class="pl-ticks" style="margin-top:8px">%s</ul><ul class="pl-ticks is-x">%s</ul></li>'
+                          % (r[1], r[2], r[3], "".join("<li>%s</li>" % x for x in r[4]), "".join("<li>%s</li>" % x for x in r[5])) for r in roles),
+                  "".join('<tr><th>%s</th><td style="text-align:right"><span class="pl-chip%s">%s</span></td></tr>' % (t, {"cfg": " is-ok", "studio": "", "custom": " is-gold"}[k], lab[k]) for t, k in reqs)), "pj-sec--roles")
 
     # 8 ---- connected apps
     apps = [("Timesheets", "#1F9E80", "Hours logged on tasks from web, mobile or a running timer, approved by managers.", "Rahul logs 3:30 on cabling; it shows on the task, the SO and the margin."),
@@ -316,8 +311,6 @@ def build(g):
                "Trello": [["Card Name", "Title"], ["Board Name", "Project"], ["Members", "Assignees"], ["List Name", "Stage"], ["Due Date", "Deadline"], ["Labels", "Tags"], ["Card Description", "Description"]],
                "MS Project": [["Task Name", "Title"], ["Resource Names", "Assignees"], ["Start", "Planned Date"], ["Finish", "Deadline"], ["Work", "Allocated Time"], ["Predecessors", "Blocked By"], ["Milestone", "Milestone"]],
                "Jira": [["Summary", "Title"], ["Project name", "Project"], ["Assignee", "Assignees"], ["Status", "Stage"], ["Due date", "Deadline"], ["Original Estimate", "Allocated Time"], ["Issue links", "Blocked By"]]}
-    src_btn = "".join('<button type="button" class="pj-src%s" data-src="%s" aria-pressed="%s">%s</button>' % (" is-on" if i == 0 else "", k, "true" if i == 0 else "false", k)
-                      for i, k in enumerate(sources))
     uat = [("Project managers", [("Create a project from the fit-out template", True), ("Reschedule the Gantt after a delay", True), ("Post a weekly project update", False)]),
            ("Team", [("Log time from the mobile app", True), ("Move a task and request changes", False)]),
            ("Client", [("Approve a task in the portal", False)]),
@@ -333,14 +326,12 @@ def build(g):
            ("Train by role", "Managers, team, accounts and clients each learn only their screens.")]
     out += sec(head("MIGRATION, TESTING &amp; TRAINING", "How Does Unisas Manage Data Migration, Testing and User Training?",
                     "Your live projects come across with their tasks, owners, dates and logged hours. Each role then tests its own scenarios before go-live. Pick where your projects live today.", "is-center")
-               + '<div class="pj-mig">%s<div class="ox pj-ox pj-imp" data-imp><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Tasks</a><span>Import a File</span></span></div></div>'
-                 '<div class="pj-imp-body"><div class="pj-srcs" role="group" aria-label="Source">%s</div><p class="pj-imp-file" data-imp-file></p>'
-                 '<div class="ox-scroll"><table class="ox-table pj-imp-t"><thead><tr><th>File Column</th><th></th><th>Odoo Field</th></tr></thead><tbody data-imp-rows></tbody></table></div>'
-                 '<div class="pj-imp-btns"><button type="button" class="ox-sbtn" data-imp-do="test">Test</button><button type="button" class="ox-pbtn" data-imp-do="go">Import</button></div>'
-                 '<p class="pj-imp-res" data-imp-res role="status" aria-live="polite"></p></div></div>'
+               + '<div class="pj-mig">%s<div class="pl-card"><p class="pl-k">Where your projects live today</p><ul class="pl-chips" style="margin-bottom:14px">%s</ul>'
+                 '<p class="pl-muted" style="margin:0 0 8px;font-size:0.86rem">Example mapping from an Excel tracker</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Your column</th><th></th><th>Becomes</th></tr></thead><tbody>%s</tbody></table></div>'
+                 '<p style="margin:12px 0 0"><span class="pl-chip is-ok">&#10003; 312 tasks, 6 stages and 14 users matched in the trial import</span></p></div>'
                  '<div class="pj-uat ox-solo" data-uatbox><div class="pj-uat-h"><span><small>User acceptance testing</small><b>Go-live readiness</b></span><span class="pj-uat-pct" data-uat-pct></span></div>'
                  '<div class="pj-uat-bar"><i data-uat-bar></i></div><ul>%s</ul><p class="pj-uat-res" data-uat-res aria-live="polite"></p></div></div>'
-                 '<script type="application/json" id="pj-src">%s</script>' % (steps(mig), src_btn, ul, json.dumps(sources)), "pj-sec--mig")
+                 '' % (steps(mig), "".join('<li class="pl-chip">%s</li>' % k for k in sources), "".join('<tr><th>%s</th><td class="is-c">&rarr;</td><td>%s</td></tr>' % (a, b) for a, b in sources["Excel"]), ul), "pj-sec--mig")
 
     # 10 ---- what's included: the implementation as an Odoo project
     scope = [("First Phase: Discover &amp; design", ["Workshops on how you deliver and bill", "Stages, milestones and project templates designed", "Roles, visibility and portal access agreed"]),
@@ -578,33 +569,6 @@ JS = r'''<script>
       if(e.target.closest('[data-dep-reset]')){reset();ddraw();}});
     reset();ddraw();}
 
-  /* --- 5 timesheets to invoice --- */
-  var bl=document.querySelector('[data-bill]');
-  if(bl){var RATE=2500,COST=1100,PO=185000,ORD=120,b;
-    function breset(){b={del:64,inv:40,n:0};}
-    function say(k,t){var li=bl.querySelector('[data-bill-app="'+k+'"]');li.querySelector('[data-bill-txt]').innerHTML=t;li.classList.remove('is-hot');void li.offsetWidth;li.classList.add('is-hot');}
-    function bdraw(){bl.querySelector('[data-bill-lines]').innerHTML='<tr><td><b>Fit-out design &amp; supervision</b><small>Service, invoiced on timesheets</small></td><td class="ox-num">'+ORD+'.00 Hours</td>'+
-        '<td class="ox-num pj-in">'+b.del.toFixed(2)+'</td><td class="ox-num">'+b.inv.toFixed(2)+'</td><td class="ox-num">'+inr(RATE,1)+'</td><td class="ox-num">'+inr(ORD*RATE,1)+'</td></tr>'+
-        '<tr><td><b>Modular workstations</b><small>Delivered and invoiced</small></td><td class="ox-num">24.00 Units</td><td class="ox-num">24.00</td><td class="ox-num">24.00</td><td class="ox-num">'+inr(14500,1)+'</td><td class="ox-num">'+inr(348000,1)+'</td></tr>';
-      var toinv=b.del>b.inv;bl.querySelector('[data-bill-is]').innerHTML='<span class="pj-st '+(toinv?'is-to':'is-ok')+'">'+(toinv?'To Invoice':'Fully Invoiced')+'</span>';
-      bl.querySelector('[data-bill-smart]').innerHTML='<span class="pj-smart"><span>Project<b>1</b></span></span><span class="pj-smart"><span>Tasks<b>11</b></span></span><span class="pj-smart"><span>Recorded<b>'+b.del+' Hours</b></span></span><span class="pj-smart"><span>Invoices<b>'+(1+b.n)+'</b></span></span>';
-      var ri=b.inv*RATE+348000,rt=(b.del-b.inv)*RATE,ct=b.del*COST+PO,exp=ri+rt;
-      function row(n,e,a,c,cls){return '<tr class="'+(cls||'')+'"><td>'+n+'</td><td class="ox-num">'+e+'</td><td class="ox-num">'+a+'</td><td class="ox-num">'+c+'</td></tr>';}
-      bl.querySelector('[data-bill-prof]').innerHTML='<thead><tr><th>Revenues</th><th class="ox-num">Expected</th><th class="ox-num">To Invoice</th><th class="ox-num">Invoiced</th></tr></thead><tbody>'+
-        row('Timesheets (billed on timesheets)',inr((b.del)*RATE),inr(rt),inr(b.inv*RATE))+row('Materials',inr(348000),inr(0),inr(348000))+
-        row('<b>Total</b>','<b>'+inr(exp)+'</b>','<b>'+inr(rt)+'</b>','<b>'+inr(ri)+'</b>','is-tot')+
-        '</tbody><thead><tr><th>Costs</th><th class="ox-num">Expected</th><th class="ox-num">To Bill</th><th class="ox-num">Billed</th></tr></thead><tbody>'+
-        row('Timesheets',inr(-b.del*COST),inr(0),inr(-b.del*COST))+row('Purchase Orders',inr(-PO),inr(0),inr(-PO))+
-        row('<b>Total</b>','<b>'+inr(-ct)+'</b>',inr(0),'<b>'+inr(-ct)+'</b>','is-tot')+
-        '</tbody><tfoot><tr><td><b>Margin</b></td><td class="ox-num"><b class="pj-in">'+inr(exp-ct)+'</b></td><td colspan="2" class="ox-num"><b>'+Math.round((exp-ct)/exp*100)+'%</b></td></tr></tfoot>';
-      var L=bl.querySelector('[data-bill-do="log"]'),I=bl.querySelector('[data-bill-do="inv"]');L.disabled=b.del>=ORD;I.disabled=!toinv;I.className=toinv?'ox-pbtn':'ox-sbtn';L.className=toinv?'ox-sbtn':'ox-pbtn';}
-    bl.addEventListener('click',function(e){var x=e.target.closest('[data-bill-do]');if(!x||x.disabled)return;var k=x.getAttribute('data-bill-do');
-      if(k==='log'){b.del=Math.min(ORD,b.del+8);say('ts','Rahul Menon logged <b>8:00</b> on <i>Electrical &amp; data cabling</i>. The task shows '+b.del+' of 120 hours used.');say('sales','Delivered quantity on S00482 is now <b>'+b.del+' hours</b>.');say('acc',(b.del-b.inv)+' hours ('+inr((b.del-b.inv)*RATE)+') are ready to invoice.');}
-      if(k==='inv'){var h=b.del-b.inv;b.inv=b.del;b.n++;say('acc','Invoice <b>INV/2026/04'+(12+b.n)+'</b> for '+h+' hours, '+inr(h*RATE*1.18)+' incl. GST, drafted with the timesheet lines attached.');say('ts','The invoiced timesheets are locked, so nobody edits billed hours.');say('sales','S00482: '+b.inv+' of 120 hours invoiced.');}
-      if(k==='reset'){breset();say('sales','S00482 created the project and its tasks from the fit-out template.');say('ts','64 hours logged so far by the team, against 120 sold.');say('acc','40 hours invoiced. 24 hours are waiting to be billed.');}
-      bdraw();});
-    breset();say('sales','S00482 created the project and its tasks from the fit-out template.');say('ts','64 hours logged so far by the team, against 120 sold.');say('acc','40 hours invoiced. 24 hours are waiting to be billed.');bdraw();}
-
   /* --- 6 Gantt planning --- */
   var pl=document.querySelector('[data-plan]');
   if(pl){var N=35,DL=32,ps={delay:false,crew:false};
@@ -635,13 +599,6 @@ JS = r'''<script>
       if(k==='reset'){ps={delay:false,crew:false};}else{ps[k]=!ps[k];if(k==='delay'&&!ps.delay)ps.crew=false;}gdraw();});
     gdraw();}
 
-  /* --- 7 roles --- */
-  var rl=document.querySelector('[data-roles]');
-  if(rl){var R=JSON.parse(document.getElementById('pj-roles').textContent),rb=[].slice.call(rl.querySelectorAll('[data-role]')),card=rl.querySelector('[data-role-card]');
-    function rdraw(i){var r=R[i];card.innerHTML='<p class="pj-role-h"><b>'+r[1]+'</b><span class="pj-tag pj-tag--cfg">'+r[2]+'</span></p><p class="pj-role-land"><small>Lands on</small>'+r[3]+'</p>'+
-      '<div class="pj-role-cols"><div><small>Can</small><ul>'+r[4].map(function(x){return '<li class="is-y">'+x+'</li>';}).join('')+'</ul></div><div><small>Cannot</small><ul>'+r[5].map(function(x){return '<li class="is-n">'+x+'</li>';}).join('')+'</ul></div></div>';}
-    rb.forEach(function(b){b.addEventListener('click',function(){press(rb,b);rdraw(+b.getAttribute('data-role'));});});rdraw(0);}
-
   /* --- 8 apps --- */
   var ap=document.querySelector('[data-app-card]');
   if(ap){var A=JSON.parse(document.getElementById('pj-apps').textContent),ab=[].slice.call(document.querySelectorAll('[data-app]'));
@@ -650,16 +607,6 @@ JS = r'''<script>
     ab.forEach(function(b){b.addEventListener('click',function(){press(ab,b);adraw(+b.getAttribute('data-app'));});});adraw(0);}
 
   /* --- 9 import + UAT --- */
-  var im=document.querySelector('[data-imp]');
-  if(im){var SRC=JSON.parse(document.getElementById('pj-src').textContent),sb=[].slice.call(im.querySelectorAll('[data-src]')),cur='Excel',res=im.querySelector('[data-imp-res]');
-    var FILE={'Excel':'Project_Tracker_FINAL_v7.xlsx','Asana':'asana_export_office_fitout.csv','Trello':'trello_board_export.json → csv','MS Project':'ChennaiHQ_plan.mpp → xml','Jira':'jira_issues_FIT.csv'};
-    function idraw(){im.querySelector('[data-imp-file]').innerHTML='<b>'+FILE[cur]+'</b> &middot; 312 rows';
-      im.querySelector('[data-imp-rows]').innerHTML=SRC[cur].map(function(r){return '<tr class="is-static"><td>'+r[0]+'</td><td class="ox-muted">&rarr;</td><td><span class="pj-sel">'+r[1]+'</span></td></tr>';}).join('');res.className='pj-imp-res';res.textContent='';}
-    sb.forEach(function(b){b.addEventListener('click',function(){press(sb,b);cur=b.getAttribute('data-src');idraw();});});
-    im.addEventListener('click',function(e){var b=e.target.closest('[data-imp-do]');if(!b)return;
-      if(b.getAttribute('data-imp-do')==='test'){res.className='pj-imp-res is-info';res.innerHTML='Everything seems valid. 312 tasks, 6 stages and 14 users matched.';}
-      else{res.className='pj-imp-res is-ok';res.innerHTML='312 records successfully imported into <b>'+(cur==='Excel'?'4 projects':'Office Fit-out: Chennai HQ')+'</b>, with stages, assignees and deadlines.';}});
-    idraw();}
   var ub=document.querySelector('[data-uatbox]');
   if(ub){var cb=[].slice.call(ub.querySelectorAll('[data-uat]'));
     function udraw(){var n=cb.filter(function(c){return c.checked;}).length,p=Math.round(n/cb.length*100);

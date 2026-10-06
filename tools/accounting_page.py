@@ -110,15 +110,12 @@ def build(g):
              ("asset", "Assets &amp; depreciation", "Accounting &rsaquo; Assets", "Asset register with depreciation posted every month.", "Year-end depreciation worksheet"),
              ("budget", "Budgets &amp; cost centres", "Configuration &rsaquo; Financial Budgets", "Budgets per branch or project, compared with actuals through analytic accounts.", "Branch P&amp;Ls built from exports"),
              ("close", "Closing &amp; reports", "Reporting &rsaquo; Statement Reports", "Profit and Loss, Balance Sheet and Cash Flow, live at any date, with lock dates once filed.", "Waiting for month end to see numbers")]
-    tiles = "".join('<button type="button" class="ac-area%s" data-area="%d" aria-pressed="%s"><b>%s</b><small class="mono">%s</small></button>'
-                    % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", a[1], a[2]) for i, a in enumerate(areas))
     out += sec(head("WHAT IT SHOULD MANAGE", "What Should the Best Accounting Software Actually Help Your Business Manage?",
                     "More than bookkeeping. Good accounting software runs the daily finance work and keeps the books current as it happens. "
-                    "These are the eight areas we set up in Odoo. Pick one to see where it lives and what it replaces.", "is-center")
-               + '<div class="ac-areas" data-areas><div class="ac-area-grid" role="group" aria-label="Finance areas">%s</div>'
-                 '<div class="ac-area-card ox-solo" aria-live="polite"><p class="ac-area-path mono" data-area-path></p><h3 data-area-name></h3><p data-area-what></p>'
-                 '<p class="ac-area-was"><span>Replaces</span><b data-area-was></b></p></div></div>'
-                 '<script type="application/json" id="ac-areas">%s</script>' % (tiles, json.dumps(areas)), "ac-sec--areas")
+                    "These are the eight areas we set up, and what each one replaces.", "is-center")
+               + '<ul class="pl-grid" style="--cols:4">%s</ul>'
+                 % "".join('<li><span class="pl-n">%02d</span><b>%s</b><p>%s</p><p class="pl-foot"><span class="pl-chip is-bad">Replaces</span> %s</p></li>' % (i + 1, a[1], a[3], a[4]) for i, a in enumerate(areas)),
+               "ac-sec--areas")
 
     # 2 ---- core operations in one system: dashboard, invoices, bills
     menu = "".join('<button type="button" class="ac-menu%s" data-ax-menu="%s" aria-pressed="%s">%s</button>' % (" is-on" if k == "dash" else "", k, "true" if k == "dash" else "false", n)
@@ -180,8 +177,8 @@ def build(g):
                  '<script type="application/json" id="ac-ops">%s</script>' % (obtn, json.dumps([[o[3], o[4], o[5], o[1]] for o in ops])), "ac-sec--je")
 
     # 5 ---- configure before go-live
-    cfg = [("Fiscal localization", "Settings &rsaquo; Fiscal Localization", "<b>India - Accounting</b> package: Indian chart of accounts, GST tax groups and the GSTR reports. Company GSTIN and state set, so Odoo knows when to apply CGST + SGST and when IGST."),
-           ("Chart of accounts", "Configuration &rsaquo; Chart of Accounts", "Your Tally ledgers mapped to Odoo accounts and account types, so the Balance Sheet and P&amp;L group correctly from day one."),
+    cfg = [("Fiscal localization", "Settings &rsaquo; Fiscal Localization", "<b>India - Accounting</b> package: Indian chart of accounts, GST tax groups and the GSTR reports. Company GSTIN and state set, so the right tax applies:  CGST + SGST and when IGST."),
+           ("Chart of accounts", "Configuration &rsaquo; Chart of Accounts", "Your Tally ledgers mapped to the new accounts and account types, so the Balance Sheet and P&amp;L group correctly from day one."),
            ("Taxes", "Configuration &rsaquo; Taxes", "GST 5, 12, 18 and 28%, IGST, reverse charge, and TDS sections such as 194C and 194J, with fiscal positions for exports and SEZ."),
            ("Journals &amp; banks", "Configuration &rsaquo; Journals", "One bank journal per account (HDFC, ICICI), cash journals per branch, and the outstanding receipts and payments accounts."),
            ("Payment terms &amp; reminders", "Configuration &rsaquo; Payment Terms", "30 Days, 50% advance, end-of-month terms, plus <b>Invoice Reminders</b> at 7, 15 and 30 days overdue."),
@@ -189,14 +186,10 @@ def build(g):
            ("Opening balances", "Accounting &rsaquo; Journal Entries", "Trial balance at cut-over, plus every open invoice and bill, so ageing and follow-ups are right from day one."),
            ("Documents &amp; e-Invoicing", "Settings &rsaquo; Indian Electronic Invoicing", "Invoice layout with HSN and bank details, e-Invoice IRN and e-Way bill credentials on the GST portal."),
            ("Users &amp; access", "Settings &rsaquo; Users", "<b>Billing</b> for the billing team, <b>Accountant</b> for finance, <b>Auditor</b> read-only access for your CA.")]
-    citems = "".join('<li><button type="button" class="ac-cfg-i" data-cfg="%d" aria-pressed="false"><span class="ac-cfg-n mono">%02d</span><b>%s</b><span class="ac-cfg-ok">%s</span></button></li>'
-                     % (i, i + 1, t, TICK) for i, (t, p, x) in enumerate(cfg))
     out += sec(head("BEFORE GO-LIVE", "What Does Your Business Need to Configure Before Going Live?",
-                    "Nine things decide whether your books are right from the first day. We set each one with your accountant. Open an item to see what it covers and tick it off.")
-               + '<div class="ac-cfg" data-cfgbox><div><div class="ac-cfg-prog"><span data-cfg-pct>0 of 9 ready</span><i><b data-cfg-bar></b></i></div><ol class="ac-cfg-list">%s</ol></div>'
-                 '<div class="ac-cfg-card ox-solo" aria-live="polite"><p class="ac-area-path mono" data-cfg-path></p><h3 data-cfg-name></h3><p data-cfg-what></p>'
-                 '<button type="button" class="ox-pbtn ac-cfg-done" data-cfg-done>Mark as configured</button></div></div>'
-                 '<script type="application/json" id="ac-cfg">%s</script>' % (citems, json.dumps(cfg)), "ac-sec--cfg")
+                    "Nine things decide whether your books are right from the first day. We set each one with your accountant.", "is-center")
+               + '<ol class="pl-grid" style="--cols:3">%s</ol>'
+                 % "".join('<li><span class="pl-n">%02d</span><b>%s</b><p>%s</p></li>' % (i + 1, t, x) for i, (t, p, x) in enumerate(cfg)), "ac-sec--cfg")
 
     # 6 ---- less manual work: bank reconciliation
     out += sec(head("LESS MANUAL WORK", "How Can Odoo Reduce Manual Invoicing, Payments and Reconciliation Work?",
@@ -279,7 +272,8 @@ def build(g):
     # 11 ---- testing before go-live: parallel run
     tb = [("Sundry Debtors / Accounts Receivable", 18640200, 18640200), ("Sundry Creditors / Accounts Payable", -7215400, -7215400), ("HDFC Current A/c / Bank", 4985880, 4985880),
           ("Output GST", -1284310, -1271830), ("Sales Accounts / Product Sales", -41260000, -41260000), ("Indirect Expenses / Expenses", 6420500, 6420500)]
-    trows = "".join('<tr data-v="%d"><td>%s</td><td class="ox-num">%s</td><td class="ox-num">%s</td><td class="ox-num" data-var></td></tr>' % (t - o, n, inr(t), inr(o)) for n, t, o in tb)
+    trows = "".join('<tr><th>%s</th><td class="is-c">%s</td><td class="is-c">%s</td><td class="is-c">%s</td></tr>'
+                    % (n, inr(t), inr(o), '<span class="pl-chip is-bad">%s</span>' % inr(t - o) if t != o else '<span class="pl-chip is-ok">&#10003; 0.00</span>') for n, t, o in tb)
     uat = [("Billing", [("Invoice from a delivered sales order", True), ("Send an e-Invoice and check the IRN", False)]),
            ("Accounts", [("Post a vendor bill from email", True), ("Reconcile a full day of bank lines", False), ("File GSTR-3B figures from the Tax Report", False)]),
            ("Management", [("Read the P&amp;L by branch", False)])]
@@ -289,9 +283,8 @@ def build(g):
         ul += "".join('<li><label class="ac-uat-i"><input type="checkbox" data-uat%s><span class="ac-chk" aria-hidden="true">%s</span><span>%s</span></label></li>' % (" checked" if on else "", TICK, t) for t, on in items)
     out += sec(head("TESTING &amp; GO-LIVE", "How Do We Test and Prepare Your Accounting System Before Go-Live?",
                     "For one month Odoo runs beside your old system. Every difference is explained and fixed before you switch, and each role signs off its own scenarios.", "is-center")
-               + '<div class="ac-test"><div class="ox ac-ox" data-par><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Parallel run</a><span>Trial balance, September 2026</span></span></div>'
-                 '<span></span><button type="button" class="ox-pbtn" data-par-fix>Post the correction</button></div><div class="ox-scroll"><table class="ox-table ac-par-t"><thead><tr><th>Account</th><th class="ox-num">Tally</th><th class="ox-num">Odoo</th><th class="ox-num">Difference</th></tr></thead>'
-                 '<tbody data-par-rows>%s</tbody></table></div><p class="ac-par-res" data-par-res aria-live="polite"></p></div>'
+               + '<div class="ac-test"><div class="pl-card"><p class="pl-k">Parallel run &middot; trial balance, September 2026</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Account</th><th class="is-c">Old system</th><th class="is-c">New system</th><th class="is-c">Difference</th></tr></thead>'
+                 '<tbody>%s</tbody></table></div><p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem"><b style="color:var(--text)">Explained and fixed:</b> a GST credit note was posted in Tally on Sep 30 and in the new books on Oct 1. Corrected and locked before sign-off.</p></div>'
                  '<div class="ac-uat ox-solo" data-uatbox><div class="ac-uat-h"><span><small>User acceptance testing</small><b>Go-live readiness</b></span><span class="ac-uat-pct" data-uat-pct></span></div>'
                  '<div class="ac-uat-bar"><i data-uat-bar></i></div><ul>%s</ul><p class="ac-uat-res" data-uat-res aria-live="polite"></p></div></div>' % (trows, ul), "ac-sec--test")
 
@@ -329,13 +322,6 @@ JS = r'''<script>
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function press(group,el){group.forEach(function(b){var on=b===el;b.classList.toggle('is-on',on);b.setAttribute('aria-pressed',on);});}
   function J(id){return JSON.parse(document.getElementById(id).textContent);}
-
-  /* --- 1 areas --- */
-  var ar=document.querySelector('[data-areas]');
-  if(ar){var A=J('ac-areas'),ab=[].slice.call(ar.querySelectorAll('[data-area]'));
-    function adraw(i){var a=A[i];ar.querySelector('[data-area-path]').innerHTML='Accounting &rsaquo; '+a[2];ar.querySelector('[data-area-name]').innerHTML=a[1];
-      ar.querySelector('[data-area-what]').innerHTML=a[3];ar.querySelector('[data-area-was]').innerHTML=a[4];}
-    ab.forEach(function(b){b.addEventListener('click',function(){press(ab,b);adraw(+b.getAttribute('data-area'));});});adraw(0);}
 
   /* --- 2 accounting explorer --- */
   var ax=document.querySelector('[data-ax]');
@@ -459,16 +445,6 @@ JS = r'''<script>
     je.addEventListener('click',function(e){var b=e.target.closest('[data-op]');if(b){var i=+b.getAttribute('data-op');if(posted.indexOf(i)<0)posted.push(i);jdraw(i);return;}
       if(e.target.closest('[data-je-reset]')){posted=[];jdraw(null);}});jdraw(null);}
 
-  /* --- 5 configuration checklist --- */
-  var cf=document.querySelector('[data-cfgbox]');
-  if(cf){var C=J('ac-cfg'),cb=[].slice.call(cf.querySelectorAll('[data-cfg]')),cur=0,done={};
-    function cdraw(){var c=C[cur];press(cb,cb[cur]);cf.querySelector('[data-cfg-path]').innerHTML=c[1];cf.querySelector('[data-cfg-name]').innerHTML=c[0];cf.querySelector('[data-cfg-what]').innerHTML=c[2];
-      var n=Object.keys(done).length;cb.forEach(function(b,i){b.classList.toggle('is-done',!!done[i]);});
-      cf.querySelector('[data-cfg-pct]').textContent=n===9?'All 9 ready for go-live':n+' of 9 ready';cf.querySelector('[data-cfg-bar]').style.width=(n/9*100)+'%';
-      var bt=cf.querySelector('[data-cfg-done]');bt.textContent=done[cur]?'Configured ✓':'Mark as configured';bt.className=done[cur]?'ox-sbtn ac-cfg-done':'ox-pbtn ac-cfg-done';}
-    cb.forEach(function(b,i){b.addEventListener('click',function(){cur=i;cdraw();});});
-    cf.querySelector('[data-cfg-done]').addEventListener('click',function(){if(done[cur])delete done[cur];else{done[cur]=1;var nx=C.findIndex(function(x,i){return !done[i];});if(nx>-1)cur=nx;}cdraw();});cdraw();}
-
   /* --- 6 bank reconciliation --- */
   var rc=document.querySelector('[data-rec]');
   if(rc){var L0=[{d:'Oct 14',l:'RTGS-SHREE DISTRIBUTORS',a:300000,p:'Shree Distributors',m:'INV/2026/00398',due:590000,k:'part'},
@@ -558,14 +534,6 @@ JS = r'''<script>
     ib.forEach(function(b){b.addEventListener('click',function(){press(ib,b);idraw(+b.getAttribute('data-int'));});});idraw(0);}
 
   /* --- 11 parallel run + UAT --- */
-  var pr=document.querySelector('[data-par]');
-  if(pr){var fixed=false;
-    function pdraw(){var bad=0;pr.querySelectorAll('[data-par-rows] tr').forEach(function(r){var d=fixed?0:+r.getAttribute('data-v');if(d)bad++;var c=r.querySelector('[data-var]');c.innerHTML=d?'<b class="ac-red">'+inr(d)+'</b>':'<span class="ac-grn">&#10003; 0.00</span>';r.classList.toggle('is-bad',!!d);
-        if(fixed&&r.getAttribute('data-v')!=='0')r.children[2].innerHTML=r.children[1].innerHTML;});
-      var res=pr.querySelector('[data-par-res]');res.innerHTML=fixed?'<b>Trial balances match.</b> The difference was a GST credit note posted in Tally on Sep 30 and in Odoo on Oct 1. Corrected and locked.':
-        '<b>1 difference found</b> in Output GST: '+inr(12480)+'. Investigating before sign-off.';res.className='ac-par-res'+(fixed?' is-ok':'');
-      var b=pr.querySelector('[data-par-fix]');b.textContent=fixed?'Done':'Post the correction';b.disabled=fixed;}
-    pr.querySelector('[data-par-fix]').addEventListener('click',function(){fixed=true;pdraw();});pdraw();}
   var ub=document.querySelector('[data-uatbox]');
   if(ub){var cbx=[].slice.call(ub.querySelectorAll('[data-uat]'));
     function udraw(){var n=cbx.filter(function(c){return c.checked;}).length,p=Math.round(n/cbx.length*100);
