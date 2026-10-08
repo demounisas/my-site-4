@@ -54,8 +54,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["GST-ready invoicing &amp; bills", "Bank reconciliation in minutes", "Reports that are always current"])
     copy = ('<div class="ac-hero-copy">%s<p class="ac-eyebrow mono">ODOO ACCOUNTING IMPLEMENTATION</p>'
             '<h1 class="ac-h1">Best Accounting Software Implementation <span>for Your Business with Odoo</span></h1>'
-            '<p class="ac-lead">Unisas sets up Odoo Accounting around how your finance team already works, so invoices, bills, payments, GST and bank '
-            'reconciliation run in one system that is connected to sales, purchase and inventory. Your books stay current every day, not just at month end.</p>'
+            '<p class="ac-lead">Unisas sets up Odoo Accounting so invoices, bills, payments, GST and bank reconciliation run in one system, current every day.</p>'
             '<ul class="ac-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Accounting %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the accounting demo</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -113,7 +112,7 @@ def build(g):
     out += sec(head("WHAT IT SHOULD MANAGE", "What Should the Best Accounting Software Actually Help Your Business Manage?",
                     "More than bookkeeping. Good accounting software runs the daily finance work and keeps the books current as it happens. "
                     "These are the eight areas we set up, and what each one replaces.", "is-center")
-               + '<ul class="pl-grid" style="--cols:4">%s</ul>'
+               + '<ul class="pl-grid is-plain" style="--cols:4">%s</ul>'
                  % "".join('<li><span class="pl-n">%02d</span><b>%s</b><p>%s</p><p class="pl-foot"><span class="pl-chip is-bad">Replaces</span> %s</p></li>' % (i + 1, a[1], a[3], a[4]) for i, a in enumerate(areas)),
                "ac-sec--areas")
 
@@ -188,7 +187,7 @@ def build(g):
            ("Users &amp; access", "Settings &rsaquo; Users", "<b>Billing</b> for the billing team, <b>Accountant</b> for finance, <b>Auditor</b> read-only access for your CA.")]
     out += sec(head("BEFORE GO-LIVE", "What Does Your Business Need to Configure Before Going Live?",
                     "Nine things decide whether your books are right from the first day. We set each one with your accountant.", "is-center")
-               + '<ol class="pl-grid" style="--cols:3">%s</ol>'
+               + '<ol class="pl-grid is-line" style="--cols:3">%s</ol>'
                  % "".join('<li><span class="pl-n">%02d</span><b>%s</b><p>%s</p></li>' % (i + 1, t, x) for i, (t, p, x) in enumerate(cfg)), "ac-sec--cfg")
 
     # 6 ---- less manual work: bank reconciliation
@@ -262,7 +261,7 @@ def build(g):
             ("Tally (during transition)", "Parallel run", "Daily", "Out", [["Oct 1", "Day book exported for the parallel run"], ["Oct 1", "Trial balance compared: no differences"]])]
     ibtn = "".join('<li><button type="button" class="ac-int%s" data-int="%d" aria-pressed="%s"><b>%s</b><small>%s</small></button></li>'
                    % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", n, w) for i, (n, w, f, d, l) in enumerate(ints))
-    out += sec('<div class="ac-ints"><div>%s<ul class="ac-int-list">%s</ul></div><div class="ac-int-log ox-solo" aria-live="polite"><p class="ac-int-h"><b data-int-name></b>'
+    out += sec('%s<div class="ac-ints"><ul class="ac-int-list">%s</ul><div class="ac-int-log ox-solo" aria-live="polite"><p class="ac-int-h"><b data-int-name></b>'
                '<span><small>Direction</small><em data-int-dir></em></span><span><small>Runs</small><em data-int-freq></em></span></p><ol data-int-log></ol></div></div>'
                '<script type="application/json" id="ac-int">%s</script>'
                % (head("INTEGRATIONS", "How Does Unisas Integrate Odoo Accounting With Your Other Business Systems?",
@@ -310,7 +309,7 @@ def build(g):
                '<div class="ac-q ox-solo" data-mat><p class="ac-q-h"><b>Finance maturity check</b><small>Choose where you are today in each area</small></p><ol>%s</ol>'
                '<div class="ac-q-res"><span class="ac-q-dial" data-mat-dial style="--p:0"><b data-mat-score>0</b></span><p data-mat-txt>Answer all five to see your score.</p></div></div></div>'
                % (head("READINESS CHECK", "Is Your Business Ready to Move to a Better Accounting System?",
-                       "If most of your answers sit on the left, your finance team is doing work the system should do. We'll review your current books and show you the same month in Odoo."),
+                       "Mostly on the left? Your finance team is doing the system&rsquo;s work. We&rsquo;ll show your month in Odoo."),
                   g["ARROW"], mrows), "ac-sec--quiz")
 
     return out + JS.replace("__MOVES__", json.dumps(MOVES))
@@ -435,10 +434,10 @@ JS = r'''<script>
   if(je){var O=J('ac-ops'),posted=[],ob=[].slice.call(je.querySelectorAll('[data-op]'));
     function jdraw(last){var e=last!=null?O[last]:null;
       je.querySelector('[data-je-name]').innerHTML=e?e[1]:'Nothing posted yet';
-      je.querySelector('[data-je-entry]').innerHTML=e?'<thead><tr><th>Account</th><th class="ox-num">Debit</th><th class="ox-num">Credit</th></tr></thead><tbody>'+e[2].map(function(l){return '<tr class="is-new"><td>'+l[0]+'</td><td class="ox-num">'+(l[1]?inr(l[1]):'')+'</td><td class="ox-num">'+(l[2]?inr(l[2]):'')+'</td></tr>';}).join('')+'</tbody>':'<tbody><tr><td class="ox-empty">Post a step on the left.</td></tr></tbody>';
+      je.querySelector('[data-je-entry]').innerHTML=e?'<thead><tr><th>Account</th><th class="ox-num">Debit</th><th class="ox-num">Credit</th></tr></thead><tbody>'+e[2].map(function(l){return '<tr class="is-new"><td>'+l[0]+'</td><td class="ox-num">'+(l[1]?inr(l[1]):'')+'</td><td class="ox-num">'+(l[2]?inr(l[2]):'')+'</td></tr>';}).join('')+'</tbody>':'<tbody><tr><td class="ox-empty">&larr; Press <b>Post</b> on any step to see the journal entry it creates.</td></tr></tbody>';
       var G={},order=[];posted.forEach(function(i){O[i][2].forEach(function(l){if(!G[l[0]]){G[l[0]]=0;order.push(l[0]);}G[l[0]]+=l[1]-l[2];});});
       var td=0,tc=0;var rows=order.map(function(a){var v=G[a];if(v>0)td+=v;else tc-=v;return '<tr><td>'+a+'</td><td class="ox-num">'+(v>0?inr(v):'')+'</td><td class="ox-num">'+(v<0?inr(-v):'')+'</td></tr>';}).join('');
-      je.querySelector('[data-je-gl]').innerHTML='<thead><tr><th>Account</th><th class="ox-num">Debit</th><th class="ox-num">Credit</th></tr></thead><tbody>'+(rows||'<tr><td colspan="3" class="ox-muted">Empty</td></tr>')+'</tbody><tfoot><tr><td><b>Total</b></td><td class="ox-num"><b>'+inr(td)+'</b></td><td class="ox-num"><b>'+inr(tc)+'</b></td></tr></tfoot>';
+      je.querySelector('[data-je-gl]').innerHTML='<thead><tr><th>Account</th><th class="ox-num">Debit</th><th class="ox-num">Credit</th></tr></thead><tbody>'+(rows||'<tr><td colspan="3" class="ox-muted">No lines yet.</td></tr>')+'</tbody><tfoot><tr><td><b>Total</b></td><td class="ox-num"><b>'+inr(td)+'</b></td><td class="ox-num"><b>'+inr(tc)+'</b></td></tr></tfoot>';
       je.querySelector('[data-je-check]').innerHTML=posted.length?'<span class="ac-ok">'+TICKS+' Balanced: debits equal credits</span>':'';
       ob.forEach(function(b,i){var p=posted.indexOf(i)>-1;b.classList.toggle('is-posted',p);b.querySelector('.ac-op-st').textContent=p?'Posted':'Post';});}
     var TICKS='&#10003;';
@@ -563,4 +562,4 @@ JS = r'''<script>
 '''
 
 CTA = ("Let's Build Your Accounting System in Odoo",
-       "Tell us how your finance team invoices, pays, reconciles and closes the month today. We'll show you the same month in Odoo Accounting and recommend the right setup.")
+       "Tell us how you invoice, pay, reconcile and close today. We&rsquo;ll show the same month in Odoo Accounting.")

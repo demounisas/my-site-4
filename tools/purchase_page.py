@@ -148,7 +148,7 @@ def build(g):
                '<div class="pu-inbox" aria-label="Example purchase team inbox"><div class="pu-inbox-bar"><b>Inbox</b><span class="pu-inbox-n">23 unread</span><span class="pu-inbox-q">purchase OR quote OR PO</span></div>'
                '<ul>%s</ul></div></div>'
                % (head("THE COST OF MANUAL PURCHASING", "Is Your Purchasing Process Creating Unnecessary Delays and Manual Work?",
-                       "In most growing companies purchasing runs on email threads and memory. It holds up until volume grows, and then it shows in an inbox like this one."),
+                       "In most growing firms, purchasing runs on email and memory. It works until volume grows, then looks like this."),
                   "".join('<li>%s%s</li>' % (CROSS, s) for s in signs), inbox), "pu-sec--ready")
 
     # 2 ---- simplify: one document, every stage
@@ -192,7 +192,7 @@ def build(g):
                '<div class="pu-set-body">%s</div></div>'
                '<div class="pu-effect ox-solo"><p class="pu-effect-h">What your team will see</p><ul data-set-out aria-live="polite"></ul></div></div></div>'
                % (head("CONFIGURED FOR YOUR POLICY", "How Does Unisas Configure Odoo Purchase Around Your Business Process?",
-                       "We write your purchase policy into Odoo's own settings. Change a setting on the right and see how it affects your buyers, stores and accounts."),
+                       "We write your purchase policy into Odoo&rsquo;s settings. Change one on the right and see who it affects."),
                   steps(impl), odoo_nav(app_icon), sets), "pu-sec--cfg")
 
     # 4 ---- what can Odoo manage: the purchase explorer
@@ -271,7 +271,7 @@ def build(g):
                '<span></span><span class="pu-ocr-st" data-ocr-st>Waiting for email</span></div><dl class="pu-ocr-dl">%s</dl>'
                '<p class="pu-ocr-res" data-ocr-res role="status" aria-live="polite"></p></div></div></div>'
                % (head("INTEGRATIONS", "How Does Unisas Integrate Odoo Purchase With Your Existing Systems?",
-                       "Purchasing touches your accounts, the GST portal, banks and vendors. We connect Odoo to each of them. Here, a vendor bill sent by email becomes a draft bill already matched to its PO."),
+                       "Odoo connects to your accounts, GST portal, banks and vendors. Here, an emailed bill becomes a draft matched to its PO."),
                   nodes, MAIL, frows), "pu-sec--int")
 
     # 8 ---- configure vs customize
@@ -360,7 +360,7 @@ def build(g):
 
     # 12 ---- visibility: Purchase Analysis
     kpis = [("Spend this quarter", inr(7068600, False), "Across 6 vendors"), ("On-time delivery", "89%", "Vendor average, last 90 days"),
-            ("Days to receive", "8.4", "From confirmation to receipt"), ("Price saved", inr(312400, False), "From RFQ alternatives")]
+            ("Days to receive", "8", "From confirmation to receipt"), ("Price saved", inr(312400, False), "From RFQ alternatives")]
     out += sec(head("PROCUREMENT VISIBILITY", "How Can a Connected Odoo Purchase Process Improve Procurement Visibility?",
                     "When every PO, receipt and bill is in one place, the reports build themselves. This is Odoo's Purchase Analysis. Change the measure to compare vendors.", "is-center")
                + '<ul class="pu-kpis">%s</ul>' % "".join('<li><small>%s</small><b>%s</b><span>%s</span></li>' % k for k in kpis)
@@ -383,7 +383,7 @@ def build(g):
                '<div class="pu-q ox-solo" data-quiz><p class="pu-q-h"><b>Procurement readiness check</b><small>6 questions, 30 seconds</small></p><ol>%s</ol>'
                '<div class="pu-q-res" data-quiz-res aria-live="polite"><span class="pu-q-score" data-quiz-score>0 / 6</span><p data-quiz-txt>Answer the questions to see where you stand.</p></div></div></div>'
                % (head("READINESS CHECK", "Is Your Procurement Process Ready for Odoo Purchase?",
-                       "If you answer yes to most of these, your purchasing has outgrown email and spreadsheets. We'll review your process and show you the same flow in Odoo."),
+                       "Mostly yes? Your purchasing has outgrown email and spreadsheets. We&rsquo;ll show the same flow in Odoo."),
                   g["ARROW"], qitems), "pu-sec--quiz")
 
     return out + JS.replace("__ORDERS__", json.dumps(ORDERS)).replace("__VENDORS__", json.dumps(VENDORS)).replace("__PRICES__", json.dumps(PRICELIST)).replace("__LIMIT__", str(LIMIT))
@@ -615,4 +615,4 @@ JS = r'''<script>
 '''
 
 CTA = ("Let's Connect Your Procure-to-Pay in Odoo",
-       "Tell us how your team requests, approves, receives and pays for purchases today. We'll show you the same flow in Odoo Purchase and recommend the right setup.")
+       "Tell us how you request, approve, receive and pay for purchases. We&rsquo;ll show the same flow in Odoo Purchase.")

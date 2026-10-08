@@ -1,11 +1,11 @@
 {
   "production": {
-    "id": "6d56b47c-5b6a-4a22-856c-5b5f3e900a58",
+    "id": "7243db8f-0b55-484c-a0b2-e55d0b91e6c3",
     "site": {
-      "main": "https://bdush1-unisas-headless-1-avinash2889-110b.wix-site-host.com"
+      "main": "https://jslrag-unisas-headless-1-avinash2889-110b.wix-site-host.com"
     },
     "dashboard": {
-      "main": "https://manage.wix.com/dashboard/2ad39ba4-63fe-41d2-a77e-849cd6409deb?apps-override=6d56b47c-5b6a-4a22-856c-5b5f3e900a58"
+      "main": "https://manage.wix.com/dashboard/2ad39ba4-63fe-41d2-a77e-849cd6409deb?apps-override=7243db8f-0b55-484c-a0b2-e55d0b91e6c3"
     }
   }
 }

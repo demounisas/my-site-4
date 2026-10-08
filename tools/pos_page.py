@@ -17,9 +17,10 @@ TICK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden=
 WIFI = ox.ic('<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.8 16a4.5 4.5 0 0 1 6.4 0"/><circle cx="12" cy="19.3" r="1" fill="currentColor"/>', 16, 2)
 
 
-def head(eyebrow, title, sub="", cls=""):
-    return ('<div class="ps-head%s"><p class="ps-eyebrow mono">%s</p><h2 class="ps-title">%s</h2>%s</div>'
-            % (" " + cls if cls else "", eyebrow, title, '<p class="ps-sub">%s</p>' % sub if sub else ""))
+def head(eyebrow, title, sub="", cls="", pts=()):
+    return ('<div class="ps-head%s"><p class="ps-eyebrow mono">%s</p><h2 class="ps-title">%s</h2>%s%s</div>'
+            % (" " + cls if cls else "", eyebrow, title, '<p class="ps-sub">%s</p>' % sub if sub else "",
+               '<ul class="pl-ticks ps-head-t">%s</ul>' % "".join("<li>%s</li>" % t for t in pts) if pts else ""))
 
 
 def sec(body, cls="", sid=""):
@@ -49,16 +50,15 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Cash, card &amp; UPI", "Stock updated with every sale", "Keeps selling offline"])
     copy = ('<div class="ps-hero-copy">%s<p class="ps-eyebrow mono">ODOO POINT OF SALE IMPLEMENTATION</p>'
             '<h1 class="ps-h1">Point of Sale Software for <span>Smarter Store Management</span> with Odoo</h1>'
-            '<p class="ps-lead">Unisas sets up Odoo Point of Sale for your shops, counters and restaurants. Every bill updates stock, customer history and accounting '
-            'the moment it is paid, across every store, and the checkout keeps working when the internet doesn&rsquo;t.</p>'
+            '<p class="ps-lead">Unisas sets up Odoo Point of Sale for your shops and restaurants, so every bill updates stock and accounts, even offline.</p>'
             '<ul class="ps-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan your Odoo POS %s</a>'
             '<a href="#register" class="btn btn-ghost">Try the register</a></div></div>' % (crumb, points, g["ARROW"]))
     tiles = "".join('<span><i style="--h:%d"></i><b>%s</b><small>&#8377; %s</small></span>' % t for t in
                     [(220, "Cotton Kurta", "1,299"), (40, "Linen Kurta", "1,499"), (330, "Silk Saree", "12,500"), (20, "Silk Stole", "899"), (160, "Jhumkas", "449"), (280, "Tote Bag", "349")])
     reg = ('<div class="ps-hx-reg"><div class="ps-hx-top"><b>Nila<span>Threads</span></b><span class="is-on">Register</span><span>Orders</span><em>' + WIFI + ' Anitha</em></div>'
-           '<div class="ps-hx-main"><div class="ps-hx-ord"><p><b>Cotton Kurta &ndash; Indigo</b><span>1.00 &times; &#8377; 1,299</span><em>&#8377; 1,299.00</em></p>'
-           '<p><b>Silk Stole</b><span>1.00 &times; &#8377; 899</span><em>&#8377; 899.00</em></p><p><b>Oxidised Jhumkas</b><span>2.00 &times; &#8377; 449</span><em>&#8377; 898.00</em></p>'
+           '<div class="ps-hx-main"><div class="ps-hx-ord"><p><b>Cotton Kurta &ndash; Sky Blue</b><span>1.00 &times; &#8377; 1,299</span><em>&#8377; 1,299.00</em></p>'
+           '<p><b>Silk Stole</b><span>1.00 &times; &#8377; 899</span><em>&#8377; 899.00</em></p><p><b>Kundan Jhumkas</b><span>2.00 &times; &#8377; 449</span><em>&#8377; 898.00</em></p>'
            '<div class="ps-hx-tot"><span>Total</span><b>&#8377; 3,096.00</b></div><div class="ps-hx-pay"><span>Customer</span><span class="is-pay">Payment</span></div></div>'
            '<div class="ps-hx-grid">' + tiles + '</div></div></div>')
     paper = ('<div class="ps-hv-paper"><b>NILA THREADS</b><small>T. Nagar &middot; Chennai</small><p><span>Cotton Kurta</span><span>1,299.00</span></p>'
@@ -89,18 +89,20 @@ def build(g):
 
     # 2 ---- the register
     cats = ["Kurtas", "Sarees", "Dupattas", "Accessories"]
-    prods = [[1, "Cotton Kurta &ndash; Indigo", "Kurtas", 1299, 220, 2, 12], [2, "Linen Kurta &ndash; Mustard", "Kurtas", 1499, 42, 6, 12],
+    prods = [[1, "Cotton Kurta &ndash; Sky Blue", "Kurtas", 1299, 220, 2, 12], [2, "Linen Kurta &ndash; Ivory", "Kurtas", 1499, 42, 6, 12],
              [3, "Chanderi Kurta Set", "Kurtas", 2499, 300, 4, 12], [4, "Kanchipuram Silk Saree", "Sarees", 12500, 340, 1, 12],
              [5, "Block-print Cotton Saree", "Sarees", 2199, 18, 9, 12], [6, "Silk Stole", "Dupattas", 899, 20, 12, 5],
-             [7, "Phulkari Dupatta", "Dupattas", 1199, 330, 5, 12], [8, "Oxidised Jhumkas", "Accessories", 449, 200, 20, 5],
+             [7, "Phulkari Dupatta", "Dupattas", 1199, 330, 5, 12], [8, "Kundan Jhumkas", "Accessories", 449, 200, 20, 5],
              [9, "Jute Tote Bag", "Accessories", 349, 90, 30, 5], [10, "Gift Wrap", "Accessories", 50, 0, 99, 5]]
+    # product photos for the register tiles (CC0 / public-domain images, cropped to the tile, in dist/assets/pos)
+    for x in prods:
+        x.append('<img src="assets/pos/product-%d.jpg" alt="" loading="lazy" width="480" height="300">' % x[0])
     out += sec(head("EVERY SALE, CONNECTED", "How Can Odoo Connect Every Sale With Your Store Operations?",
-                    "This is the Odoo Point of Sale register for Nila Threads, T. Nagar. Add products, change a quantity on the numpad, pick a loyalty customer and take payment. "
-                    "When you validate, see what the same sale changed in stock, loyalty and the session.", "is-center")
+                    "This is the Odoo Point of Sale register for Nila Threads, T. Nagar. Add products, change a quantity on the numpad, pick a loyalty customer and take payment.", "is-center")
                + '<div class="ps-reg-w"><div class="ps-reg ox-solo" data-p2box><div class="ps-rt"><span class="ps-rt-logo">%s</span><button type="button" class="ps-rt-tab is-on" data-p2nav="register">Register</button>'
                  '<button type="button" class="ps-rt-tab" data-p2nav="orders">Orders <b data-p2n>0</b></button><label class="ps-rt-q">%s<input type="search" placeholder="Search products..." data-p2q aria-label="Search products"></label>'
                  '<span class="ps-rt-r"><span class="ps-wifi">%s</span><span class="ps-rt-emp"><span class="ox-av is-sm" style="--c:#B8325A">A</span>Anitha</span></span></div>'
-                 '<div class="ps-rb" data-p2body></div></div><aside class="ps-fx ox-solo" aria-live="polite"><p class="ps-fx-h">What this sale changed</p><ul data-p2fx></ul></aside></div>'
+                 '<div class="ps-rb" data-p2body></div></div></div>'
                  '<p class="ox-hint"><span class="ox-hint-dot"></span>Live preview of the Odoo POS register with sample data. Click products, use the numpad, pay and validate.</p>'
                  % (app_icon, ox.SEARCH, WIFI) + data("ps-prods", prods) + data("ps-cats", cats), "ps-sec--reg", "register")
 
@@ -128,8 +130,9 @@ def build(g):
 
     # 4 ---- offline
     out += sec(head("OFFLINE MODE", "Can Odoo Keep Your Checkout Running Even When the Internet Goes Down?",
-                    "Yes. Once a session is open, the register keeps products, prices and customers in the browser. Orders taken offline are saved on the device and sent to Odoo when the connection returns. "
-                    "Cut the internet, keep selling, then reconnect.", "is-center")
+                    "Yes. The register keeps products and prices in the browser and syncs offline orders when you reconnect. Try it.", "is-center",
+                    ["Keep selling and printing receipts with no internet", "Products, prices and discounts stay loaded on the register",
+                     "Offline orders queued safely on the register", "Everything syncs to Odoo once you reconnect"])
                + '<div class="ps-off" data-p4box><div class="ps-off-reg ox-solo"><div class="ps-off-top"><b>Register &middot; Counter 2</b><span class="ps-wifi" data-p4wifi>%s</span><span class="ps-off-q" data-p4q></span></div>'
                  '<div class="ps-off-b"><p class="ps-off-s" data-p4s></p><button type="button" class="ps-big" data-p4sell>Sell &amp; print receipt</button>'
                  '<label class="ps-net"><input type="checkbox" data-p4net checked><span class="ps-sw" aria-hidden="true"></span><span>Internet connection</span></label></div>'
@@ -140,12 +143,12 @@ def build(g):
                  % (WIFI, ox_head("Point of Sale", "Orders")), "ps-sec--off")
 
     # 5 ---- products, pricing, taxes, rules
-    lines = [["Linen Kurta &ndash; Mustard", 1499, 2, 12, 1], ["Silk Stole", 899, 1, 5, 0], ["Oxidised Jhumkas", 449, 1, 5, 0]]
+    lines = [["Linen Kurta &ndash; Ivory", 1499, 2, 12, 1], ["Silk Stole", 899, 1, 5, 0], ["Kundan Jhumkas", 449, 1, 5, 0]]
     pls = [["Public Pricelist", 0, "List prices"], ["Nila Members", 10, "10% off for loyalty members"], ["Wholesale (10+ pcs)", 22, "Boutique resellers, min. 10 pieces"]]
     out += sec(head("PRODUCTS, PRICES &amp; RULES", "How Does Unisas Set Up Products, Pricing, Taxes and POS-Specific Rules?",
                     "Each product carries its POS category, barcode, variants and GST rate; pricelists, promotions and discount limits sit on top. "
                     "Here is how that looks for one product in a boutique.", "is-center")
-               + '<div class="pl-2"><div class="pl-card"><p class="pl-k">What each product carries &middot; Linen Kurta, Mustard</p><div class="pl-scroll"><table class="pl-table"><tbody>'
+               + '<div class="pl-2"><div class="pl-card"><p class="pl-k">What each product carries &middot; Linen Kurta, Ivory</p><div class="pl-scroll"><table class="pl-table"><tbody>'
                  '<tr><th>Sales price</th><td>&#8377; 1,499.00, tax included</td></tr><tr><th>GST</th><td><span class="pl-chip">GST 12%%</span></td></tr><tr><th>POS category</th><td>Kurtas</td></tr>'
                  '<tr><th>Barcode</th><td class="mono">8901234500217</td></tr><tr><th>Variants</th><td><ul class="pl-chips"><li class="pl-chip">S</li><li class="pl-chip">M</li><li class="pl-chip">L</li><li class="pl-chip">XL</li></ul></td></tr></tbody></table></div></div>'
                  '<div class="pl-card"><p class="pl-k">Rules that sit on top</p><ul class="pl-steps">%s'
@@ -158,11 +161,10 @@ def build(g):
     orders = [["Order 00042-001-0001", "10:12", "Cash", 3096], ["Order 00042-001-0002", "10:47", "UPI", 12500], ["Order 00042-001-0003", "11:30", "Card", 2499],
               ["Order 00042-001-0004", "12:05", "UPI", 2998], ["Order 00042-001-0005", "13:22", "Cash", 1748], ["Order 00042-001-0006", "15:40", "Card", 4398],
               ["Order 00042-001-0007", "17:15", "UPI", 1299], ["Order 00042-001-0008", "18:52", "Cash", 2647]]
-    moves = [["Cotton Kurta &ndash; Indigo", 2, "2 &rarr; 0", True], ["Kanchipuram Silk Saree", 1, "1 &rarr; 0", True], ["Linen Kurta &ndash; Mustard", 2, "6 &rarr; 4", False],
-             ["Chanderi Kurta Set", 2, "4 &rarr; 2", True], ["Silk Stole", 3, "12 &rarr; 9", False], ["Oxidised Jhumkas", 4, "20 &rarr; 16", False]]
+    moves = [["Cotton Kurta &ndash; Sky Blue", 2, "2 &rarr; 0", True], ["Kanchipuram Silk Saree", 1, "1 &rarr; 0", True], ["Linen Kurta &ndash; Ivory", 2, "6 &rarr; 4", False],
+             ["Chanderi Kurta Set", 2, "4 &rarr; 2", True], ["Silk Stole", 3, "12 &rarr; 9", False], ["Kundan Jhumkas", 4, "20 &rarr; 16", False]]
     out += sec(head("INVENTORY &amp; ACCOUNTING", "How Can Odoo Connect POS Sales With Inventory and Accounting?",
-                    "Stock leaves the store&rsquo;s location as each order is paid. When the register is closed, Odoo posts one journal entry for the session, split by payment method and GST rate, "
-                    "and reordering rules raise purchase orders for what ran low. Close today&rsquo;s session and see all three.", "is-center")
+                    "Stock leaves the store as each order is paid. Closing the register posts one journal entry by payment method and GST rate, and reorders what ran low. Close today&rsquo;s session to see it.", "is-center")
                + '<div class="ps-cl" data-p6box><div class="ox ps-ox">%s<div class="ox-scroll"><table class="ox-table ps-ord-t"><thead><tr><th>Order Ref</th><th>Time</th><th>Payment</th><th class="ox-num">Total</th></tr></thead><tbody>%s</tbody>'
                  '<tfoot><tr><td colspan="3"><b>8 orders</b></td><td class="ox-num"><b data-p6tot></b></td></tr></tfoot></table></div></div>'
                  '<div class="ps-cl-r"><div class="ps-cl-tabs" role="group" aria-label="Result">%s</div><div class="ps-cl-b ox-solo" data-p6b aria-live="polite"></div></div></div>'
@@ -230,7 +232,7 @@ def build(g):
             "groc": ["Scale reads weight into the line", "Price-embedded barcodes for packed items", "Lots and expiry dates on perishables", "Loyalty and weekly offers on fast movers"]}
     out += sec(head("YOUR SELLING ENVIRONMENT", "How Does Unisas Adapt POS Workflows for Retail, Restaurants or Other Selling Environments?",
                     "The same POS runs a boutique, a restaurant, a caf&eacute; counter or a grocery till; what changes is the workflow at the counter. Here is what we set up for each.", "is-center")
-               + '<ul class="pl-grid" style="--cols:4">%s</ul>'
+               + '<ul class="pl-grid is-tint" style="--cols:4">%s</ul>'
                  % "".join('<li><b>%s</b><ul class="pl-ticks ps-env-t">%s</ul></li>' % (n, "".join("<li>%s</li>" % c for c in cfgs[k])) for k, n in envs),
                "ps-sec--env")
 
@@ -275,14 +277,15 @@ def build(g):
                '<label><input type="checkbox" data-p13x="card"> Integrated card terminal</label></div></div>'
                '<div class="ps-sc-out" data-p13out aria-live="polite"></div></div></div>'
                % (head("PLAN YOUR IMPLEMENTATION", "How Can We Plan an Odoo POS Implementation for Your Business?",
-                       "The plan depends on how many stores and counters you have, what you sell, the hardware at each counter, and what your billing system holds today. "
-                       "Answer a few questions for a first recommendation, then talk it through with us."), g["ARROW"]), "ps-sec--scope")
+                       "The plan depends on your stores, counters, products and hardware. Answer a few questions to get a first plan.", "",
+                       ["Products, prices and customers moved from your current system", "Printers, scanners, scales and card terminals set up",
+                        "Cashiers and store managers trained on the counter", "Fixed scope and go-live date agreed before we start"]), g["ARROW"]), "ps-sec--scope")
 
     return out + JS
 
 
 CTA = ("Let's Plan a Checkout That Runs Your Whole Store",
-       "Tell us about your stores, counters and how customers pay. We'll show you your products on the Odoo register and recommend the right setup, hardware and rollout plan.")
+       "Tell us about your stores, counters and payments. We&rsquo;ll show your products on the Odoo register and plan the rollout.")
 
 FAQ = [("Does Odoo POS work without internet?",
         "Yes. Once a session is open, the register keeps selling offline and saves orders on the device. They sync to Odoo when the connection returns. Card terminals and live UPI confirmation need a connection, so we set a fallback for each."),
@@ -339,7 +342,7 @@ JS = r'''<script>
     function paid(){return st.pays.reduce(function(a,x){return a+x.a;},0);}
     function lineHtml(l){var x=p(l.id),t=l.q*l.pr*(1-l.d/100);return '<li class="ps-ln'+(st.sel===l.id?' is-sel':'')+'" data-ln="'+l.id+'"><span class="ps-ln-n">'+x[1]+'</span><b>'+inr(t)+'</b><small>'+num(l.q,2)+' Units &times; '+inr(l.pr)+(l.d?' &middot; '+l.d+'% discount':'')+'</small></li>';}
     function grid(){var t=q.value.trim().toLowerCase();return P.filter(function(x){return (!st.cat||x[2]===st.cat)&&(!t||x[1].toLowerCase().indexOf(t)>-1);}).map(function(x){
-      return '<button type="button" class="ps-pt" data-add="'+x[0]+'"><span class="ps-pt-img" style="--h:'+x[4]+'"></span><span class="ps-pt-n">'+x[1]+'</span><span class="ps-pt-p">'+inr(x[3])+'</span>'+(x[5]<=2?'<em>'+x[5]+' left</em>':'')+'</button>';}).join('')||'<p class="ps-empty">No product found.</p>';}
+      return '<button type="button" class="ps-pt" data-add="'+x[0]+'"><span class="ps-pt-img" style="--h:'+x[4]+'">'+(x[7]||'')+'</span><span class="ps-pt-n">'+x[1]+'</span><span class="ps-pt-p">'+inr(x[3])+'</span>'+(x[5]<=2?'<em>'+x[5]+' left</em>':'')+'</button>';}).join('')||'<p class="ps-empty">No product found.</p>';}
     function pad(){var K=['1','2','3','qty','4','5','6','disc','7','8','9','price','+/-','0','.','del'],L={qty:'Qty',disc:'%',price:'Price',del:'&#9003;'};
       return '<div class="ps-pad">'+K.map(function(k){return '<button type="button" class="'+(L[k]&&k!=='del'?'is-mode'+(st.mode===k?' is-on':''):'')+'" data-k="'+k+'">'+(L[k]||k)+'</button>';}).join('')+'</div>';}
     function reg(){var tot=total();
@@ -369,7 +372,7 @@ JS = r'''<script>
       if(o.cust)fxl.push(['Loyalty','+'+o.pts+' points for '+o.cust,'#8E4F83']);
       fxl.push(['Session','POS/00042: order '+st.done.length+', '+inr(o.tot)+' by '+o.pays.map(function(x){return x.n;}).join(' + ')+(o.change>0.005?' (change '+inr(o.change)+' given)':''),'#B8325A']);
       fxl.push(['Accounting','Posted with the session at Closing Register: sales and GST '+inr(o.tax)+' by rate','#B7791F']);
-      fx.innerHTML=fxl.map(function(f,i){return '<li style="--c:'+f[2]+';--i:'+i+'"><b>'+f[0]+'</b><span>'+f[1]+'</span></li>';}).join('');}
+      if(fx)fx.innerHTML=fxl.map(function(f,i){return '<li style="--c:'+f[2]+';--i:'+i+'"><b>'+f[0]+'</b><span>'+f[1]+'</span></li>';}).join('');}
     function key(k){var l=st.lines.filter(function(x){return x.id===st.sel;})[0];
       if(k==='qty'||k==='disc'||k==='price'){st.mode=k;st.buf='';render();return;}if(!l)return;
       if(k==='del'){if(st.buf){st.buf=st.buf.slice(0,-1);}else if(st.mode==='qty'){st.lines=st.lines.filter(function(x){return x!==l;});st.sel=st.lines.length?st.lines[st.lines.length-1].id:null;render();return;}}
@@ -396,7 +399,7 @@ JS = r'''<script>
       render();});
     bx.addEventListener('click',function(e){var n=e.target.closest('[data-p2nav]');if(n){st.scr=n.getAttribute('data-p2nav')==='orders'?'orders':'reg';render();}});
     q.addEventListener('input',function(){st.scr='reg';render();});
-    fx.innerHTML='<li class="is-wait"><span>Validate a payment to see the stock, loyalty, session and accounting updates.</span></li>';render();})();
+    if(fx)fx.innerHTML='<li class="is-wait"><span>Validate a payment to see the stock, loyalty, session and accounting updates.</span></li>';render();})();
 
   /* --- 4 offline --- */
   (function(){var bx=document.querySelector('[data-p4box]');if(!bx)return;var net=bx.querySelector('[data-p4net]'),T=['Cotton Kurta','Silk Stole + Jhumkas','Block-print Saree','Tote Bag','Linen Kurta x2','Phulkari Dupatta'],AM=[1299,1348,2199,349,2998,1199];

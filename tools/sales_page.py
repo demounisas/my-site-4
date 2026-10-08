@@ -54,9 +54,8 @@ def hero(g):
              '<a href="index.html#modules">Solutions</a><span>/</span><span aria-current="page">Sales</span></nav>')
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Quotes in minutes", "Signed &amp; paid online", "Invoices from what you deliver"])
     copy = ('<div class="sl-hero-copy">%s<p class="sl-eyebrow mono">ODOO SALES IMPLEMENTATION</p>'
-            '<h1 class="sl-h1">Salesforce Implementation Services <span>Customized with Odoo</span></h1>'
-            '<p class="sl-lead">We implement Odoo Sales around the way your team quotes, sells and invoices, so a quotation becomes an order, a delivery '
-            'and an invoice in one connected flow, with no re-typing between teams.</p><ul class="sl-hero-points">%s</ul>'
+            '<h1 class="sl-h1">Sales Implementation Services <span>Customized with Odoo</span></h1>'
+            '<p class="sl-lead">We implement Odoo Sales so a quotation becomes an order, a delivery and an invoice in one connected flow, with no re-typing.</p><ul class="sl-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Sales %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the quote-to-cash demo</a></div></div>' % (crumb, points, g["ARROW"]))
     lines = [("Ergo task chair", "Mesh back, 4D armrests", 24, 8450), ("Height-adjustable desk", "Dual motor, 160 x 80 cm", 12, 32900),
@@ -157,25 +156,6 @@ def build(g):
                     "Every step creates the next document for you. Press play to follow one order from signature to payment.", "is-center")
                + '<div class="sl-chain"><button type="button" class="sl-play" data-chain-play>%s<span>Play the flow</span></button><ol class="sl-docs">%s</ol></div>'
                % (ic('<path d="M7 5l12 7-12 7z"/>', 16, 2), cards), "sl-sec--chain")
-
-    # 5 ---- automation: chatter of one order
-    events = [("08:12", "Quotation sent", "S00482 emailed to Rohan Shah from the <b>Dealer offer</b> template.", "mail"),
-              ("Day 3", "Automatic reminder", "No reply yet, so a polite follow-up email went out by itself.", "bell"),
-              ("Day 4", "Signed &amp; paid online", "Rohan signed and paid a 30% deposit via UPI. <span class='sl-track'>Status: Quotation &rarr; <b>Sales Order</b></span>", "sign"),
-              ("Day 4", "Delivery created", "WH/OUT/00031 created and stock reserved in the Chennai warehouse.", "truck"),
-              ("Day 6", "Invoice raised", "Delivered quantities invoiced as INV/2026/00042 and emailed with the e-Invoice IRN.", "inv"),
-              ("Day 36", "Payment reminder", "Balance not received by the due date, so follow-up level 1 was sent.", "bell"),
-              ("Day 38", "Paid &amp; reconciled", "Bank statement matched to the invoice. <span class='sl-track'>Invoice Status: <b>Paid</b></span>", "check")]
-    eic = {"mail": ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>', 15), "bell": ic('<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>', 15),
-           "sign": ic('<path d="M4 18c3-4 5-11 8-11 2 0 0 7 3 7 1.5 0 2.5-2 5-2"/><path d="M4 21h16"/>', 15), "truck": ic('<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>', 15),
-           "inv": ic('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>', 15), "check": ic('<path d="M5 13l4 4L19 7"/>', 15)}
-    log = "".join('<li class="sl-ev sl-ev--%s"><span class="sl-ev-ic">%s</span><div><p class="sl-ev-head"><b>Unisas Automation</b><small>%s</small></p><p class="sl-ev-title">%s</p><p>%s</p></div></li>'
-                  % (k, eic[k], t, h, x) for t, h, x, k in events)
-    out += sec('<div class="sl-auto">%s<div class="sl-chatter ox-solo"><div class="ox-ch-btns"><span class="ox-pbtn">Send message</span><span class="ox-sbtn">Log note</span><span class="ox-sbtn">Activity</span></div>'
-               '<p class="ox-ch-sep">S00482 &middot; Bluebay Retail</p><ol class="sl-events">%s</ol></div></div>'
-               % (head("AUTOMATION", "Which Sales Processes Can Unisas Automate Using Odoo?",
-                       "This is the history of one order in Odoo. Nobody on your team had to do any of these steps by hand; Unisas sets up the rules that do them."), log),
-               "sl-sec--auto")
 
     # 6 ---- customisation: branded quotation PDF with callouts
     pins = [("Your branding", "Logo, colours, fonts and layout on every quotation, order and invoice."),

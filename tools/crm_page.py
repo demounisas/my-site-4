@@ -65,8 +65,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Leads from web, email &amp; WhatsApp", "Stages that match your process", "Forecasts you can trust"])
     copy = ('<div class="crm-hero-copy">%s<p class="crm-eyebrow mono">ODOO CRM IMPLEMENTATION</p>'
             '<h1 class="crm-h1">CRM Implementation for <span>Smarter Sales</span>, Powered by Odoo</h1>'
-            '<p class="crm-lead">We set up Odoo CRM around the way your team sells, so every lead lands in one pipeline, every follow-up is scheduled, '
-            'and managers can forecast from real deals.</p><ul class="crm-hero-points">%s</ul>'
+            '<p class="crm-lead">We set up Odoo CRM around how your team sells, so every lead lands in one pipeline and forecasts come from real deals.</p><ul class="crm-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo CRM %s</a>'
             '<a href="#setup" class="btn btn-ghost">How we set it up</a></div></div>' % (crumb, points, g["ARROW"]))
     journey = '''<div class="crm-journey" aria-hidden="true">
@@ -110,8 +109,7 @@ def build(g):
                 (IC["target"], "Forecasts from real deals", "Expected revenue and probability come straight from the pipeline, not a spreadsheet.")]
     ben = "".join('<li><span class="crm-ic">%s</span><span><strong>%s</strong>%s</span></li>' % b for b in benefits)
     out += sec(head("WHAT IS ODOO CRM", "What Is Odoo CRM and How Can It Improve Your Sales Process?",
-                    "Odoo CRM is the sales pipeline app inside Odoo ERP. It tracks every lead and opportunity from first enquiry to signed deal, "
-                    "and shares its data with Sales, Invoicing and Email Marketing, so nothing is typed twice. Try it below: this is how your team's pipeline looks in Odoo.",
+                    "Odoo CRM is the sales pipeline app in Odoo ERP. It tracks every lead from first enquiry to signed deal and shares data with Sales and Invoicing. Try it below.",
                     "is-center is-wide")
                + ox.frame(g["TILE_ICONS"][1]) + '<ul class="crm-benefits is-row">%s</ul>' % ben, "crm-sec--what")
 
@@ -174,7 +172,7 @@ def build(g):
                     '<span class="crm-toggle" aria-hidden="true"><i></i></span></li>' % (trg.upper(), w, t) for trg, w, t in rules)
     out += sec('<div class="crm-auto-wrap">%s<ul class="crm-rules">%s</ul></div>'
                % (head("AUTOMATION", "What CRM Processes Can Unisas Automate?",
-                       "We automate the repetitive steps between your sales stages, so your team spends its time on conversations, not admin. These are the Odoo automation rules we set up most often."), cards),
+                       "We automate the steps between sales stages, so your team sells instead of doing admin."), cards),
                "crm-sec--auto")
 
     # 7 ---- integrations: orbit
@@ -184,7 +182,7 @@ def build(g):
     core = g["TILE_ICONS"][1]
     out += sec('<div class="crm-integ">%s<div class="crm-orbit" style="--n:%d"><div class="crm-o-core"><span class="crm-o-logo">%s</span><strong>Odoo CRM</strong><small class="mono">TWO-WAY SYNC</small></div><ul>%s</ul></div></div>'
                % (head("INTEGRATIONS", "How Can Odoo CRM Connect With Your Existing Business Systems?",
-                       "Odoo CRM connects to the channels your leads already come from and the tools your team already uses, so enquiries, emails and calls are logged against the right deal automatically."
+                       "Odoo CRM logs enquiries, emails and calls from your channels against the right deal."
                        ' <a class="crm-inline-link" href="odoo-integration.html">See our integration service</a>'),
                   len(nodes), core, orbit), "crm-sec--integ")
 
@@ -240,8 +238,7 @@ def build(g):
              % (thead, tbody))
     out += sec('<div class="crm-results">%s<div class="crm-report" aria-label="Example Odoo CRM pipeline analysis">%s<div class="crm-kpis">%s</div></div></div>'
                % (head("RESULTS YOU CAN TRACK", "What Business Results Can You Track With Odoo CRM?",
-                       "Because CRM shares data with Sales and Invoicing, every report reflects what was actually quoted, won and billed, and updates as deals move. "
-                       "Slice any of these by salesperson, team, source or month."), pivot, tiles),
+                       "Reports use what was actually quoted, won and billed, and update as deals move."), pivot, tiles),
                "crm-sec--results")
 
     # 11 ---- businesses: industry tabs
@@ -324,7 +321,7 @@ SCRIPT = '''<script>
   var pr=document.querySelector('[data-prbox]');
   if(pr){
     var PH=JSON.parse(document.getElementById('crm-phases').textContent),pb=[].slice.call(pr.querySelectorAll('[data-pr]')),bd=pr.querySelector('[data-prboard]'),cd=pr.querySelector('[data-prcard]');
-    var DRAFT=['Enquiry?','Talking','Quote sent','Won'],STG=['New','Qualified','Proposition','Won'],TOT=['&#8377; 6,90,000','&#8377; 18,40,000','&#8377; 8,85,000','&#8377; 9,80,000'];
+    var DRAFT=['Enquiry?','Talking','Quote sent','Won'],NOTES=[['Website form','WhatsApp msgs','Walk-ins?'],['Call back in 1 day','Who owns the lead?'],['Quote from Excel','Follow up when?'],['Advance paid','Hand over to accounts']],SPEC=[['Comes from','Web form, email, WhatsApp'],['Moves when','Budget and need confirmed'],['Moves when','Quote sent from template'],['Done when','Advance received']],TEST=[['Test enquiry from web form','Auto-assigned: Chennai'],['Test lead qualified','Call scheduled for tomorrow'],['Test quote S00001','Follow-up set for 7 days'],['Test order confirmed','Sales order created']],STG=['New','Qualified','Proposition','Won'],TOT=['&#8377; 6,90,000','&#8377; 18,40,000','&#8377; 8,85,000','&#8377; 9,80,000'];
     var CARDS=[[['Annual support contract','Kaveri Foods','2,10,000','Email','R','#3E7CB1','g'],['CRM for 2 showrooms','Nair Textiles','4,80,000','Website','A','#B5567E','o']],
                [['ERP for 3 branches','Shree Distributors','12,00,000','WhatsApp','M','#4C9F70','r'],['Quote for 40 POS terminals','Bluebay Retail','6,40,000','Website','A','#B5567E','g']],
                [['Clinic group onboarding','Sunrise Clinics','5,25,000','Referral','M','#4C9F70','o'],['Warehouse barcode setup','Arun Logistics','3,60,000','Email','R','#3E7CB1','g']],
@@ -335,7 +332,7 @@ SCRIPT = '''<script>
       var cols=STG.map(function(s,i){var cs=L>=3?CARDS[i]:[];
         return '<div class="crm-pr-col'+(L<1?' is-draft':'')+'"><p><b>'+(L<1?DRAFT[i]:s)+'</b>'+(L>=5?'<small>'+TOT[i]+'</small>':(L>=3?'<small>'+cs.length+'</small>':''))+'</p>'+
           (cs.length?cs.map(function(c){return '<div class="crm-pr-card"><b>'+c[0]+'</b><span>&#8377; '+c[2]+'</span><span class="crm-pr-cust">'+c[1]+'</span><span class="crm-pr-foot"><span class="ox-tag ox-tag--'+SRC[c[3]]+'">'+c[3]+'</span>'+
-            (L>=4?(c[6]?'<i class="crm-pr-act is-'+c[6]+'"></i>':'')+'<span class="ox-av is-sm" style="--c:'+c[5]+'">'+c[4]+'</span>':'')+'</span></div>';}).join(''):'<div class="crm-pr-empty">'+(L<1?'':'No records yet')+'</div>')+'</div>';}).join('');
+            (L>=4?(c[6]?'<i class="crm-pr-act is-'+c[6]+'"></i>':'')+'<span class="ox-av is-sm" style="--c:'+c[5]+'">'+c[4]+'</span>':'')+'</span></div>';}).join(''):(L<1?NOTES[i].map(function(n){return '<span class="crm-pr-note">'+n+'</span>';}).join(''):(L==1?'<div class="crm-pr-spec"><small>'+SPEC[i][0]+'</small><b>'+SPEC[i][1]+'</b><span>Agreed</span></div>':(L==2?'<div class="crm-pr-card is-test"><b>'+TEST[i][0]+'</b><span class="crm-pr-cust">'+TEST[i][1]+'</span><span class="crm-pr-foot"><span class="ox-tag ox-tag--yellow">Test</span></span></div>':'<div class="crm-pr-empty">No records yet</div>'))))+'</div>';}).join('');
       var foot=[];
       if(L>=2)foot.push('Assign by territory','Follow up after 7 days','Quote from template');
       if(L>=3)foot.push('2,340 leads imported','Website &middot; Email &middot; WhatsApp connected');
@@ -355,4 +352,4 @@ SCRIPT = '''<script>
 '''
 
 CTA = ("Let's Map Your Sales Process to Odoo CRM",
-       "Tell us how your team sells today. We'll walk through your pipeline, show you how it looks in Odoo CRM, and recommend the right setup and integrations.")
+       "Tell us how your team sells today. We&rsquo;ll show your pipeline in Odoo CRM and recommend the right setup.")

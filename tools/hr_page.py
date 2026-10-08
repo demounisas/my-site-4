@@ -73,8 +73,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["One record for every employee", "Leave, attendance &amp; approvals", "Built for teams of 10 to 500"])
     copy = ('<div class="hr-hero-copy">%s<p class="hr-eyebrow mono">ODOO HR IMPLEMENTATION</p>'
             '<h1 class="hr-h1">HR Software for Small Businesses <span>Configured to Fit Your Workflows</span> with Odoo</h1>'
-            '<p class="hr-lead">Unisas sets up Odoo Employees, Time Off and Attendances around the way your company already works, so every employee record, '
-            'leave request and approval lives in one place. Managers approve from their phone, employees serve themselves, and HR stops chasing spreadsheets.</p>'
+            '<p class="hr-lead">Unisas sets up Odoo Employees, Time Off and Attendances around how you work, so records, leave and approvals live in one place.</p>'
             '<ul class="hr-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo HR %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the employee demo</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -276,12 +275,28 @@ def build(g):
              "Anitha's forklift certificate expires in 30 days; a renewal activity is scheduled for HR."),
             ("Appraisals", "#E07A5F", "Reviews &amp; goals", "Ratings, goals and feedback history", "Manager, department and skills",
              "Annual review cycle launched for 42 employees; managers get one appraisal per team member.")]
-    procs = "".join('<li style="--c:%s"><p class="hr-pr-k mono">%s</p><h3>%s</h3><dl><div><dt>&darr; In</dt><dd>%s</dd></div><div><dt>&uarr; Out</dt><dd>%s</dd></div></dl><p class="hr-pr-ex">%s</p></li>'
-                    % (c, t, n, a, b, x) for n, c, t, a, b, x in apps)
+    # a ring of processes around the employee record; the card beside it shows what flows in and out
+    import math
+    nodes, spokes, panels = [], [], []
+    for i, (n, c, t, a, b, x) in enumerate(apps):
+        ang = math.radians(-90 + i * 360 / len(apps))
+        px, py = 50 + 38 * math.cos(ang), 50 + 38 * math.sin(ang)
+        on = i == 0
+        nodes.append('<button type="button" role="tab" class="hr-ring-n%s" style="--c:%s;left:%.2f%%;top:%.2f%%" id="hr-hubt-%d" aria-controls="hr-hub-%d" aria-selected="%s" data-hub-t="%d">'
+                     '<i aria-hidden="true">%s</i><span>%s</span></button>' % (" is-on" if on else "", c, px, py, i, i, "true" if on else "false", i, n[0], n))
+        spokes.append('<line x1="50" y1="50" x2="%.2f" y2="%.2f" style="--c:%s"%s data-hub-l="%d"/>' % (px, py, c, ' class="is-on"' if on else "", i))
+        panels.append('<article class="hr-hub-p" id="hr-hub-%d" role="tabpanel" aria-labelledby="hr-hubt-%d" style="--c:%s"%s>'
+                      '<p class="hr-pr-k mono">%s</p><h3>%s</h3>'
+                      '<div class="hr-hub-f"><div><span>&darr; Into the employee record</span><p>%s</p></div>'
+                      '<div><span>&uarr; Out to %s</span><p>%s</p></div></div>'
+                      '<p class="hr-hub-ex"><b>Example</b>%s</p></article>' % (i, i, c, "" if on else " hidden", t, n, a, n, b, x))
     out += sec(head("WIDER HR PROCESSES", "How Does Unisas Connect Employee Management With Your Wider HR Processes?",
                     "The employee record is the hub. Hiring creates it, payroll and expenses read from it, appraisals and documents write back to it. "
-                    "Here is what flows in and out for each process.", "is-center")
-               + '<ul class="hr-procs">%s</ul>' % procs, "hr-sec--hub")
+                    "Pick a process to see what flows in and out.", "is-center")
+               + '<div class="hr-hubx" data-hub><div class="hr-ring" role="tablist" aria-label="HR processes">'
+                 '<svg class="hr-ring-s" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none"><circle cx="50" cy="50" r="38"/>%s</svg>'
+                 '<span class="hr-ring-c" aria-hidden="true"><b>Employee</b><small>record</small></span>%s</div>'
+                 '<div class="hr-hub-ps">%s</div></div>' % ("".join(spokes), "".join(nodes), "".join(panels)), "hr-sec--hub")
 
     # 11 ---- which apps to implement
     qs = [("shift", "Staff work in shifts or on a factory floor"), ("leave", "Leave requests arrive by phone or WhatsApp"), ("hire", "We hire more than 10 people a year"),
@@ -307,7 +322,7 @@ def build(g):
             ("after", "After go-live", [("Hypercare for the first month", "u"), ("New policies and changes", "b"), ("Quarterly review of HR reports", "u")])]
     rt = "".join('<button type="button" class="hr-rt%s" data-rt="%d" aria-pressed="%s">%s</button>' % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", n) for i, (k, n, r) in enumerate(raci))
     out += sec(head("WHAT WE HANDLE", "What Does Unisas Handle During HR System Implementation?",
-                    "Almost all of it. You bring the decisions and the data; we do the configuration, cleaning, testing and training. Here is who does what in each phase.", "is-center")
+                    "Almost all of it. You bring the decisions and data; we configure, clean, test and train. Here is who does what.", "is-center")
                + '<div class="hr-raci ox-solo" data-raci><div class="hr-rts" role="group" aria-label="Phase">%s</div><table class="hr-raci-t"><thead><tr><th>Task</th><th>Unisas</th><th>Together</th><th>You</th></tr></thead><tbody data-raci-b></tbody></table>'
                  '<p class="hr-raci-sum" data-raci-sum></p></div>' % rt + data("hr-raci", raci), "hr-sec--raci")
 
@@ -321,8 +336,7 @@ def build(g):
                '<label><input type="checkbox" data-pl-x="rec"> Recruitment and appraisals</label></div></div>'
                '<div class="hr-pl-out"><div class="hr-pl-wk" data-pl-wk></div><ol class="hr-pl-road" data-pl-road></ol><p class="hr-pl-tot" data-pl-tot aria-live="polite"></p></div></div></div>'
                % (head("PLAN YOUR SETUP", "How Can We Plan an Odoo HR Setup Around Your Workforce?",
-                       "Size, locations, shifts and payroll decide the plan more than anything else. Most small businesses go live with Employees, Time Off and Attendances "
-                       "in a few weeks, then add payroll once a clean month of attendance is in. Try the planner, then talk it through with us."), g["ARROW"]), "hr-sec--plan")
+                       "Size, sites, shifts and payroll shape the plan. Most firms go live with core HR in weeks, then add payroll."), g["ARROW"]), "hr-sec--plan")
 
     # 14 ---- why Unisas
     why = [("Built around how you work", "We map your leave rules, shifts and approvals first, then configure Odoo to them, so nobody has to learn a new process on day one.",
@@ -356,7 +370,7 @@ FAQ = [("Is Odoo HR suitable for a small business with 10 to 50 employees?",
         "Yes. We import employees, departments, managers and documents from your spreadsheets or current software, and load each person's leave balance as an opening allocation, checked with you before go-live.")]
 
 CTA = ("Let's Map Your HR Processes to Odoo",
-       "Tell us how your team handles employee records, leave and attendance today. We'll show you the same processes in Odoo and recommend the apps and setup that fit your business.")
+       "Tell us how you handle employee records, leave and attendance today. We&rsquo;ll show the same in Odoo and suggest a setup.")
 
 
 JS = r'''<script>
@@ -543,6 +557,14 @@ JS = r'''<script>
       rc.querySelector('[data-raci-b]').innerHTML=rows.map(function(r){return '<tr><td>'+r[0]+'</td>'+['u','b','y'].map(function(k){return '<td class="ox-num">'+(r[1]===k?'<span class="hr-dot is-'+k+'"></span>':'')+'</td>';}).join('')+'</tr>';}).join('');
       rc.querySelector('[data-raci-sum]').innerHTML='Unisas leads <b>'+u+' of '+rows.length+'</b> tasks in this phase.';}
     bt.forEach(function(b){b.addEventListener('click',function(){press(bt,b);draw(+b.getAttribute('data-rt'));});});draw(0);})();
+
+  /* --- 10 process hub --- */
+  (function(){var hub=document.querySelector('[data-hub]');if(!hub)return;
+    var tabs=[].slice.call(hub.querySelectorAll('[data-hub-t]')),lines=[].slice.call(hub.querySelectorAll('[data-hub-l]')),panes=[].slice.call(hub.querySelectorAll('.hr-hub-p'));
+    function pick(i){tabs.forEach(function(t,k){t.classList.toggle('is-on',k===i);t.setAttribute('aria-selected',k===i);});
+      lines.forEach(function(l,k){l.classList.toggle('is-on',k===i);});panes.forEach(function(p,k){p.hidden=k!==i;});}
+    tabs.forEach(function(t,k){t.addEventListener('click',function(){pick(k);});t.addEventListener('mouseenter',function(){if(matchMedia('(hover:hover)').matches)pick(k);});
+      t.addEventListener('keydown',function(e){var d=e.key==='ArrowRight'||e.key==='ArrowDown'?1:e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:0;if(!d)return;e.preventDefault();var j=(k+d+tabs.length)%tabs.length;pick(j);tabs[j].focus();});});})();
 
   /* --- 13 planner --- */
   (function(){var pl=document.querySelector('[data-pl]');if(!pl)return;

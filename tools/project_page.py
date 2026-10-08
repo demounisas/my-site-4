@@ -119,8 +119,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Tasks, milestones &amp; dependencies", "Timesheets that become invoices", "Live status on every project"])
     copy = ('<div class="pj-hero-copy">%s<p class="pj-eyebrow mono">ODOO PROJECT IMPLEMENTATION</p>'
             '<h1 class="pj-h1">Project Management Software <span>That Plans, Tracks and Bills Your Work</span></h1>'
-            '<p class="pj-lead">Unisas sets up Odoo Project around how your team delivers, so every project, task, deadline and billable hour sits in one '
-            'system that is connected to your sales and accounts. Managers see what is late before the client does.</p><ul class="pj-hero-points">%s</ul>'
+            '<p class="pj-lead">Unisas sets up Odoo Project around how your team delivers, so projects, tasks, deadlines and billable hours sit in one system linked to sales and accounts.</p><ul class="pj-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Project %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the project demo</a></div></div>' % (crumb, points, g["ARROW"]))
     # portfolio timeline: Oct 1 to Dec 31 (92 days), today Oct 14 (day 13)
@@ -240,7 +239,7 @@ def build(g):
             ("<b>Margin</b>", '<b style="color:var(--success)">' + inr(252600) + "</b>", "", "<b>50%</b>")]
     out += sec(head("CONNECTED TO SALES &amp; ACCOUNTING", "How Does Unisas Connect Project Management With Timesheets, Sales and Accounting?",
                     "A confirmed sales order creates the project. Hours logged on tasks become billable, the invoice is drafted from them, and the project's profitability updates as you go.", "is-center")
-               + '<ol class="pl-grid" style="--cols:4">%s</ol>'
+               + '<ol class="pl-grid is-line" style="--cols:4">%s</ol>'
                  '<div class="pl-card" style="max-width:820px;margin:20px auto 0"><p class="pl-k">Office Fit-out: Chennai HQ &middot; profitability</p><div class="pl-scroll"><table class="pl-table">'
                  '<thead><tr><th></th><th class="is-c">Expected</th><th class="is-c">To invoice</th><th class="is-c">Invoiced</th></tr></thead><tbody>%s</tbody></table></div></div>'
                  % ("".join('<li style="--c:%s"><span class="pl-n">%02d &middot; %s</span><b>%s</b><p>%s</p></li>' % (c, k + 1, t, e, x) for k, (c, t, e, x) in enumerate(chain)),
@@ -277,7 +276,7 @@ def build(g):
     lab = {"cfg": "Configuration", "studio": "Studio", "custom": "Customization"}
     out += sec(head("DATA, ROLES &amp; CUSTOMIZATION", "How Does Unisas Handle Project Data, Roles and Workflow Customization?",
                     "Each person sees what their role needs and nothing more. We configure first, use Odoo Studio for light changes, and write code only when the process truly needs it.", "is-center")
-               + '<ul class="pl-grid" style="--cols:4">%s</ul><div class="pl-card" style="margin-top:20px"><p class="pl-k">Typical requests and how we meet them</p><div class="pl-scroll"><table class="pl-table"><tbody>%s</tbody></table></div></div>'
+               + '<ul class="pl-grid is-side" style="--cols:4">%s</ul><div class="pl-card" style="margin-top:20px"><p class="pl-k">Typical requests and how we meet them</p><div class="pl-scroll"><table class="pl-table"><tbody>%s</tbody></table></div></div>'
                % ("".join('<li><b>%s</b><em>%s</em><p>Lands on: %s</p><ul class="pl-ticks" style="margin-top:8px">%s</ul><ul class="pl-ticks is-x">%s</ul></li>'
                           % (r[1], r[2], r[3], "".join("<li>%s</li>" % x for x in r[4]), "".join("<li>%s</li>" % x for x in r[5])) for r in roles),
                   "".join('<tr><th>%s</th><td style="text-align:right"><span class="pl-chip%s">%s</span></td></tr>' % (t, {"cfg": " is-ok", "studio": "", "custom": " is-gold"}[k], lab[k]) for t, k in reqs)), "pj-sec--roles")
@@ -402,7 +401,7 @@ def build(g):
                '<div class="pj-q ox-solo" data-quiz><p class="pj-q-h"><b>Project readiness check</b><small>6 questions, 30 seconds</small></p><ol>%s</ol>'
                '<div class="pj-q-res" data-quiz-res aria-live="polite"><span class="pj-q-score" data-quiz-score>0 / 6</span><p data-quiz-txt>Answer the questions to see where you stand.</p></div></div></div>'
                % (head("READINESS CHECK", "Is Your Business Ready to Build a Project Workflow With Odoo?",
-                       "If most of these sound familiar, your projects have outgrown spreadsheets and chat groups. We'll review one of your live projects and show it to you in Odoo."),
+                       "Sound familiar? Your projects have outgrown spreadsheets and chat groups. We&rsquo;ll show a live one in Odoo."),
                   g["ARROW"], qitems), "pj-sec--quiz")
 
     data = {"P": PROJECTS, "T": TASKS, "U": PEOPLE, "TS": {str(k): v for k, v in TIMESHEETS.items()}, "S": {k: list(v) for k, v in STATUS.items()}}
@@ -642,4 +641,4 @@ JS = r'''<script>
 '''
 
 CTA = ("Let's Build Your Project Workflow in Odoo",
-       "Tell us how your team plans, delivers and bills projects today. We'll show you one of your live projects in Odoo Project and recommend the right setup.")
+       "Tell us how you plan, deliver and bill projects. We&rsquo;ll show one of your live projects in Odoo Project.")

@@ -74,8 +74,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Live stock in every warehouse", "Barcode, lots &amp; serials", "Reorders that raise themselves"])
     copy = ('<div class="iv-hero-copy">%s<p class="iv-eyebrow mono">ODOO INVENTORY IMPLEMENTATION</p>'
             '<h1 class="iv-h1">Inventory Implementation Services <span>Tailored to Your Business with Odoo</span></h1>'
-            '<p class="iv-lead">We set up Odoo Inventory around your warehouses, bins and routes, so every receipt, transfer and delivery updates stock the moment it '
-            'happens, and reorders go out before the shelf runs empty.</p><ul class="iv-hero-points">%s</ul>'
+            '<p class="iv-lead">We set up Odoo Inventory around your warehouses, so stock updates as it moves and reorders go out on time.</p><ul class="iv-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Inventory %s</a>'
             '<a href="#explore" class="btn btn-ghost">Explore live stock</a></div></div>' % (crumb, points, g["ARROW"]))
     # a receipt being scanned on the shop floor with the Odoo Barcode app
@@ -298,7 +297,7 @@ def build(g):
            ("10:55:30", "Shiprocket", "AWB 1442 9876 5510 created for BLR/OUT/00119"),
            ("11:02:47", "e-Way bill", "EWB 3410 2287 6612 generated for CHN/OUT/00032"),
            ("11:15:02", "Zebra ZD421", "12 lot labels printed for CHN/IN/00010")]
-    out += sec('<div class="iv-int"><div>%s<ul class="iv-sys">%s</ul></div><div class="iv-log ox-solo"><p class="iv-log-h"><b>Integration log</b><span class="iv-live">Live</span></p>'
+    out += sec('%s<div class="iv-int"><ul class="iv-sys">%s</ul><div class="iv-log ox-solo"><p class="iv-log-h"><b>Integration log</b><span class="iv-live">Live</span></p>'
                '<ol>%s</ol><p class="iv-log-f">Failed syncs retry automatically and alert your team in Odoo.</p></div></div>'
                % (head("INTEGRATIONS", "How Can Unisas Integrate Odoo Inventory With Your Existing Systems?",
                        "Your stock rarely lives in one system. We connect Odoo to the channels, carriers and devices around it, so one stock figure feeds them all."),
@@ -387,7 +386,7 @@ def build(g):
                '<div class="iv-pl ox-solo"><p class="iv-pl-h"><b>Typical rollout</b><small>8 to 10 weeks, single company, up to 3 warehouses</small></p>'
                '<div class="iv-pl-weeks"><span></span><div>%s</div></div>%s</div></div>'
                % (head("NEXT STEPS", "How Can We Plan Your Odoo Inventory Implementation?",
-                       "Every plan starts with your warehouse, not a template. Here is how a typical rollout runs, and what the first conversation covers."),
+                       "Every plan starts with your warehouse, not a template. Here is how a typical rollout runs."),
                   "".join('<li><b>%s</b><span>%s</span></li>' % f for f in first), g["ARROW"], weeks, prow), "iv-sec--plan")
 
     return out + JS.replace("__PRODUCTS__", json.dumps(PRODUCTS)).replace("__WH__", json.dumps(WH)).replace("__REPLEN__", json.dumps(REPLEN))
@@ -488,4 +487,4 @@ JS = r'''<script>
 '''
 
 CTA = ("Let's Get Your Stock Under Control in Odoo",
-       "Tell us how many warehouses, SKUs and channels you run today. We'll show you the same flow in Odoo Inventory and recommend the right setup.")
+       "Tell us your warehouses, SKUs and channels. We&rsquo;ll show the same flow in Odoo Inventory and recommend a setup.")

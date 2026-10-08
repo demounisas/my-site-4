@@ -22,9 +22,10 @@ TICK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden=
 V_CAL = ox.ic('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>', 16, 1.9)
 
 
-def head(eyebrow, title, sub="", cls=""):
-    return ('<div class="em-head%s"><p class="em-eyebrow mono">%s</p><h2 class="em-title">%s</h2>%s</div>'
-            % (" " + cls if cls else "", eyebrow, title, '<p class="em-sub">%s</p>' % sub if sub else ""))
+def head(eyebrow, title, sub="", cls="", pts=()):
+    return ('<div class="em-head%s"><p class="em-eyebrow mono">%s</p><h2 class="em-title">%s</h2>%s%s</div>'
+            % (" " + cls if cls else "", eyebrow, title, '<p class="em-sub">%s</p>' % sub if sub else "",
+               '<ul class="pl-ticks em-head-t">%s</ul>' % "".join("<li>%s</li>" % t for t in pts) if pts else ""))
 
 
 def sec(body, cls="", sid=""):
@@ -54,8 +55,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Audiences from CRM &amp; sales data", "Scheduled, tested campaigns", "Opens, clicks &amp; revenue in one report"])
     copy = ('<div class="em-hero-copy">%s<p class="em-eyebrow mono">ODOO EMAIL MARKETING IMPLEMENTATION</p>'
             '<h1 class="em-h1">Powerful <span>Email Marketing Software</span> with Odoo</h1>'
-            '<p class="em-lead">Unisas sets up Odoo Email Marketing on the same database as your contacts, CRM and sales. Every campaign goes to a segment you can trust, '
-            'lands in the inbox at the right hour, and reports the leads, quotations and orders it brought in.</p>'
+            '<p class="em-lead">Unisas sets up Odoo Email Marketing on the same database as your CRM and sales, so every campaign reports the orders it brought in.</p>'
             '<ul class="em-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan your email marketing %s</a>'
             '<a href="#compose" class="btn btn-ghost">Build a mailing</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -84,16 +84,15 @@ def build(g):
     camps = [["Diwali trade offer", "Gift boxes at trade price", ["ret", "dist"], "Tue 07:30", "before shops open"],
              ["New: Chettinad Sambar Mix", "Product launch with a recipe", ["home", "rep", "new"], "Thu 19:00", "when dinner is planned"],
              ["We miss you: 10% back", "Win-back offer", ["lap"], "Sat 10:00", "weekend shopping hour"]]
-    leg = "".join('<li><i style="background:%s"></i>%s</li>' % (c, n) for n, c in types.values())
     out += sec(head("RIGHT PEOPLE, RIGHT TIME", "Are Your Email Campaigns Reaching the Right Customers at the Right Time?",
                     "One newsletter to the whole list is easy to send and expensive in unsubscribes. Pick a campaign, then compare sending it to everyone at one time "
                     "with sending it to the right segment at the hour they read email.", "is-center")
-               + '<div class="em-aim" data-e1box><div class="em-aim-l"><div class="em-camps" role="group" aria-label="Campaign">%s</div>'
-                 '<div class="em-aim-card ox-solo"><div class="em-mode" role="group" aria-label="Sending method"><button type="button" class="is-on" data-e1mode="all" aria-pressed="true">Everyone, one time</button>'
-                 '<button type="button" data-e1mode="seg" aria-pressed="false">Targeted segment, best time</button></div>'
-                 '<div class="em-dots" data-e1dots aria-hidden="true"></div><ul class="em-leg">%s</ul><p class="em-when" data-e1when></p></div></div>'
-                 '<div class="em-aim-r ox-solo" aria-live="polite"><p class="mono">ONE SEND, 12,300 CONTACTS</p><ul class="em-kpis" data-e1kpis></ul><p class="em-aim-msg" data-e1msg></p></div></div>'
-                 % (pressed("em-camp", "data-e1", camps, lambda c: "<b>%s</b><small>%s</small>" % (c[0], c[1])), leg)
+               + '<div class="em-aim" data-e1box><div class="em-camps" role="group" aria-label="Campaign">%s</div>'
+                 '<div class="em-lst ox-solo"><div class="em-lst-h"><p><b>Your list</b><small>12,300 contacts in Odoo</small></p>'
+                 '<p class="em-lst-k"><span class="is-rel">Written for this campaign</span><span class="is-irr">Not written for it</span></p></div>'
+                 '<div class="em-mix" data-e1mix aria-hidden="true"></div><ul class="em-chips" data-e1chips></ul></div>'
+                 '<div class="em-vs" aria-live="polite"><div class="em-opt is-blast" data-e1all></div><span class="em-vs-o" aria-hidden="true">vs</span><div class="em-opt is-tgt" data-e1seg></div></div></div>'
+                 % pressed("em-camp", "data-e1", camps, lambda c: "<b>%s</b><small>%s</small>" % (c[0], c[1]))
                + data("em-types", types) + data("em-order", order) + data("em-camps", camps), "em-sec--aim")
 
     # 2 ---- recipients domain editor
@@ -153,8 +152,7 @@ def build(g):
     sb = "".join('<button type="button" class="em-sg%s" data-e3="%d" aria-pressed="%s"><b>%s</b><small>%s</small></button>'
                  % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", s[0], s[1]) for i, s in enumerate(segs))
     out += sec(head("SEGMENTS TO WORKFLOWS", "How Does Unisas Map Your Customer Segments to the Right Campaign Workflows?",
-                    "Not every segment needs the same treatment. Some get a monthly mailing, some a timed journey, some a plain email from their salesperson. "
-                    "We map each segment to its audience in Odoo, its sequence, the number that proves it works and who takes over. Pick a segment.", "is-center")
+                    "Not every segment needs the same treatment: a monthly mailing, a timed journey or a plain email from sales. We map each one to its audience, sequence and owner in Odoo. Pick a segment.", "is-center")
                + '<div class="em-map" data-e3box><div class="em-sgs" role="group" aria-label="Customer segment">%s</div><div class="em-wf ox-solo" aria-live="polite" data-e3card></div></div>' % sb
                + data("em-segs", segs), "em-sec--map")
 
@@ -213,7 +211,7 @@ def build(g):
         return n[:1].upper() + n[1:]
     out += sec(head("YOUR MARKETING PROCESS", "How Does Unisas Configure Email Campaigns Around Your Marketing Process?",
                     "Your team already has a way of planning, approving and reporting campaigns. We give each step an owner, a place in the system and a record of what was done.", "is-center")
-               + '<ol class="pl-grid" style="--cols:4">%s</ol>'
+               + '<ol class="pl-grid is-rows" style="--cols:4">%s</ol>'
                  % "".join('<li><span class="pl-n">%02d</span><b>%s</b><em>%s</em><p>%s</p><ul class="pl-ticks em-pl-t">%s</ul></li>'
                            % (i + 1, x[0], x[1], x[2], "".join("<li><span><b>%s:</b> %s</span></li>" % (plain(c[0]), c[1]) for c in x[3])) for i, x in enumerate(steps)), "em-sec--proc")
 
@@ -275,8 +273,9 @@ def build(g):
     by = {x[0]: x for x in acts}
     depth = {"a": 0, "b": 1, "c": 2, "d": 2, "e": 1}
     out += sec(head("AUTOMATED JOURNEYS", "How Does Unisas Build and Configure Automated Customer Journeys?",
-                    "Here is a welcome journey we build for new subscribers. Each step waits for a trigger on the one above it: opened, not opened, clicked. "
-                    "These are the numbers after the first week for 1,000 subscribers.", "is-center")
+                    "A welcome journey for new subscribers. Each step waits on the one above. First-week results for 1,000 people.", "is-center",
+                    ["Triggers on opens, clicks, sign-ups and orders", "A wait time and condition on every step",
+                     "Lists, tags and CRM leads updated automatically", "Results shown for each step of the journey"])
                + '<div class="pl-card" style="max-width:900px;margin:0 auto"><p class="pl-k">Welcome &amp; first order &middot; newsletter sign-ups in the last 24 hours</p><ul class="pl-steps">%s</ul>'
                  '<p style="margin:14px 0 0;display:flex;flex-wrap:wrap;gap:6px"><span class="pl-chip is-ok">1,000 completed in 7 days</span><span class="pl-chip">2,265 emails sent</span><span class="pl-chip is-gold">197 showed first-order intent</span></p></div>'
                  % "".join('<li style="margin-left:%dpx"><span class="pl-n">%d</span><b>%s</b><em>%s &middot; %s</em><p>%s &middot; reached <b>%s</b></p></li>'
@@ -360,14 +359,15 @@ def build(g):
                '<label><input type="checkbox" data-e13x="sms"> SMS or WhatsApp alongside email</label></div></div>'
                '<div class="em-sc-out" data-e13out aria-live="polite"></div></div></div>'
                % (head("PLAN YOUR IMPLEMENTATION", "How Can We Plan an Odoo Email Marketing Implementation for Your Business?",
-                       "The plan depends on how many contacts move across, how often you send, and whether you need automated journeys and revenue reporting. "
-                       "Answer a few questions for a first recommendation, then talk it through with us."), g["ARROW"]), "em-sec--scope")
+                       "The plan depends on your contacts, how often you send and the journeys you need. Answer a few questions to start.", "",
+                       ["Contacts, lists and unsubscribes moved from your current tool", "Sending domain, templates and journeys set up for you",
+                        "Your team trained on its own campaigns", "Fixed scope and timeline agreed before we start"]), g["ARROW"]), "em-sec--scope")
 
     return out + JS
 
 
 CTA = ("Let's Plan Email Campaigns That Bring In Orders",
-       "Tell us who you email today, how often, and what you want them to do. We'll show you your campaigns in Odoo Email Marketing and recommend the right setup, from lists and domain to automated journeys.")
+       "Tell us who you email, how often and why. We&rsquo;ll show your campaigns in Odoo and recommend the right setup.")
 
 FAQ = [("Do we still need Mailchimp or another email tool with Odoo?",
         "Usually not. Odoo Email Marketing covers mailing lists, templates, scheduling, A/B tests and tracking, and it reads your CRM and sales data directly. Most clients move their lists across and cancel the separate tool."),
@@ -394,18 +394,23 @@ JS = r'''<script>
 
   /* --- 1 right people, right time --- */
   (function(){var bx=document.querySelector('[data-e1box]');if(!bx)return;var T=J('em-types'),O=J('em-order'),C=J('em-camps'),PER=205,
-    cb=[].slice.call(bx.querySelectorAll('[data-e1]')),mb=[].slice.call(bx.querySelectorAll('[data-e1mode]')),cur=0,mode='all';
-    function draw(){var c=C[cur],seg=mode==='seg',rel=0,irr=0;
-      bx.querySelector('[data-e1dots]').innerHTML=O.map(function(t){var r=c[2].indexOf(t)>-1,got=seg?r:true;if(got){if(r)rel++;else irr++;}
-        return '<i class="'+(got?(r?'is-rel':'is-irr'):'is-off')+'" style="--c:'+T[t][1]+'" title="'+T[t][0]+'"></i>';}).join('');
-      var rec=(rel+irr)*PER,op=rel*PER*(seg?0.46:0.40)+irr*PER*0.08,un=irr*PER*0.012+rel*PER*0.001,ord=rel*PER*(seg?0.034:0.024);
-      bx.querySelector('[data-e1when]').innerHTML=seg?'<b>'+c[3]+'</b> &middot; '+c[4]:'<b>Mon 09:00</b> &middot; the whole list at once';
-      bx.querySelector('[data-e1kpis]').innerHTML=[['Recipients',num(rec)],['Open rate',(op/rec*100).toFixed(1)+'%'],['Unsubscribes',num(Math.round(un))],['Orders',num(Math.round(ord))]]
-        .map(function(k){return '<li><small>'+k[0]+'</small><b>'+k[1]+'</b></li>';}).join('');
-      bx.querySelector('[data-e1msg]').innerHTML=seg?'<b>Only the people it was written for</b> get it, at the hour they read email. Fewer sends, more orders, almost no unsubscribes.'
-        :'<b>'+num(irr*PER)+' people</b> got an email that wasn&rsquo;t meant for them. They are the ones who unsubscribe or mark it as spam.';}
-    cb.forEach(function(b){b.addEventListener('click',function(){press(cb,b);cur=+b.getAttribute('data-e1');draw();});});
-    mb.forEach(function(b){b.addEventListener('click',function(){press(mb,b);mode=b.getAttribute('data-e1mode');draw();});});draw();})();
+    cb=[].slice.call(bx.querySelectorAll('[data-e1]')),cur=0,G={};O.forEach(function(t){G[t]=(G[t]||0)+1;});
+    function kp(l,v,d){return '<li><small>'+l+'</small><b>'+v+'</b>'+(d?'<i>'+d+'</i>':'')+'</li>';}
+    function draw(){var c=C[cur],rel=0,irr=0,R=Object.keys(T).map(function(t){var n=G[t]||0,r=c[2].indexOf(t)>-1;if(r)rel+=n;else irr+=n;return {t:t,n:n,r:r};});
+      R.sort(function(a,b){return (b.r-a.r)||(b.n-a.n);});
+      bx.querySelector('[data-e1mix]').innerHTML=R.map(function(x){return '<i class="'+(x.r?'is-rel':'is-irr')+'" style="--c:'+T[x.t][1]+';flex-grow:'+x.n+'"></i>';}).join('');
+      bx.querySelector('[data-e1chips]').innerHTML=R.map(function(x){return '<li class="'+(x.r?'is-rel':'is-irr')+'" style="--c:'+T[x.t][1]+'"><i></i><b>'+T[x.t][0]+'</b><small>'+num(x.n*PER)+'</small></li>';}).join('');
+      var A={rec:(rel+irr)*PER,op:rel*PER*0.40+irr*PER*0.08,un:Math.round(irr*PER*0.012+rel*PER*0.001),ord:Math.round(rel*PER*0.024)},
+          S={rec:rel*PER,op:rel*PER*0.46,un:Math.round(rel*PER*0.001),ord:Math.round(rel*PER*0.034)};
+      A.or=A.op/A.rec*100;S.or=S.op/S.rec*100;
+      bx.querySelector('[data-e1all]').innerHTML='<p class="em-opt-h"><span class="mono">OPTION A</span><b>Everyone, one time</b><small><b>Mon 09:00</b> &middot; the whole list at once</small></p>'+
+        '<ul class="em-opt-k">'+kp('Recipients',num(A.rec))+kp('Open rate',A.or.toFixed(1)+'%')+kp('Unsubscribes',num(A.un))+kp('Orders',num(A.ord))+'</ul>'+
+        '<p class="em-opt-m"><b>'+num(irr*PER)+' people</b> get an email that wasn&rsquo;t meant for them. They are the ones who unsubscribe or mark it as spam.</p>';
+      bx.querySelector('[data-e1seg]').innerHTML='<p class="em-opt-h"><span class="mono">OPTION B &middot; RECOMMENDED</span><b>Targeted segment, best time</b><small><b>'+c[3]+'</b> &middot; '+c[4]+'</small></p>'+
+        '<ul class="em-opt-k">'+kp('Recipients',num(S.rec),'&minus;'+num(A.rec-S.rec)+' sends')+kp('Open rate',S.or.toFixed(1)+'%','+'+(S.or-A.or).toFixed(1)+' pts')+
+        kp('Unsubscribes',num(S.un),'&minus;'+num(A.un-S.un))+kp('Orders',num(S.ord),'+'+num(S.ord-A.ord))+'</ul>'+
+        '<p class="em-opt-m"><b>Only the people it was written for</b> get it, at the hour they read email. Fewer sends, more orders, almost no unsubscribes.</p>';}
+    cb.forEach(function(b){b.addEventListener('click',function(){press(cb,b);cur=+b.getAttribute('data-e1');draw();});});draw();})();
 
   /* --- 2 recipients --- */
   (function(){var bx=document.querySelector('[data-e2box]');if(!bx)return;var M=J('em-models'),L=J('em-lists'),body=bx.querySelector('[data-e2body]'),mb=[].slice.call(bx.querySelectorAll('[data-e2m]')),
@@ -569,7 +574,7 @@ JS = r'''<script>
   (function(){var bx=document.querySelector('[data-e11ubox]');if(!bx)return;var S=J('em-subs'),RS=J('em-reasons'),u=bx.querySelector('[data-e11u]'),rec=bx.querySelector('[data-e11rec]'),
     st={page:false,subs:S.map(function(s){return s[1];}),reason:null,block:false,saved:false};
     function draw(){
-      if(!st.page)u.innerHTML='<p class="em-u-h"><b>October recipe newsletter</b><small>From Amudha Spices &middot; to lakshmi.r@gmail.com</small></p><div class="em-u-mail"><span></span><span></span><span class="is-s"></span></div><p class="em-u-ft">Amudha Spices, Madurai &middot; <button type="button" data-e11go>Unsubscribe</button> &middot; Manage preferences</p>';
+      if(!st.page)u.innerHTML='<p class="em-u-h"><b>October recipe newsletter</b><small>From Amudha Spices &middot; to lakshmi.r@gmail.com</small></p><div class="em-u-mail"><span class="em-u-hint">Click <b>Unsubscribe</b> below to opt out as Lakshmi &darr;</span><span></span><span class="is-s"></span></div><p class="em-u-ft">Amudha Spices, Madurai &middot; <button type="button" data-e11go>Unsubscribe</button> &middot; Manage preferences</p>';
       else{var off=S.some(function(s,i){return s[1]&&!st.subs[i];})||st.block;
         u.innerHTML='<div class="em-u-url mono">amudhaspices.in/mailing/my</div><p class="em-u-h"><b>Manage your mailing subscriptions</b><small>lakshmi.r@gmail.com</small></p>'+
         '<ul class="em-u-subs">'+S.map(function(s,i){return '<li><label><input type="checkbox" data-e11s="'+i+'"'+(st.subs[i]?' checked':'')+(st.block?' disabled':'')+'><span class="em-sw" aria-hidden="true"></span>'+s[0]+'</label></li>';}).join('')+'</ul>'+

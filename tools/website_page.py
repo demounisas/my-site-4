@@ -15,9 +15,13 @@ from crm_explorer import ic
 TICK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 
 
-def head(eyebrow, title, sub="", cls=""):
-    return ('<div class="wb-head%s"><p class="wb-eyebrow mono">%s</p><h2 class="wb-title">%s</h2>%s</div>'
-            % (" " + cls if cls else "", eyebrow, title, '<p class="wb-sub">%s</p>' % sub if sub else ""))
+HEAD_PTS = {'THE REST OF YOUR BUSINESS': ['Portal, events, demos and support all run on the same site', 'Every form lands as a record in the right team&rsquo;s app', 'One login for customers, dealers and applicants', 'Add a new front door later without rebuilding the site'], 'AFTER GO-LIVE': ['Marketing edits pages, banners and blog posts in the builder', 'Prices and stock update from Odoo, not by editing the site', 'Chats, forms and tickets reach the right person on their own', 'No developer or agency ticket for day-to-day changes'], 'SCOPE YOUR PROJECT': ['A fixed-scope estimate after a short discovery call', 'Pages, product data and integrations sized up front', 'Launch the essentials first, then add features in phases', 'Content migration and SEO redirects planned from day one']}
+
+
+def head(eyebrow, title, sub="", cls="", pts=()):
+    ul = '<ul class="wb-head-pts">%s</ul>' % "".join('<li>%s%s</li>' % (TICK, x) for x in pts) if pts else ""
+    return ('<div class="wb-head%s"><p class="wb-eyebrow mono">%s</p><h2 class="wb-title">%s</h2>%s%s</div>'
+            % (" " + cls if cls else "", eyebrow, title, '<p class="wb-sub">%s</p>' % sub if sub else "", ul))
 
 
 def sec(body, cls="", sid=""):
@@ -45,8 +49,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Edit pages without a developer", "Every form lands in your CRM", "Shop tied to live stock &amp; prices"])
     copy = ('<div class="wb-hero-copy">%s<p class="wb-eyebrow mono">ODOO WEBSITE IMPLEMENTATION</p>'
             '<h1 class="wb-h1">Business Website Development <span>Connected to Your Sales and Operations</span> with Odoo</h1>'
-            '<p class="wb-lead">Unisas builds your website on Odoo, on the same system as your CRM, sales, stock and accounts. Enquiries become leads, '
-            'quotes and orders on their own, product pages show real prices and stock, and your team updates the site themselves.</p>'
+            '<p class="wb-lead">Unisas builds your website on Odoo, alongside your CRM, sales, stock and accounts, so enquiries turn into orders on their own.</p>'
             '<ul class="wb-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss your Odoo website %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the website builder</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -86,11 +89,14 @@ def build(g):
              "The site tracks known visitors and the pages they viewed, so sales can call the dealer who read the price list twice.")]
     pin_html = "".join('<button type="button" class="wb-pin%s" data-p1="%d" style="--x:%d;--y:%d" aria-label="%s" aria-pressed="%s">%d</button>'
                        % (" is-on" if i == 0 else "", i, x, y, n, "true" if i == 0 else "false", i + 1) for i, (n, x, y, *_r) in enumerate(pins))
-    page = ('<div class="wb-mock"><div class="wb-m-nav"><b>Kaveri Fans</b><span></span><span></span><span></span><em>Sign in</em></div>'
-            '<div class="wb-m-hero"><span class="wb-m-h"></span><span class="wb-m-l"></span><span class="wb-m-l is-s"></span><em>Get a quote</em></div>'
-            '<div class="wb-m-row"><div class="wb-m-prods"><span></span><span></span><span></span></div></div>'
-            '<div class="wb-m-row is-2"><div class="wb-m-form"><span></span><span></span><span></span><em></em></div><div class="wb-m-vis"><span></span><span></span></div></div>'
-            '<span class="wb-m-chat"></span>%s</div>' % pin_html)
+    page = ('<div class="wb-mock"><div class="wb-m-nav"><b>Kaveri<i>Fans</i></b><span>Home</span><span>Products</span><span>About</span><em>Sign in</em></div>'
+            '<div class="wb-m-hero"><small class="wb-m-k">BLDC &middot; 5-STAR RATED</small><span class="wb-m-h">Quiet fans for Indian summers</span>'
+            '<span class="wb-m-l">Ceiling and pedestal fans, made in Coimbatore since 1998.</span><em>Get a quote</em></div>'
+            '<div class="wb-m-row"><div class="wb-m-prods"><span><i></i>Aero 48<small>Ceiling fan</small></span><span><i></i>Breeze 36<small>Ceiling fan</small></span>'
+            '<span><i></i>Turbo 40<small>Pedestal fan</small></span></div></div>'
+            '<div class="wb-m-row is-2"><div class="wb-m-form"><b>Contact us</b><span>Your name</span><span>Phone number</span><span>Message</span><em>Send</em></div>'
+            '<div class="wb-m-vis"><b>Site visitors</b><span>1,284 visits this month</span><span>Most viewed: Products, Price list</span></div></div>'
+            '<span class="wb-m-chat"><i></i><i></i><i></i></span>%s</div>' % pin_html)
     out += sec(head("BEYOND THE BRAND", "What Should Your Business Website Do Beyond Presenting Your Brand?",
                     "A brochure website looks good and stops there. A business website takes enquiries, quotes, orders and questions, and hands each one to the right person. "
                     "Click a numbered spot and switch between the two.", "is-center")
@@ -241,7 +247,7 @@ def build(g):
     bl = "".join('<button type="button" class="wb-blk%s" data-p10="%d" style="--c:%s" aria-pressed="%s"><span>%s</span><em>%s</em></button>'
                  % (" is-on" if i == 0 else "", i, c, "true" if i == 0 else "false", b, a) for i, (b, a, c, x, apps) in enumerate(blocks))
     out += sec(head("THE REST OF YOUR BUSINESS", "How Can Unisas Connect Website Operations With the Rest of Your Business?",
-                    "Beyond leads and orders, each part of the site can be the front door to another team: support, events, hiring, marketing. Pick a part of the page to see what sits behind it.", "is-center")
+                    "Each part of the site can open a door to another team: support, events, hiring. Pick one to see what sits behind it.", "is-center", HEAD_PTS["THE REST OF YOUR BUSINESS"])
                + '<div class="wb-anat" data-p10box>%s<div class="wb-anat-c ox-solo" aria-live="polite"><p class="mono" data-p10k></p><h3 data-p10n></h3><p data-p10t></p><p class="wb-anat-apps"><small>Apps involved</small><b data-p10a></b></p></div></div>'
                  % browser("kaverifans.in", '<div class="wb-blks">%s</div>' % bl, "is-anat") + data("wb-blocks", blocks), "wb-sec--anat")
 
@@ -256,7 +262,7 @@ def build(g):
              ("sup", "Support", [("Answer website tickets within SLA", "Helpdesk &rsaquo; My Tickets", 30), ("Add an FAQ article to the help centre", "Knowledge &rsaquo; New Article", 15)])]
     rb = "".join('<button type="button" class="wb-role%s" data-p11="%d" aria-pressed="%s">%s</button>' % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", n) for i, (k, n, t) in enumerate(roles))
     out += sec(head("AFTER GO-LIVE", "What Can Your Team Manage Through Odoo After the Website Goes Live?",
-                    "Day-to-day changes don&rsquo;t need a developer or a ticket to an agency. Here is a typical week for each team, with where they click in Odoo and how long it takes.", "is-center")
+                    "Day-to-day changes need no developer or agency. Here is a typical week per team, with clicks and time taken.", "is-center", HEAD_PTS["AFTER GO-LIVE"])
                + '<div class="wb-week" data-p11box><div class="wb-roles" role="group" aria-label="Team">%s</div><div class="ox wb-ox">%s<ul class="wb-tasks" data-p11list></ul><p class="wb-week-sum" data-p11sum></p></div></div>'
                  % (rb, ox_head("To Do", "This week")) + data("wb-roles", roles), "wb-sec--week")
 
@@ -286,14 +292,13 @@ def build(g):
                '<div class="wb-sc-chk is-wide"><label><input type="checkbox" data-p13x="1"> Courier or marketplace integration</label><label><input type="checkbox" data-p13x="1"> Custom features (configurator, locator)</label></div></div>'
                '<div class="wb-sc-out" data-p13out aria-live="polite"></div></div></div>'
                % (head("SCOPE YOUR PROJECT", "How Can We Scope the Right Odoo Website Implementation for Your Business?",
-                       "Scope comes from what the site has to do, how much content and product data moves across, and what it connects to. "
-                       "Answer a few questions for a first recommendation, then talk it through with us."), g["ARROW"]), "wb-sec--scope")
+                       "Scope depends on what the site must do, how much data moves and what it connects to. Answer a few questions to start.", "", HEAD_PTS["SCOPE YOUR PROJECT"]), g["ARROW"]), "wb-sec--scope")
 
     return out + JS
 
 
 CTA = ("Let's Plan a Website That Works for Your Business",
-       "Tell us what your website needs to do: who visits, what they should be able to do, and which systems it should feed. We'll show you how it looks in Odoo and recommend the right scope.")
+       "Tell us who visits your site and what it should do. We&rsquo;ll show it in Odoo and recommend the right scope.")
 
 
 JS = r'''<script>
@@ -430,7 +435,7 @@ JS = r'''<script>
       var menu=['Home','Products'];if(o.shop)menu.push('Shop');menu.push('Dealers');if(o.blog)menu.push('Blog');if(o.events)menu.push('Events');if(o.jobs)menu.push('Careers');menu.push('Contact us');
       var site='<div class="wb-mini"><div class="wb-mini-nav"><b>Kaveri<span>Fans</span></b><span class="wb-mini-m">'+menu.map(function(m){return '<span>'+m+'</span>';}).join('')+'</span><span class="wb-mini-r">'+
         (o.lang?'<span class="wb-lang">EN &#9662;</span>':'')+(o.b2b?'<span>Sign in</span>':'')+(o.shop?'<span>&#128722;</span>':'')+(o.appt?'<span class="is-btn">Book a demo</span>':'')+'</span></div>'+
-        '<div class="wb-mini-hero"><b>Ceiling fans built for Indian summers</b>'+(o.shop?'<span class="is-btn">Shop fans</span>':'<span class="is-btn">Get a quote</span>')+'</div>'+
+        '<div class="wb-mini-hero"><b>Ceiling fans built for Indian summers</b><small>Quiet BLDC motors, 65% less power, 2-year warranty.</small>'+(o.shop?'<span class="is-btn">Shop fans</span>':'<span class="is-btn">Get a quote</span>')+'</div>'+
         '<div class="wb-mini-row">'+(o.shop?'<span class="wb-mini-card"><i></i>Aero 48<small>&#8377; 3,490'+(o.b2b?' &middot; dealer price after sign-in':'')+'</small></span><span class="wb-mini-card"><i></i>Breeze 36<small>&#8377; 2,790</small></span>':'<span class="wb-mini-card is-wide"><i></i>Product range<small>Enquire for prices</small></span>')+
         (o.events?'<span class="wb-mini-card is-ev"><i></i>Dealer meet<small>Nov 14 &middot; Coimbatore</small></span>':'')+(o.blog?'<span class="wb-mini-card is-blog"><i></i>Choosing a BLDC fan<small>Blog</small></span>':'')+'</div>'+
         (o.cookie?'<div class="wb-mini-cookie">We use cookies to improve your experience. <span>Accept</span></div>':'')+(o.chat?'<span class="wb-mini-chat">&#128172;</span>':'')+'</div>';
@@ -467,7 +472,7 @@ JS = r'''<script>
 
   /* --- 10 anatomy --- */
   (function(){var bx=document.querySelector('[data-p10box]');if(!bx)return;var B=J('wb-blocks'),bt=[].slice.call(bx.querySelectorAll('[data-p10]'));
-    function draw(i){var b=B[i];bx.querySelector('[data-p10k]').innerHTML=b[0].toUpperCase();bx.querySelector('[data-p10k]').style.color=b[2];bx.querySelector('[data-p10n]').innerHTML=b[1];bx.querySelector('[data-p10t]').innerHTML=b[3];bx.querySelector('[data-p10a]').innerHTML=b[4];}
+    function draw(i){var b=B[i];bx.querySelector('[data-p10k]').innerHTML=b[0];bx.querySelector('[data-p10k]').style.color=b[2];bx.querySelector('[data-p10n]').innerHTML=b[1];bx.querySelector('[data-p10t]').innerHTML=b[3];bx.querySelector('[data-p10a]').innerHTML=b[4];}
     bt.forEach(function(b){b.addEventListener('click',function(){press(bt,b);draw(+b.getAttribute('data-p10'));});});draw(0);})();
 
   /* --- 11 team week --- */

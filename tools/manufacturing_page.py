@@ -108,8 +108,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Bills of materials &amp; routings", "Work orders on shop-floor tablets", "Actual cost on every order"])
     copy = ('<div class="mf-hero-copy">%s<p class="mf-eyebrow mono">ODOO MANUFACTURING IMPLEMENTATION</p>'
             '<h1 class="mf-h1">Manufacturing ERP Software for <span>End-to-End Production Management</span></h1>'
-            '<p class="mf-lead">Unisas implements Odoo Manufacturing so sales orders, bills of materials, work orders, stock, quality checks and costs run '
-            'in one connected system. Planners see real capacity, operators see the right instructions, and finance sees the actual cost of every order.</p>'
+            '<p class="mf-lead">Unisas implements Odoo Manufacturing so orders, BoMs, work orders, stock, quality and costs run in one connected system.</p>'
             '<ul class="mf-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Manufacturing %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the manufacturing demo</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -175,8 +174,8 @@ def build(g):
              ("Inventory", "#1F8A78", "WH/OUT/00231", "Delivered", "250 fans shipped with lot FAN-2610-0042; e-Way bill generated.", "Delivery"),
              ("Accounting", "#B7791F", "INV/2026/00431", "Invoiced and costed", "Invoice posted, and finished-goods value booked at the actual order cost.", "Invoices")]
     out += sec(head("CONNECTED WORKFLOW", "How Can Manufacturing ERP Software Connect Your Production Workflow?",
-                    "One sales order sets off every document the factory needs, and each one links back to it, so the whole trail is one click from the order.", "is-center")
-               + '<ol class="pl-grid" style="--cols:4">%s</ol>'
+                    "One sales order sets off every document the factory needs, each linked back to it, one click from the order.", "is-center")
+               + '<ol class="pl-grid is-side" style="--cols:4">%s</ol>'
                  % "".join('<li style="--c:%s"><span class="pl-n">%02d &middot; %s</span><b>%s</b><em>%s</em><p>%s</p></li>' % (c, i + 1, app, t, d, x) for i, (app, c, d, t, x, sb) in enumerate(chain)),
                "mf-sec--chain")
 
@@ -221,8 +220,7 @@ def build(g):
     apps = [("mrp", "Manufacturing", "#0E7C86"), ("inv", "Inventory", "#1F8A78"), ("pur", "Purchase", "#3E7CB1"), ("qc", "Quality", "#B5567E")]
     cols = "".join('<div class="mf-cx-app" data-cx-app="%s" style="--c:%s"><p class="mf-cx-h"><i></i>%s</p><div class="mf-cx-b" data-cx-b="%s"></div></div>' % (k, c, n, k) for k, n, c in apps)
     out += sec(head("CONNECTED APPS", "How Can Odoo Connect Manufacturing With Inventory, Purchase and Quality?",
-                    "They share one database, so a shortage in one app becomes an action in the next. Confirm a large order and follow it through: "
-                    "a capacitor shortage, a purchase, an incoming inspection and, finally, a manufacturing order that is ready to start.", "is-center")
+                    "They share one database, so a shortage becomes an action in the next app. Confirm a big order and follow it.", "is-center")
                + '<div class="mf-cx" data-cx><div class="mf-cx-bar"><span class="mf-cx-step" data-cx-step></span><span class="mf-cx-acts" data-cx-acts></span><button type="button" class="ox-sbtn" data-cx-reset>Reset</button></div>'
                  '<div class="mf-cx-grid">%s</div><ol class="mf-cx-log" data-cx-log aria-live="polite"></ol></div>' % cols, "mf-sec--cx")
 
@@ -244,8 +242,8 @@ def build(g):
     out += sec(head("CONFIGURE, CUSTOMIZE OR INTEGRATE", "When Should Manufacturing ERP Be Configured, Customized or Integrated?",
                     "Most requirements are met by configuration. We customize only where it saves real time every week, and integrate where the data already lives in a machine or another system. "
                     "Pick a requirement to see where it lands and why.", "is-center")
-               + '<div class="mf-sort" data-sort><div class="mf-pile"><p class="mf-pile-h"><b>Requirements from the workshop</b><span><button type="button" class="ox-sbtn" data-sort-all>Sort all</button><button type="button" class="ox-sbtn" data-sort-reset>Reset</button></span></p><ul data-pile>%s</ul></div>'
-                 '<div class="mf-lanes">%s</div><p class="mf-sort-why" data-sort-why aria-live="polite">Choose a requirement on the left.</p></div>'
+               + '<div class="mf-sort" data-sort><div class="mf-pile"><p class="mf-pile-h"><b>Requirements from the workshop</b><span><button type="button" class="ox-sbtn" data-sort-all>Sort all</button><button type="button" class="ox-sbtn" data-sort-reset>Reset</button></span></p><p class="mf-pile-tip">Click a requirement to sort it &rarr;</p><ul data-pile>%s</ul></div>'
+                 '<div class="mf-lanes">%s</div><p class="mf-sort-why" data-sort-why aria-live="polite">Click any requirement on the left to see where it lands and why, or press <b>Sort all</b>.</p></div>'
                  % (rq, lanes) + data("mf-reqs", reqs), "mf-sec--sort")
 
     # 7 ---- production models
@@ -373,7 +371,7 @@ def build(g):
              ("Every quarter", "Improvement review", "OEE, cost variance and late orders reviewed with you, and the next improvements planned.")]
     out += sec(head("AFTER GO-LIVE", "How Does Unisas Support Manufacturing Operations After Go-Live?",
                     "Production does not stop for software questions. Our support desk answers by priority. Here are real kinds of tickets and how they were solved.", "is-center")
-               + '<ol class="pl-grid" style="--cols:3">%s</ol><ul class="pl-grid" style="--cols:3;margin-top:16px">%s</ul>'
+               + '<ol class="pl-grid is-tint" style="--cols:3">%s</ol><ul class="pl-grid is-plain" style="--cols:3;margin-top:16px">%s</ul>'
                  % ("".join('<li><span class="pl-n">%s</span><b>%s</b><p>%s</p></li>' % (n, t, x) for n, t, x in plans),
                     "".join('<li><p style="margin:0;display:flex;gap:6px;flex-wrap:wrap"><span class="pl-chip%s">%s</span><span class="pl-chip%s">%s</span></p><b>%s</b><em>%s</em><p>%s</p></li>'
                             % (stl[t[0]][1], stl[t[0]][0], " is-bad" if t[3] == "Urgent" else "", t[3], t[1], t[2], t[6]) for t in tickets)), "mf-sec--sup")
@@ -388,8 +386,7 @@ def build(g):
                '<div class="mf-pl-chk"><label><input type="checkbox" data-pl-x="2"> Machine or IoT integration</label><label><input type="checkbox" data-pl-x="1"> Quality &amp; maintenance</label><label><input type="checkbox" data-pl-x="2"> Migration from another ERP</label></div></div>'
                '<div class="mf-pl-out"><ol class="mf-pl-bars" data-pl-bars></ol><p class="mf-pl-tot" data-pl-tot aria-live="polite"></p></div></div></div>'
                % (head("PLAN YOUR PROJECT", "How Can You Plan Your Manufacturing ERP Implementation?",
-                       "Start with one plant and the products that matter most, get the shop floor reporting reliably, then add planning, quality and maintenance. "
-                       "Tell the planner about your factory for a first timeline, then talk it through with us."), g["ARROW"]), "mf-sec--plan")
+                       "Start with one plant and your key products, get shop-floor reporting right, then add the rest. Try the planner."), g["ARROW"]), "mf-sec--plan")
 
     return out + JS
 
@@ -578,7 +575,7 @@ JS = r'''<script>
     so.addEventListener('click',function(e){var b=e.target.closest('[data-req]');
       if(b){var i=+b.getAttribute('data-req');if(b.closest('[data-lane]')){so.querySelectorAll('.mf-req.is-on').forEach(function(x){x.classList.remove('is-on');});b.classList.add('is-on');why.innerHTML='<span class="mf-tagk mf-tagk--'+RQ[i][1]+'">'+LN[RQ[i][1]]+'</span> <b>'+RQ[i][0]+'</b>: '+RQ[i][2];}else place(i);return;}
       if(e.target.closest('[data-sort-all]')){RQ.forEach(function(r,i){place(i,true);});why.innerHTML='Seven of nine land in <b>Configure</b> or <b>Integrate</b> with no custom code. That is typical for our manufacturing projects.';return;}
-      if(e.target.closest('[data-sort-reset]')){var pile=so.querySelector('[data-pile]');RQ.forEach(function(r,i){var b=so.querySelector('[data-req="'+i+'"]');b.classList.remove('is-placed','is-on');pile.appendChild(b.parentNode);});why.textContent='Choose a requirement on the left.';}
+      if(e.target.closest('[data-sort-reset]')){var pile=so.querySelector('[data-pile]');RQ.forEach(function(r,i){var b=so.querySelector('[data-req="'+i+'"]');b.classList.remove('is-placed','is-on');pile.appendChild(b.parentNode);});why.innerHTML='Click any requirement on the left to see where it lands and why, or press <b>Sort all</b>.';}
     });}
 
   /* --- 7 production models --- */
@@ -646,5 +643,4 @@ JS = r'''<script>
 '''
 
 CTA = ("Let's Map Your Production Process to Odoo",
-       "Tell us how your factory runs today: your products, work centres and the systems you use. We'll walk your production flow in Odoo Manufacturing "
-       "and recommend the right setup, scope and timeline.")
+       "Tell us about your products, work centres and systems. We&rsquo;ll walk your flow in Odoo and suggest a scope.")
