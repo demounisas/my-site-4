@@ -70,10 +70,10 @@ TAGCOL = {"Leadership": "purple", "Field": "blue", "Shift A": "green", "Shift B"
 def hero(g):
     crumb = ('<nav class="mp-crumb mono" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span>'
              '<a href="index.html#modules">Solutions</a><span>/</span><span aria-current="page">HR</span></nav>')
-    points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["One record for every employee", "Leave, attendance &amp; approvals", "Built for teams of 10 to 500"])
+    points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["One record for every employee", "Leave, attendance and approvals", "Built for teams of 10 to 500"])
     copy = ('<div class="hr-hero-copy">%s<p class="hr-eyebrow mono">ODOO HR IMPLEMENTATION</p>'
-            '<h1 class="hr-h1">HR Software for Small Businesses <span>Configured to Fit Your Workflows</span> with Odoo</h1>'
-            '<p class="hr-lead">Unisas sets up Odoo Employees, Time Off and Attendances around how you work, so records, leave and approvals live in one place.</p>'
+            '<h1 class="hr-h1">Human Resource Management Software <span>Configured to Fit Your Workflows</span> with Odoo</h1>'
+            '<p class="hr-lead">Unisas sets up an Odoo HR management system around how you already work, so employee records, leave, attendance and approvals sit in one place.</p>'
             '<ul class="hr-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo HR %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the employee demo</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -101,30 +101,31 @@ def build(g):
     # 1 ---- scattered information: one employee, many versions
     sources = [("Employee master.xlsx", "HR laptop", "3 months ago"), ("Payroll sheet", "Accounts", "Monthly"), ("Biometric machine", "Coimbatore gate", "Daily"),
                ("Email &amp; WhatsApp", "Leave requests", "Every day"), ("Personnel file", "Cabinet in HR room", "At joining"), ("Leave register", "Notebook", "When someone remembers")]
-    conflicts = [("Mobile", [("Employee master", "+91 98400 11223"), ("WhatsApp", "+91 90030 55821")], 1, "Changed her number in June; only WhatsApp knew."),
-                 ("Department", [("Employee master", "Marketing"), ("Payroll sheet", "Sales")], 1, "Moved to Sales last year; the master sheet was never updated."),
-                 ("Manager", [("Employee master", "Arjun Mehta"), ("Email", "Kavya Nair")], 1, "Kavya approves her leave by email, so Kavya is her manager."),
+    conflicts = [("Mobile", [("Employee master", "+91 98400 11223"), ("WhatsApp", "+91 90030 55821")], 1, "Changed in June. Only WhatsApp knew."),
+                 ("Department", [("Employee master", "Marketing"), ("Payroll sheet", "Sales")], 1, "Moved to Sales last year. The master sheet never caught up."),
+                 ("Manager", [("Employee master", "Arjun Mehta"), ("Email", "Kavya Nair")], 1, "Kavya approves her leave by email, so Kavya is her real manager."),
                  ("Date of joining", [("Personnel file", "04/07/2022"), ("Payroll sheet", "07/04/2022")], 0, "Same date, two formats: 4 July 2022."),
-                 ("Leave balance", [("Leave register", "12 days"), ("Email approvals", "9 days")], 1, "Three approved days by email never reached the register."),
-                 ("Bank account", [("Payroll sheet", "HDFC &middot;&middot;&middot; 4412"), ("Personnel file", "SBI &middot;&middot;&middot; 0937")], 0, "Salary goes to HDFC; the SBI account is from her previous job.")]
+                 ("Leave balance", [("Leave register", "12 days"), ("Email approvals", "9 days")], 1, "Three days approved by email never reached the register."),
+                 ("Bank account", [("Payroll sheet", "HDFC &middot;&middot;&middot; 4412"), ("Personnel file", "SBI &middot;&middot;&middot; 0937")], 0, "Salary goes to HDFC. The SBI account is from her last job.")]
     src = "".join('<li><span class="mono">%02d</span><b>%s</b><small>%s &middot; %s</small></li>' % (i + 1, n, w, t) for i, (n, w, t) in enumerate(sources))
     cards = "".join('<li><p class="hr-pc-f">%s</p><dl>%s</dl><p class="hr-pc-why"><b>Reality:</b> %s</p></li>'
                     % (f, "".join('<div class="%s"><dt>%s</dt><dd>%s</dd></div>' % ("is-ok" if j == ok else "is-bad", s, v) for j, (s, v) in enumerate(opts)), why)
                     for f, opts, ok, why in conflicts)
-    out += sec(head("THE PROBLEM", "Is Employee Information Scattered Across Too Many Systems?",
-                    "In most small companies one employee lives in six places, and each place has a slightly different answer. "
+    out += sec(head("THE PROBLEM", "Is Employee Data Management Scattered Across Too Many Systems?",
+                    "In most small companies, one employee lives in six places, and each one gives a slightly different answer. "
                     "Here is Priya, a sales executive, as she exists today: six fields, two answers each, and only one of them right.", "is-center")
                + '<div class="hr-p1"><div class="hr-pl-src"><p class="hr-pk">One employee, six places</p><ol>%s</ol></div>'
-                 '<ul class="hr-pc">%s</ul></div>' % (src, cards), "hr-sec--scat")
+                 '<ul class="hr-pc">%s</ul></div>' % (src, cards)
+               + '<p class="hr-sec-note">That&rsquo;s the gap that good human resource management software closes: one record that payroll, managers and HR all read from.</p>', "hr-sec--scat")
 
     # 2 ---- the central hub: Employees explorer
     menu = "".join('<button type="button" class="hr-menu%s" data-ex-menu="%s" aria-pressed="%s">%s</button>' % (" is-on" if k == "emp" else "", k, "true" if k == "emp" else "false", n)
                    for k, n in [("emp", "Employees"), ("dept", "Departments"), ("org", "Org Chart")])
     views = "".join('<button type="button" class="ox-vbtn%s" data-ex-view="%s" aria-label="%s view" aria-pressed="%s">%s</button>' % (" is-on" if k == "kanban" else "", k, n, "true" if k == "kanban" else "false", svg)
                     for k, n, svg in [("kanban", "Kanban", V_KANBAN), ("list", "List", V_LIST)])
-    out += sec(head("ONE PLACE FOR YOUR PEOPLE", "How Can Odoo Create a Central Hub for Your Workforce?",
-                    "This is the Odoo Employees app with sample staff from a Chennai manufacturer. Filter by department, open an employee, move through the tabs, "
-                    "and use the org chart on the right to jump to their manager or team.", "is-center")
+    out += sec(head("ONE PLACE FOR YOUR PEOPLE", "How Can Odoo HRMS Create a Central Hub for Your Workforce?",
+                    "This is the Odoo Employees app, loaded with sample staff from a Chennai manufacturer. Filter by department, open an employee and move through the tabs for work details, "
+                    "private information, skills and documents. The org chart on the right jumps straight to a manager or team. It works just like the employee management system your staff will use from day one.", "is-center")
                + '<div class="ox hr-ox hr-ex" data-ex><div class="ox-nav"><span class="ox-app">%s<b>Employees</b></span><span class="hr-menus" role="group" aria-label="Employees menu">%s</span>'
                  '<span class="ox-menu">Reporting</span><span class="ox-menu">Configuration</span><span class="ox-nav-r"><span class="ox-company">Your Company</span><span class="ox-av" style="--c:#8E4F83">L</span></span></div>'
                  '<div class="ox-cp"><div class="ox-cp-l"><button type="button" class="ox-new" data-ex-new>New</button><span class="ox-crumb ox-crumb--stack" data-ex-crumb></span></div>'
@@ -134,15 +135,15 @@ def build(g):
                  % (app_icon, menu, SEARCH, views) + data("hr-emps", EMPS) + data("hr-depts", DEPTS) + data("hr-tagcol", TAGCOL), "hr-sec--explore", "explore")
 
     # 3 ---- structure records around your organization
-    layers = [("Company", "Your Company Pvt Ltd", "One company, or several if you run separate legal entities with their own payroll."),
-              ("Work locations", "Chennai HQ &middot; Coimbatore Plant &middot; Home", "Where people work, used for attendance, time off rules and reporting."),
-              ("Departments", "7, nested under Management", "Each with a manager, so approvals and reports follow the hierarchy."),
-              ("Job positions", "18 positions", "Sales Executive, Machine Operator and so on, shared with Recruitment."),
-              ("Employee types", "Employee &middot; Worker &middot; Trainee &middot; Contractor", "Separates staff on payroll from contract and trainee workers."),
-              ("Tags", "Shift A &middot; Shift B &middot; Field &middot; Leadership", "Free labels for groups that cut across departments.")]
+    layers = [("Company", "Your Company Pvt Ltd", "One entity, or several if each runs its own payroll."),
+              ("Work locations", "Chennai HQ &middot; Coimbatore Plant &middot; Home", "Where people work. Drives attendance, time off rules and reporting."),
+              ("Departments", "7, nested under Management", "Each has a manager, so approvals follow your real hierarchy."),
+              ("Job positions", "18 positions", "Shared with the recruitment software inside Odoo, so openings and headcount stay in sync."),
+              ("Employee types", "Employee &middot; Worker &middot; Trainee &middot; Contractor", "Separates salaried staff from contractors and trainees."),
+              ("Tags", "Shift A &middot; Shift B &middot; Field &middot; Leadership", "Free labels for groups that cut across departments, like shift teams.")]
     ly = "".join('<li style="--k:%d"><span class="mono">%02d</span><div><b>%s</b><em>%s</em><p>%s</p></div></li>' % (i, i + 1, n, v, x) for i, (n, v, x) in enumerate(layers))
-    out += sec(head("YOUR STRUCTURE", "How Does Unisas Structure Employee Records Around Your Organization?",
-                    "Before a single employee is imported we agree the structure: companies, locations, departments, positions and types. "
+    out += sec(head("YOUR STRUCTURE", "How Does Unisas Structure Employee Records in Your HR Management System?",
+                    "Before anyone is imported, we agree the structure: companies, locations, departments, positions and types. "
                     "Get this right and approvals, reports and access rules follow on their own.", "is-center")
                + '<ol class="hr-stack">%s</ol>' % ly, "hr-sec--str")
 
@@ -155,11 +156,15 @@ def build(g):
     tabs4 = "".join('<button type="button" role="tab" class="hr-lt%s" data-lt="%s" aria-selected="%s">%s<small>%s</small></button>'
                     % (" is-on" if k == "on" else "", k, "true" if k == "on" else "false", n, x) for k, n, x in
                     [("on", "Onboarding", "Karthik joins the plant"), ("chg", "Change", "Priya is promoted"), ("off", "Offboarding", "Senthil resigns")])
-    out += sec(head("JOINERS, MOVERS, LEAVERS", "How Can Odoo Simplify Onboarding, Employee Changes and Offboarding?",
-                    "Odoo runs each event as a plan of activities assigned to the right people, and records every change on the employee. "
-                    "Try all three: tick off an onboarding plan, promote someone, and register a departure.", "is-center")
+    out += sec(head("JOINERS, MOVERS, LEAVERS", "How Can Odoo Simplify Employee Onboarding, Changes and Offboarding?",
+                    "Each joiner, mover and leaver becomes a plan of activities assigned to the right people, and every change is logged on the record. Try all three below.", "is-center")
                + '<div class="hr-life" data-life><div class="hr-lts" role="tablist" aria-label="Employee events">%s</div><div class="hr-life-b" data-life-b aria-live="polite"></div></div>'
-                 % tabs4 + data("hr-onb", onb) + data("hr-off", off), "hr-sec--life")
+                 % tabs4
+               + '<ul class="hr-life-notes">%s</ul>' % "".join('<li><b>%s</b><small>%s</small><p>%s</p></li>' % x for x in [
+                   ("Onboarding", "Karthik joins the plant", "IT creates his login, his manager books induction and HR collects ID proofs. Every task has an owner and a due date."),
+                   ("Change", "Priya is promoted", "Her position, manager and department update once. Approvals and the org chart follow, and the history shows what changed."),
+                   ("Offboarding", "Senthil resigns", "Equipment returns, final settlement and access removal run as a checklist. The record is archived, not deleted.")])
+               + data("hr-onb", onb) + data("hr-off", off), "hr-sec--life")
 
     # 5 ---- workflows, roles and approvals
     flows = [("Paid leave", "Planned holidays", ["Employee", "Manager", "HR"]),
@@ -169,16 +174,17 @@ def build(g):
     fl = "".join('<li><p><b>%s</b><small>%s</small></p><ol class="hr-flow">%s<li class="is-end">Approved</li></ol></li>'
                  % (n, x, "".join("<li>%s</li>" % s for s in steps)) for n, x, steps in flows)
     matrix = [("Employee", "Requests time off, logs attendance, submits expenses", "Own record"),
-              ("Manager (Approver)", "Approves their team's time off, attendance and expenses", "Their team"),
-              ("Time Off Officer", "Second approval, allocations, public holidays", "Everyone's time off"),
-              ("HR Officer", "Creates and updates employee records, runs plans", "All employees"),
-              ("HR Administrator", "Configuration, access rights, sensitive fields", "Everything")]
+              ("Manager", "Approves their team's time off, attendance and expenses", "Their team"),
+              ("Time Off Officer", "Second approval for time off", "Allocations, public holidays"),
+              ("HR Officer", "Creates and updates employee records, runs plans", "All employee records"),
+              ("HR Administrator", "Sets up the HR apps and access rights", "Configuration and sensitive fields")]
     out += sec(head("ROLES &amp; APPROVALS", "How Does Unisas Configure HR Workflows, Roles and Approval Responsibilities?",
-                    "Each request type gets its own approval rule, and each employee their own approver, so requests reach the right person without anyone forwarding emails. "
-                    "Here is a typical setup we agree with a small business.", "is-center")
+                    "Each request type gets its own approval rule and each employee their own approver, so nobody forwards emails. "
+                    "Here&rsquo;s a typical setup we agree with a small business.", "is-center")
                + '<div class="hr-p5"><div class="hr-card-p"><p class="hr-pk">Approval rule per request type</p><ul class="hr-flows">%s</ul></div>'
                  '<div class="hr-card-p"><p class="hr-pk">Who does what</p><ul class="hr-who">%s</ul></div></div>'
-                 % (fl, "".join('<li><b>%s</b><span>%s</span><em>%s</em></li>' % m for m in matrix)), "hr-sec--appr")
+                 % (fl, "".join('<li><b>%s</b><span>%s</span><em>%s</em></li>' % m for m in matrix))
+               + '<p class="hr-sec-note">Good leave management software is strict where salary is affected and quick for a same-day sick call.</p>', "hr-sec--appr")
 
     # 6 ---- attendance, time off and working schedules
     scheds = [("Standard 48 hours/week", "Mon&ndash;Sat 09:00&ndash;18:00, 1 h lunch", [8, 8, 8, 8, 8, 8]),
@@ -186,14 +192,15 @@ def build(g):
               ("Shift B 45 hours/week", "Mon&ndash;Sat 14:00&ndash;22:00, 30 min break", [7.5, 7.5, 7.5, 7.5, 7.5, 7.5])]
     att = [["Mon 19", "08:56", "18:20", 8.4], ["Tue 20", "09:04", "18:04", 8.0], ["Wed 21", "08:50", "19:20", 9.5], ["Thu 22", "09:01", "18:07", 8.1], ["Fri 23", "09:10", "17:46", 7.6], ["Sat 24", "09:00", "18:00", 8.0]]
     sc = "".join('<label class="hr-sch"><input type="radio" name="hr-sch" value="%d"%s><span><b>%s</b><small>%s</small></span></label>' % (i, " checked" if i == 0 else "", n, x) for i, (n, x, h) in enumerate(scheds))
-    out += sec(head("ATTENDANCE, TIME OFF &amp; SCHEDULES", "How Can Odoo Connect Attendance, Time Off and Employee Work Schedules?",
-                    "The working schedule says how many hours each day should have. Attendance records what was worked, time off fills the gaps, and the difference becomes extra hours. "
-                    "Change the schedule or add a day off and the week recalculates.", "is-center")
+    out += sec(head("ATTENDANCE, TIME OFF &amp; SCHEDULES", "How Can Odoo Attendance Connect Time Off and Employee Work Schedules?",
+                    "The working schedule says how many hours each day should hold. Attendance records what was worked, time off fills the gaps, and the difference becomes extra hours. "
+                    "Change the schedule or add a day off, and the week recalculates.", "is-center")
                + '<div class="hr-wk" data-wk><div class="hr-wk-side"><p class="hr-wk-h">Working Hours</p>%s<p class="hr-wk-h">This week</p>'
                  '<label class="hr-tg"><input type="checkbox" data-wk-sick><span class="hr-sw" aria-hidden="true"></span><span>Sick Time Off on Thursday</span></label>'
                  '<label class="hr-tg"><input type="checkbox" data-wk-hol><span class="hr-sw" aria-hidden="true"></span><span>Public holiday on Friday (Ayudha Puja)</span></label></div>'
                  '<div class="ox hr-ox hr-wk-main">%s<div class="hr-wk-grid" data-wk-grid></div><div class="hr-wk-tot" data-wk-tot aria-live="polite"></div></div></div>'
-                 % (sc, ox_head("Attendances", "Suresh Babu &middot; Week 43")) + data("hr-sched", scheds) + data("hr-att", att), "hr-sec--wk")
+                 % (sc, ox_head("Attendances", "Suresh Babu &middot; Week 43"))
+               + '<p class="hr-sec-note">For shift teams, attendance management software and leave finally share one calendar. Overtime and unpaid days reach payroll without manual reconciliation.</p>' + data("hr-sched", scheds) + data("hr-att", att), "hr-sec--wk")
 
     # 7 ---- access and sensitive information
     roles = [("self", "Priya (herself)"), ("peer", "A colleague"), ("mgr", "Her manager"), ("officer", "HR Officer"), ("admin", "HR Administrator")]
@@ -213,11 +220,11 @@ def build(g):
         if r in f[2].split():
             return '<td><span class="hr-am">View</span></td>'
         return '<td><span class="hr-am is-x" aria-label="Hidden">&mdash;</span></td>'
-    out += sec(head("ACCESS &amp; PRIVACY", "How Should Employee Access and Sensitive HR Information Be Controlled?",
-                    "Bank details, identity numbers and salaries should be seen only by the people who need them. "
+    out += sec(head("ACCESS &amp; PRIVACY", "How Should Employee Access and Sensitive HR Records Be Controlled?",
+                    "Bank details, Aadhaar, PAN and salaries should be visible only to the people who need them. "
                     "We agree an access matrix like this one with you, field by field, before any data goes in.", "is-center")
                + '<div class="hr-card-p hr-am-w"><div class="hr-scroll"><table class="hr-am-t"><thead><tr><th>Priya&rsquo;s record</th>%s</tr></thead><tbody>%s</tbody></table></div>'
-                 '<p class="hr-am-key"><span class="hr-am is-w">Edit</span> can change &middot; <span class="hr-am">View</span> read only &middot; <span class="hr-am is-x">&mdash;</span> hidden. Every change to a sensitive field is logged with who and when.</p></div>'
+                 '<p class="hr-am-key"><span class="hr-am is-w">Edit</span> can change &middot; <span class="hr-am">View</span> read only &middot; <span class="hr-am is-x">&mdash;</span> hidden. Every sensitive change is logged with who and when, the audit trail your HR compliance software should give you.</p></div>'
                  % ("".join("<th>%s</th>" % n for k, n in roles), "".join('<tr><th>%s</th>%s</tr>' % (f[0], "".join(cell(f, k) for k, n in roles)) for f in fields)), "hr-sec--acc")
 
     # 8 ---- data migration: spreadsheet clean-up
@@ -231,12 +238,12 @@ def build(g):
               ("dup", "E031 and E032 share a mobile number", "Merge into E032", [[3, -1, ""]]),
               ("mgr", "Manager &lsquo;Deepa K&rsquo; not found", "Link to Deepa Krishnan", [[5, 3, "Deepa Krishnan"]]),
               ("date", "Dates in three formats", "Convert to DD-MM-YYYY", [[2, 5, "12-03-2023"], [5, 5, "01-02-2024"]])]
-    load = [("Departments &amp; job positions", "7 &middot; 18"), ("Work locations &amp; schedules", "3 &middot; 3"), ("Employees, managers first", "42"),
-            ("Users &amp; access rights", "29"), ("Opening leave balances", "42 allocations"), ("Documents", "Offer letters, ID proofs")]
+    load = [("Departments and positions", "7 &middot; 18"), ("Locations and schedules", "3 &middot; 3"), ("Employees, managers first", "42"),
+            ("Users and access", "29"), ("Opening leave balances", "42 allocations"), ("Documents", "Offer letters, ID proofs")]
     th = "".join("<th>%s</th>" % h for h in ["Emp Code", "Name", "Department", "Manager", "Mobile", "Joined", "Leave"])
-    out += sec(head("DATA MIGRATION", "How Does Unisas Bring Existing Employee Data Into Odoo?",
-                    "Most HR data arrives as a spreadsheet with years of small inconsistencies. We clean it before it goes in, with you deciding every merge. "
-                    "Fix each issue and import.", "is-center")
+    out += sec(head("DATA MIGRATION", "How Does Unisas Bring Existing Employee Data Into Your Odoo HR Module?",
+                    "Most HR data arrives as a spreadsheet carrying years of small inconsistencies: duplicate names, two date formats, managers who left. "
+                    "We clean it before import, and you decide every merge. Fix each issue below, then import.", "is-center")
                + '<div class="hr-mig" data-mig><div class="hr-sheet ox-solo"><p class="hr-sheet-h"><span class="hr-xls">XLS</span><b>employees_master_2026.xlsx</b><small>42 rows &middot; showing 6</small></p>'
                  '<div class="ox-scroll"><table class="hr-sheet-t"><thead><tr><th></th>%s</tr></thead><tbody data-mig-rows></tbody></table></div></div>'
                  '<div class="hr-iss ox-solo"><p class="hr-iss-h"><b>Issues found</b><small data-mig-n></small></p><ul data-mig-iss></ul>'
@@ -252,33 +259,35 @@ def build(g):
                ["Fathima Begum", "#3D8DAE", [3, 2, 0, 0, 2, 0, 3, 0]], ["Vignesh Rao", "#5A7D9A", [3, 3, 1, 0, 0, 0, 0, 3]]]
     goals = [("Close &#8377; 40 lakh of new business", 80), ("Learn Odoo CRM reporting", 100), ("Mentor the new sales executive", 50)]
     t9 = "".join('<button type="button" class="hr-vtab%s" data-sk-tab="%s" aria-pressed="%s">%s</button>' % (" is-on" if k == "sk" else "", k, "true" if k == "sk" else "false", n) for k, n in [("sk", "Skills"), ("ap", "Appraisals")])
-    out += sec(head("SKILLS &amp; PERFORMANCE", "How Can Odoo Help Track Employee Skills, Development and Performance?",
-                    "Skills live on each employee with a level, so you can find who can cover a machine or a customer in seconds. Appraisals bring goals, both sides&rsquo; feedback and a final rating into one document.", "is-center")
+    out += sec(head("SKILLS &amp; PERFORMANCE", "How Can Odoo Appraisal Track Employee Skills, Development and Performance?",
+                    "Skills sit on each employee with a level, so you can find who can cover a machine or a customer in seconds. Appraisals bring goals, both sides&rsquo; feedback and a final rating into one document.", "is-center")
                + '<div class="ox hr-ox hr-sk" data-sk><div class="ox-nav"><span class="ox-app">%s<b>Employees</b></span><span class="hr-vtabs" role="group" aria-label="Report">%s</span>'
                  '<span class="ox-nav-r"><span class="ox-company">Your Company</span><span class="ox-av" style="--c:#8E4F83">L</span></span></div><div class="hr-sk-b" data-sk-b></div></div>'
-                 % (app_icon, t9) + data("hr-skills", skills) + data("hr-matrix", matrix9) + data("hr-goals", goals), "hr-sec--sk")
+                 % (app_icon, t9)
+               + '<p class="hr-sec-note">As performance management software, Odoo also runs 360 feedback and automated review cycles, so a yearly round launches in one step.</p>' + data("hr-skills", skills) + data("hr-matrix", matrix9) + data("hr-goals", goals), "hr-sec--sk")
 
     # 10 ---- wider HR processes: the employee record at the centre
-    apps = [("Recruitment", "#8E4F83", "Applicant &rarr; employee", "Job position, contact details, documents and the signed offer", "Headcount and open positions per department",
-             "Karthik S hired as Machine Operator: employee created with his CV, offer and joining date."),
-            ("Sign", "#1F8A78", "Offer letters &amp; policies", "Signed offer letter, NDA and policy acknowledgements", "Name, address and job title to fill the template",
-             "Offer letter signed on his phone; the PDF is attached to his employee record."),
-            ("Payroll", "#3E7CB1", "Salary &amp; statutory", "Payslips, PF and ESI numbers, tax regime", "Contract wage, attendance, unpaid leave and bank account",
-             "October payslip: 26 working days, 1 unpaid day, PF and ESI deducted, posted to accounting."),
-            ("Expenses", "#C98600", "Claims &amp; travel", "Reimbursements paid with salary or by bank", "Employee, manager as approver, bank account",
-             "Priya's fuel claim of &#8377; 2,340 approved by Kavya and added to her payslip."),
-            ("Timesheets", "#5A7D9A", "Time on projects", "Hours per project and task, billable or not", "Employee cost per hour and working schedule",
-             "Installation team logs 42 h on the Bluebay project; cost flows to the project's margin."),
-            ("Fleet", "#7A6C5D", "Company vehicles", "Assigned vehicle, fuel and service logs", "Driver = employee, released on exit",
-             "Delivery van TN 38 BX 4412 assigned to Senthil; returned in his offboarding plan."),
-            ("Documents", "#B5567E", "HR file", "ID proofs, certificates and letters in an Employees folder", "Access follows the employee's privacy rules",
-             "Anitha's forklift certificate expires in 30 days; a renewal activity is scheduled for HR."),
-            ("Appraisals", "#E07A5F", "Reviews &amp; goals", "Ratings, goals and feedback history", "Manager, department and skills",
-             "Annual review cycle launched for 42 employees; managers get one appraisal per team member.")]
+    # ring label, colour, kind, into the record, out of the record, example, card title
+    apps = [("Recruitment", "#8E4F83", "Applicant &rarr; employee", "Job position, documents, signed offer.", "Headcount and open roles.",
+             "Karthik is hired with his CV, offer and joining date attached.", "Odoo Recruitment"),
+            ("Sign", "#1F8A78", "Offer letters &amp; policies", "Signed offer, NDA, policy acknowledgements.", "Name and job title for templates.",
+             "His offer is signed on his phone and filed automatically.", "Sign"),
+            ("Payroll", "#3E7CB1", "Salary &amp; statutory", "Payslips, PF and ESI numbers.", "Wage, attendance, unpaid leave, bank account.",
+             "October: 26 days worked, PF and ESI deducted, posted to accounting.", "Odoo Payroll"),
+            ("Expenses", "#C98600", "Claims &amp; travel", "Reimbursements.", "Approver and bank account.",
+             "Priya&rsquo;s &#8377;2,340 fuel claim is approved by Kavya and added to her payslip.", "Odoo Expenses"),
+            ("Timesheets", "#5A7D9A", "Time on projects", "Hours per project and task.", "Cost per hour.",
+             "42 hours on the Bluebay project flow into its margin.", "Odoo Timesheet"),
+            ("Fleet", "#7A6C5D", "Company vehicles", "Assigned vehicle and logs.", "Driver, released on exit.",
+             "Senthil&rsquo;s van returns through his offboarding plan.", "Fleet"),
+            ("Documents", "#B5567E", "HR file", "ID proofs and certificates.", "Privacy-based access.",
+             "Anitha&rsquo;s forklift certificate triggers a renewal reminder 30 days early.", "Documents"),
+            ("Appraisals", "#E07A5F", "Reviews &amp; goals", "Ratings, goals, feedback.", "Manager and skills.",
+             "One cycle creates an appraisal for each of 42 employees.", "Appraisals")]
     # a ring of processes around the employee record; the card beside it shows what flows in and out
     import math
     nodes, spokes, panels = [], [], []
-    for i, (n, c, t, a, b, x) in enumerate(apps):
+    for i, (n, c, t, a, b, x, full) in enumerate(apps):
         ang = math.radians(-90 + i * 360 / len(apps))
         px, py = 50 + 38 * math.cos(ang), 50 + 38 * math.sin(ang)
         on = i == 0
@@ -289,9 +298,9 @@ def build(g):
                       '<p class="hr-pr-k mono">%s</p><h3>%s</h3>'
                       '<div class="hr-hub-f"><div><span>&darr; Into the employee record</span><p>%s</p></div>'
                       '<div><span>&uarr; Out to %s</span><p>%s</p></div></div>'
-                      '<p class="hr-hub-ex"><b>Example</b>%s</p></article>' % (i, i, c, "" if on else " hidden", t, n, a, n, b, x))
-    out += sec(head("WIDER HR PROCESSES", "How Does Unisas Connect Employee Management With Your Wider HR Processes?",
-                    "The employee record is the hub. Hiring creates it, payroll and expenses read from it, appraisals and documents write back to it. "
+                      '<p class="hr-hub-ex"><b>Example</b>%s</p></article>' % (i, i, c, "" if on else " hidden", t, full, a, full, b, x))
+    out += sec(head("WIDER HR PROCESSES", "How Does Unisas Connect Employee Management Software With Your Wider HR Processes?",
+                    "The employee record is the hub. Hiring creates it, payroll and expenses read from it, and appraisals and documents write back to it. "
                     "Pick a process to see what flows in and out.", "is-center")
                + '<div class="hr-hubx" data-hub><div class="hr-ring" role="tablist" aria-label="HR processes">'
                  '<svg class="hr-ring-s" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none"><circle cx="50" cy="50" r="38"/>%s</svg>'
@@ -307,23 +316,24 @@ def build(g):
              ("ts", "Timesheets", "#5A7D9A", "time", 1), ("apr", "Appraisals", "#E07A5F", "rev", 2), ("plan", "Planning", "#6B5B95", "shift", 2), ("fleet", "Fleet", "#7A6C5D", "car", 2)]
     ql = "".join('<li><label class="hr-q"><input type="checkbox" data-q="%s"><span class="hr-q-box" aria-hidden="true">%s</span><span>%s</span></label></li>' % (k, TICK, t) for k, t in qs)
     al = "".join('<li class="hr-app" data-app="%s" style="--c:%s"><span class="hr-app-ic">%s</span><b>%s</b><em data-app-st></em></li>' % (k, c, n[0], n) for k, n, c, q, ph in happs)
-    out += sec(head("CHOOSING APPS", "Which Odoo HR Applications Should Your Business Actually Implement?",
+    out += sec(head("CHOOSING APPS", "Which Odoo HRMS Modules Should Your Business Actually Implement?",
                     "Not all of them, and not all at once. Start with what removes the most manual work, then add the rest once the basics run smoothly. "
                     "Tick what applies to you.", "is-center")
                + '<div class="hr-pick" data-apppick><ul class="hr-qs">%s</ul><div class="hr-apps-w ox-solo"><p class="hr-apps-h"><b>Your recommended setup</b><small data-pick-sum></small></p>'
                  '<ul class="hr-apps">%s</ul><p class="hr-legend"><span class="is-1">Phase 1</span><span class="is-2">Phase 2</span><span class="is-0">Not needed yet</span></p></div></div>'
-                 % (ql, al) + data("hr-happs", happs), "hr-sec--pick")
+                 % (ql, al)
+               + '<p class="hr-sec-note">A typical small-business setup starts with Employees, Time Off and Attendances. Payroll follows once there&rsquo;s a clean month of attendance to calculate from.</p>' + data("hr-happs", happs), "hr-sec--pick")
 
     # 12 ---- what Unisas handles
-    raci = [("disc", "Discover", [("HR process workshops with HR and managers", "u"), ("Leave, attendance and approval policies agreed", "b"), ("Access rights by role", "u"), ("Sign-off on the design", "y")]),
-            ("cfg", "Configure", [("Departments, positions and locations", "u"), ("Time off types, allocations and holidays", "u"), ("Working schedules and attendance devices", "u"), ("Activity plans for joiners and leavers", "u"), ("Letter and contract templates", "b")]),
-            ("data", "Data", [("Employee spreadsheet export", "y"), ("Cleaning, merging and mapping", "u"), ("Opening leave balances checked", "b"), ("Import and verification", "u")]),
-            ("go", "Train &amp; go live", [("Training for HR, managers and employees", "u"), ("Mobile app and kiosk set up", "u"), ("Parallel month of leave and attendance", "b"), ("Go-live announcement to staff", "y")]),
-            ("after", "After go-live", [("Hypercare for the first month", "u"), ("New policies and changes", "b"), ("Quarterly review of HR reports", "u")])]
+    raci = [("disc", "Discover", [("Fit-gap report", "u"), ("Map leave rules and shifts", "b"), ("Sign off policies", "y")]),
+            ("cfg", "Configure", [("Schedules, approvals, access", "u"), ("Test database review", "b")]),
+            ("data", "Data", [("Clean and import", "u"), ("Confirm merges", "y")]),
+            ("go", "Train &amp; go live", [("Role-based training", "u"), ("Parallel run", "b")]),
+            ("after", "After go-live", [("Named consultant, then support desk", "u"), ("New policies and sites", "b")])]
     rt = "".join('<button type="button" class="hr-rt%s" data-rt="%d" aria-pressed="%s">%s</button>' % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", n) for i, (k, n, r) in enumerate(raci))
-    out += sec(head("WHAT WE HANDLE", "What Does Unisas Handle During HR System Implementation?",
-                    "Almost all of it. You bring the decisions and data; we configure, clean, test and train. Here is who does what.", "is-center")
-               + '<div class="hr-raci ox-solo" data-raci><div class="hr-rts" role="group" aria-label="Phase">%s</div><table class="hr-raci-t"><thead><tr><th>Task</th><th>Unisas</th><th>Together</th><th>You</th></tr></thead><tbody data-raci-b></tbody></table>'
+    out += sec(head("WHAT WE HANDLE", "What Does Unisas Handle During HRMS Implementation?",
+                    "Almost all of it. You bring the decisions and data; we configure, clean, test and train.", "is-center")
+               + '<div class="hr-raci ox-solo" data-raci><div class="hr-rts" role="group" aria-label="Phase">%s</div><table class="hr-raci-t"><thead><tr><th>Task</th><th>We do</th><th>Together</th><th>You do</th></tr></thead><tbody data-raci-b></tbody></table>'
                  '<p class="hr-raci-sum" data-raci-sum></p></div>' % rt + data("hr-raci", raci), "hr-sec--raci")
 
     # 13 ---- plan the setup
@@ -335,42 +345,42 @@ def build(g):
                '<div class="hr-pl-chk"><label><input type="checkbox" data-pl-x="shift" checked> Shift workers and biometric devices</label><label><input type="checkbox" data-pl-x="pay"> Payroll in Odoo</label>'
                '<label><input type="checkbox" data-pl-x="rec"> Recruitment and appraisals</label></div></div>'
                '<div class="hr-pl-out"><div class="hr-pl-wk" data-pl-wk></div><ol class="hr-pl-road" data-pl-road></ol><p class="hr-pl-tot" data-pl-tot aria-live="polite"></p></div></div></div>'
-               % (head("PLAN YOUR SETUP", "How Can We Plan an Odoo HR Setup Around Your Workforce?",
+               % (head("PLAN YOUR SETUP", "How Can We Plan an Odoo HR Software Setup Around Your Workforce?",
                        "Size, sites, shifts and payroll shape the plan. Most firms go live with core HR in weeks, then add payroll."), g["ARROW"]), "hr-sec--plan")
 
     # 14 ---- why Unisas
-    why = [("Built around how you work", "We map your leave rules, shifts and approvals first, then configure Odoo to them, so nobody has to learn a new process on day one.",
+    why = [("Built around how you work", "We map your leave rules, shifts and approvals first, then configure Odoo to match, so nobody learns a new process on day one.",
             '<span class="ox-sbar is-mini"><span class="ox-sb is-done">To Approve</span><span class="ox-sb is-cur">Approved</span></span>'),
-           ("Indian HR rules understood", "Leave policies, PF and ESI, professional tax and labour-law registers set up the way your auditor and payroll partner expect.",
+           ("Indian HR rules understood", "Leave policies, PF and ESI, professional tax and labour-law registers are set up the way your auditor and payroll partner expect.",
             '<span class="hr-why-chips"><span>PF</span><span>ESI</span><span>PT</span><span>TDS</span></span>'),
-           ("Small-business sized", "Fixed scope and a short timeline. We start with the apps that save time now and add the rest when you are ready.",
+           ("Small-business sized", "Fixed scope and a short timeline. We start with the apps that save time now, which is how HR software for small businesses should roll out.",
             '<span class="hr-why-chips"><span>Employees</span><span>Time Off</span><span>Attendances</span></span>'),
-           ("Support after go-live", "A named consultant for the first month and a support desk after, for new policies, new locations and new joiners.",
+           ("Support after go-live", "A named consultant for the first month, then a support desk for new policies, locations and joiners.",
             '<span class="hr-why-live"><i></i>Hypercare &middot; Active</span>')]
-    out += sec(head("WHY UNISAS", "Why Choose Unisas for Your Odoo HR Implementation?",
+    out += sec(head("WHY UNISAS", "Why Choose Unisas for Your Odoo Human Resource Management Software Implementation?",
                     "One team that understands both people processes and Odoo, from the first workshop to long after go-live.", "is-center")
                + '<ol class="hr-why">%s</ol>' % "".join('<li><span class="hr-why-top ox-solo" aria-hidden="true">%s</span><h3>%s</h3><p>%s</p></li>' % (b, t, x) for t, x, b in why), "hr-sec--why")
 
     return out + JS
 
 
-FAQ = [("Is Odoo HR suitable for a small business with 10 to 50 employees?",
-        "Yes. Odoo Employees, Time Off and Attendances work well for small teams, and you pay only for the apps you use. Most of our small-business clients start with those three and add Payroll or Recruitment later."),
+FAQ = [("Is Odoo the best HR software for small business teams of 10 to 50 people?",
+        "For most teams that size, yes. Odoo works well as an HRMS for small business because you pay only for the apps you need. Most clients start with Employees, Time Off and Attendances, then add Payroll later."),
        ("Can employees apply for leave and check in from their phones?",
-        "Yes. Employees use the Odoo mobile app or browser to request time off, see their balance and check in, with geolocation if you want it. Managers approve from the same app."),
+        "Yes. Staff use the Odoo mobile app or a browser to request time off, see their balance and check in, with geolocation if you want it. Managers approve from the same employee leave management system, even on the road."),
        ("Can Odoo connect to our biometric attendance machine?",
-        "Usually, yes. Most common biometric devices can push check-ins to Odoo through a connector or a scheduled import. We confirm your device model during scoping."),
-       ("Does Odoo payroll handle PF, ESI and professional tax?",
-        "Odoo Payroll with the Indian localization supports salary structures with PF, ESI and professional tax. We validate the rules with your accountant before the first payroll run, or keep payroll with your current provider and send attendance from Odoo."),
+        "Usually, yes. Most common biometric devices can push check-ins into Odoo through a connector or a scheduled import. We confirm your device model during scoping, before any configuration work starts."),
+       ("Does Odoo handle PF, ESI and professional tax in payroll?",
+        "Yes, with the Indian localization, which supports salary structures with PF, ESI and professional tax. We validate the rules with your accountant first, or you can keep your current payroll management software and feed it attendance."),
        ("How do you keep salary and personal details private?",
         "Access rights are set per role. Employees see their own record, managers see their team's time off and appraisals, and only HR and payroll administrators see bank accounts, identity numbers and salaries."),
-       ("How long does an Odoo HR implementation take?",
-        "For a company of up to 100 people, Employees, Time Off and Attendances typically go live in 4 to 6 weeks. Payroll adds 3 to 4 weeks, including a parallel month to compare payslips."),
+       ("How long does the rollout take?",
+        "For up to 100 people, a typical HRMS implementation puts Employees, Time Off and Attendances live in 4 to 6 weeks. Payroll adds 3 to 4 weeks, including a parallel month to compare payslips."),
        ("Can we move our existing employee data and leave balances?",
-        "Yes. We import employees, departments, managers and documents from your spreadsheets or current software, and load each person's leave balance as an opening allocation, checked with you before go-live.")]
+        "Yes. Unisas imports employees, departments, managers and documents from your spreadsheets or current software into the new HR management system. Each person's leave balance loads as an opening allocation, checked with you first.")]
 
-CTA = ("Let's Map Your HR Processes to Odoo",
-       "Tell us how you handle employee records, leave and attendance today. We&rsquo;ll show the same in Odoo and suggest a setup.")
+CTA = ("Let's Map Your HR Operations to Odoo",
+       "Tell us how you handle employee records, leave and attendance today. We&rsquo;ll show you the same process in Odoo and suggest a setup that fits.")
 
 
 JS = r'''<script>

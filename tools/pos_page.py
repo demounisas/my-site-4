@@ -18,8 +18,10 @@ WIFI = ox.ic('<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.8 1
 
 
 def head(eyebrow, title, sub="", cls="", pts=()):
+    """sub is one paragraph, or a list of paragraphs."""
+    subs = [sub] if isinstance(sub, str) else list(sub)
     return ('<div class="ps-head%s"><p class="ps-eyebrow mono">%s</p><h2 class="ps-title">%s</h2>%s%s</div>'
-            % (" " + cls if cls else "", eyebrow, title, '<p class="ps-sub">%s</p>' % sub if sub else "",
+            % (" " + cls if cls else "", eyebrow, title, "".join('<p class="ps-sub">%s</p>' % s for s in subs if s),
                '<ul class="pl-ticks ps-head-t">%s</ul>' % "".join("<li>%s</li>" % t for t in pts) if pts else ""))
 
 
@@ -50,7 +52,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Cash, card &amp; UPI", "Stock updated with every sale", "Keeps selling offline"])
     copy = ('<div class="ps-hero-copy">%s<p class="ps-eyebrow mono">ODOO POINT OF SALE IMPLEMENTATION</p>'
             '<h1 class="ps-h1">Point of Sale Software for <span>Smarter Store Management</span> with Odoo</h1>'
-            '<p class="ps-lead">Unisas sets up Odoo Point of Sale for your shops and restaurants, so every bill updates stock and accounts, even offline.</p>'
+            '<p class="ps-lead">Unisas sets up Odoo POS software for shops and restaurants, so every bill updates stock and accounts, even when the internet drops.</p>'
             '<ul class="ps-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan your Odoo POS %s</a>'
             '<a href="#register" class="btn btn-ghost">Try the register</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -76,9 +78,11 @@ def build(g):
     app_icon = g["TILE_ICONS"][10]
 
     # 1 ---- gaps between checkout, inventory and accounting
-    out += sec(head("THE GAPS", "Is Your Point of Sale Creating Gaps Between Checkout, Inventory and Accounting?",
-                    "A standalone billing machine knows what was sold. Your stock sheet and your books find out later, if someone re-types it. "
-                    "Ring up a few sales, close the day and count the gaps. Then try the same day on a connected POS.", "is-center")
+    out += sec(head("THE GAPS", "Is Your POS Billing Software Creating Gaps Between Checkout, Inventory and Accounting?",
+                    ["A standalone billing machine knows exactly what was sold. Your stock sheet and your books find out later, and only if someone re-types every line. "
+                     "That delay is where shrinkage hides, reorders arrive too late and month-end closing stretches into a week.",
+                     "Most store owners we meet don&rsquo;t have a billing problem. They have a connection problem.",
+                     "Ring up a few sales, close the day and count the gaps. Then run the same day on connected point of sale software and watch stock and journal entries update on their own."], "is-center")
                + '<div class="ps-gap" data-p1box><div class="ps-mode" role="group" aria-label="System"><button type="button" class="is-on" data-p1mode="old" aria-pressed="true">Standalone billing</button>'
                  '<button type="button" data-p1mode="odoo" aria-pressed="false">Connected POS</button></div>'
                  '<div class="ps-gap-g"><div class="ps-gp ox-solo"><p class="ps-gp-h"><i style="--c:#B8325A"></i>Checkout</p><div data-p1="pos"></div></div>'
@@ -97,42 +101,41 @@ def build(g):
     # product photos for the register tiles (CC0 / public-domain images, cropped to the tile, in dist/assets/pos)
     for x in prods:
         x.append('<img src="assets/pos/product-%d.jpg" alt="" loading="lazy" width="480" height="300">' % x[0])
-    out += sec(head("EVERY SALE, CONNECTED", "How Can Odoo Connect Every Sale With Your Store Operations?",
-                    "This is the Odoo Point of Sale register for Nila Threads, T. Nagar. Add products, change a quantity on the numpad, pick a loyalty customer and take payment.", "is-center")
+    out += sec(head("EVERY SALE, CONNECTED", "How Can Odoo POS Connect Every Sale With Your Store Operations?",
+                    ["One register, one database. When a cashier scans a product, the same record feeds inventory, accounting, CRM and your online store, with no exports and no second login.",
+                     "This is the live register for Nila Threads, a boutique in T. Nagar, Chennai. Add products, change a quantity on the numpad, pick a loyalty customer and take payment by cash, card or UPI."], "is-center")
                + '<div class="ps-reg-w"><div class="ps-reg ox-solo" data-p2box><div class="ps-rt"><span class="ps-rt-logo">%s</span><button type="button" class="ps-rt-tab is-on" data-p2nav="register">Register</button>'
                  '<button type="button" class="ps-rt-tab" data-p2nav="orders">Orders <b data-p2n>0</b></button><label class="ps-rt-q">%s<input type="search" placeholder="Search products..." data-p2q aria-label="Search products"></label>'
                  '<span class="ps-rt-r"><span class="ps-wifi">%s</span><span class="ps-rt-emp"><span class="ox-av is-sm" style="--c:#B8325A">A</span>Anitha</span></span></div>'
                  '<div class="ps-rb" data-p2body></div></div></div>'
-                 '<p class="ox-hint"><span class="ox-hint-dot"></span>Live preview of the Odoo POS register with sample data. Click products, use the numpad, pay and validate.</p>'
+                 '<p class="ox-hint"><span class="ox-hint-dot"></span>Live preview with sample data. Click products, use the numpad, pay and validate.</p>'
                  % (app_icon, ox.SEARCH, WIFI) + data("ps-prods", prods) + data("ps-cats", cats), "ps-sec--reg", "register")
 
     # 3 ---- configured around how the store operates
-    qs = [["Several cashiers share one counter", ["emp"]], ["Products have barcodes", ["bar"]], ["Customers sit at tables and order food", ["rest", "floor", "kitchen"]],
-          ["Regulars pay at the end of the month", ["acct"]], ["Large items are delivered from the warehouse", ["ship"]], ["Members get special prices and points", ["price", "loyal"]],
-          ["Staff can receive tips", ["tips"]], ["Some products are sold by weight", ["scale"]]]
-    setts = {"emp": ["Log in with Employees", "Each cashier signs in with a PIN or badge; every order records who sold it"],
-             "bar": ["Barcode Scanner", "Scan to add products, customers and coupons; default barcode nomenclature"],
-             "rest": ["Is a Bar/Restaurant", "Orders are tied to tables and guests"], "floor": ["Floors &amp; Tables", "Your floor plan, tables coloured by status"],
-             "kitchen": ["Preparation Display", "Orders sent to the kitchen screen or printer by category"],
-             "acct": ["Customer Account payment", "Sales charged to the customer, invoiced and collected later"],
-             "ship": ["Allow Ship Later", "The customer pays now; delivery is created from the warehouse"],
-             "price": ["Flexible Pricelists", "Member, festive and wholesale prices chosen on the order"], "loyal": ["Loyalty, Gift Cards &amp; eWallet", "Points earned and spent in store and online"],
-             "tips": ["Tips", "Tip added on the payment screen and tracked per employee"], "scale": ["Weighing Scale", "Products marked &lsquo;To Weigh With Scale&rsquo; read the weight from the IoT Box"]}
+    qs = [["Several cashiers share one counter", ["Log in with Employees"], "PIN or badge sign-in; every order records who sold it"],
+          ["Products have barcodes", ["Barcode Scanner"], "Scan products, customers and coupons"],
+          ["Customers sit at tables and order food", ["Floors &amp; Tables", "Preparation Display"], "Table orders routed to the kitchen by category"],
+          ["Regulars pay at month-end", ["Customer Account"], "Charged now, invoiced and collected later"],
+          ["Large items ship from the warehouse", ["Allow Ship Later"], "Pay now, delivery created from stock"],
+          ["Members get special prices and points", ["Pricelists", "Loyalty, Gift Cards &amp; eWallet"], "Points earned and spent in store and online"],
+          ["Staff receive tips", ["Tips"], "Tip management on the payment screen, tracked per employee"],
+          ["Products sold by weight", ["Weighing Scale"], "Weight read from the IoT Box"]]
     presets = [["Boutique", [0, 1, 4, 5]], ["Supermarket", [0, 1, 5, 7]], ["Caf&eacute;", [0, 2, 6]], ["Wholesale counter", [1, 3, 4]]]
-    out += sec(head("YOUR STORE, YOUR SETUP", "How Does Unisas Configure POS Around the Way Your Store Actually Operates?",
-                    "We start from how your counter works: who checks out, what customers buy and how they pay. Each answer switches on a specific setting.", "is-center")
-               + '<div class="pl-2 is-w"><div class="pl-card"><p class="pl-k">What we ask &rarr; what we switch on</p><div class="pl-scroll"><table class="pl-table"><tbody>%s</tbody></table></div></div>'
+    out += sec(head("YOUR STORE, YOUR SETUP", "How Does Unisas Configure Odoo POS Software Around the Way Your Store Actually Operates?",
+                    "We begin at your counter, not in a settings menu. Who checks out customers, what do they buy and how do they pay? "
+                    "Each answer switches on a specific setting, so your team only sees what it uses.", "is-center")
+               + '<div class="pl-2 is-w"><div class="pl-card"><div class="pl-scroll"><table class="pl-table"><thead><tr><th>What we ask</th><th>What we switch on</th></tr></thead><tbody>%s</tbody></table></div></div>'
                  '<div class="pl-card"><p class="pl-k">Typical setups</p><ul class="pl-steps">%s</ul></div></div>'
                  % ("".join('<tr><th>%s</th><td><ul class="pl-chips">%s</ul><small class="pl-muted">%s</small></td></tr>'
-                            % (q[0], "".join('<li class="pl-chip">%s</li>' % setts[k][0] for k in q[1]), "; ".join(setts[k][1] for k in q[1])) for q in qs),
+                            % (q[0], "".join('<li class="pl-chip">%s</li>' % c for c in q[1]), q[2]) for q in qs),
                     "".join('<li><span class="pl-n">%d</span><b>%s</b><p>%s</p></li>' % (i + 1, pr[0], ", ".join(qs[j][0].lower() for j in pr[1]).capitalize() + ".") for i, pr in enumerate(presets))),
                "ps-sec--cfg")
 
     # 4 ---- offline
-    out += sec(head("OFFLINE MODE", "Can Odoo Keep Your Checkout Running Even When the Internet Goes Down?",
-                    "Yes. The register keeps products and prices in the browser and syncs offline orders when you reconnect. Try it.", "is-center",
-                    ["Keep selling and printing receipts with no internet", "Products, prices and discounts stay loaded on the register",
-                     "Offline orders queued safely on the register", "Everything syncs to Odoo once you reconnect"])
+    out += sec(head("OFFLINE MODE", "Can Odoo Offline POS Keep Your Checkout Running When the Internet Goes Down?",
+                    "Yes. Products, prices and discounts stay loaded in the browser, every order queues safely on the device, and everything syncs once the connection returns. "
+                    "A Saturday-evening broadband outage no longer means customers walking out.", "is-center",
+                    ["Keep selling and printing receipts with no internet", "Offline orders queued safely on the register", "Everything syncs to Odoo once you reconnect"])
                + '<div class="ps-off" data-p4box><div class="ps-off-reg ox-solo"><div class="ps-off-top"><b>Register &middot; Counter 2</b><span class="ps-wifi" data-p4wifi>%s</span><span class="ps-off-q" data-p4q></span></div>'
                  '<div class="ps-off-b"><p class="ps-off-s" data-p4s></p><button type="button" class="ps-big" data-p4sell>Sell &amp; print receipt</button>'
                  '<label class="ps-net"><input type="checkbox" data-p4net checked><span class="ps-sw" aria-hidden="true"></span><span>Internet connection</span></label></div>'
@@ -144,16 +147,17 @@ def build(g):
 
     # 5 ---- products, pricing, taxes, rules
     lines = [["Linen Kurta &ndash; Ivory", 1499, 2, 12, 1], ["Silk Stole", 899, 1, 5, 0], ["Kundan Jhumkas", 449, 1, 5, 0]]
-    pls = [["Public Pricelist", 0, "List prices"], ["Nila Members", 10, "10% off for loyalty members"], ["Wholesale (10+ pcs)", 22, "Boutique resellers, min. 10 pieces"]]
-    out += sec(head("PRODUCTS, PRICES &amp; RULES", "How Does Unisas Set Up Products, Pricing, Taxes and POS-Specific Rules?",
-                    "Each product carries its POS category, barcode, variants and GST rate; pricelists, promotions and discount limits sit on top. "
-                    "Here is how that looks for one product in a boutique.", "is-center")
+    pls = [["Public Pricelist", 0, "Standard prices for walk-in customers"], ["Nila Members", 10, "10% off, applied when the member is selected"], ["Wholesale (10+ pcs)", 22, "22% off for boutique resellers"]]
+    out += sec(head("PRODUCTS, PRICES &amp; RULES", "How Does Unisas Set Up Products, Pricing, GST and Rules in Your POS Software?",
+                    "Get the product master right and the counter runs itself. Each item carries its POS category, barcode, variants and GST rate, "
+                    "with pricelists, promotions and discount limits layered on top.", "is-center")
                + '<div class="pl-2"><div class="pl-card"><p class="pl-k">What each product carries &middot; Linen Kurta, Ivory</p><div class="pl-scroll"><table class="pl-table"><tbody>'
                  '<tr><th>Sales price</th><td>&#8377; 1,499.00, tax included</td></tr><tr><th>GST</th><td><span class="pl-chip">GST 12%%</span></td></tr><tr><th>POS category</th><td>Kurtas</td></tr>'
                  '<tr><th>Barcode</th><td class="mono">8901234500217</td></tr><tr><th>Variants</th><td><ul class="pl-chips"><li class="pl-chip">S</li><li class="pl-chip">M</li><li class="pl-chip">L</li><li class="pl-chip">XL</li></ul></td></tr></tbody></table></div></div>'
                  '<div class="pl-card"><p class="pl-k">Rules that sit on top</p><ul class="pl-steps">%s'
-                 '<li><span class="pl-n">%d</span><b>Festive promotion</b><em>Automatic</em><p>Buy 2 kurtas, get 10%% off them, applied on the order without the cashier doing anything.</p></li>'
-                 '<li><span class="pl-n">%d</span><b>Discount limit</b><em>Up to 10%%</em><p>Cashiers can give up to 10%% on an order. Anything above needs the store manager&rsquo;s PIN.</p></li></ul></div></div>'
+                 '<li><span class="pl-n">%d</span><b>Festive promotion</b><em>Automatic</em><p>Buy two kurtas, get 10%% off, applied automatically.</p></li>'
+                 '<li><span class="pl-n">%d</span><b>Discount limit</b><em>Up to 10%%</em><p>Cashiers give up to 10%%; more needs a manager&rsquo;s PIN.</p></li></ul></div></div>'
+                 '<p class="ps-foot">We also migrate your item list, HSN codes and opening stock from Excel, Tally or older billing tools, so nothing gets keyed in twice.</p>'
                  % ("".join('<li><span class="pl-n">%d</span><b>%s</b><em>%s</em><p>%s</p></li>' % (i + 1, x[0], "List price" if not x[1] else "%d%% off" % x[1], x[2]) for i, x in enumerate(pls)), len(pls) + 1, len(pls) + 2),
                "ps-sec--price")
 
@@ -163,8 +167,11 @@ def build(g):
               ["Order 00042-001-0007", "17:15", "UPI", 1299], ["Order 00042-001-0008", "18:52", "Cash", 2647]]
     moves = [["Cotton Kurta &ndash; Sky Blue", 2, "2 &rarr; 0", True], ["Kanchipuram Silk Saree", 1, "1 &rarr; 0", True], ["Linen Kurta &ndash; Ivory", 2, "6 &rarr; 4", False],
              ["Chanderi Kurta Set", 2, "4 &rarr; 2", True], ["Silk Stole", 3, "12 &rarr; 9", False], ["Kundan Jhumkas", 4, "20 &rarr; 16", False]]
-    out += sec(head("INVENTORY &amp; ACCOUNTING", "How Can Odoo Connect POS Sales With Inventory and Accounting?",
-                    "Stock leaves the store as each order is paid. Closing the register posts one journal entry by payment method and GST rate, and reorders what ran low. Close today&rsquo;s session to see it.", "is-center")
+    out += sec(head("INVENTORY &amp; ACCOUNTING", "How Can Odoo Point of Sale Connect Sales With Inventory and Accounting?",
+                    ["Stock leaves the shelf the moment each order is paid. Closing the register posts one clean journal entry, split by payment method and GST rate, "
+                     "and triggers reorders for anything below its minimum.",
+                     "That makes Odoo true billing software with inventory built in, not two products stitched together by a nightly export. Your accountant sees GST-ready figures the same evening.",
+                     "Close today&rsquo;s session to see the journal entry, stock moves and replenishment it creates."], "is-center")
                + '<div class="ps-cl" data-p6box><div class="ox ps-ox">%s<div class="ox-scroll"><table class="ox-table ps-ord-t"><thead><tr><th>Order Ref</th><th>Time</th><th>Payment</th><th class="ox-num">Total</th></tr></thead><tbody>%s</tbody>'
                  '<tfoot><tr><td colspan="3"><b>8 orders</b></td><td class="ox-num"><b data-p6tot></b></td></tr></tfoot></table></div></div>'
                  '<div class="ps-cl-r"><div class="ps-cl-tabs" role="group" aria-label="Result">%s</div><div class="ps-cl-b ox-solo" data-p6b aria-live="polite"></div></div></div>'
@@ -174,18 +181,18 @@ def build(g):
                + data("ps-orders", orders) + data("ps-moves", moves), "ps-sec--cl")
 
     # 7 ---- payments, cashiers, controls
-    emps = [["Anitha S", "Cashier", "#B8325A", [1, 1, 0, 0, 0, 1]], ["Ravi Kumar", "Store Manager", "#3E7CB1", [1, 1, 1, 1, 1, 1]], ["Joel M", "Trainee", "#1F8A78", [1, 0, 0, 0, 0, 0]]]
-    acts = ["Sell and take payment", "Discount up to 10%", "Discount above 10% or change a price", "Refund an order", "Open the cash drawer without a sale", "Close the register"]
-    out += sec(head("PAYMENTS, CASHIERS &amp; CONTROLS", "How Should Your POS Handle Payments, Cashiers and Store-Level Controls?",
-                    "Cashiers sign in with their own PIN, so every order, refund and discount is traceable to a person. Managers approve the risky actions, "
-                    "and the register only closes once cash is counted.", "is-center")
+    emps = [["Anitha S", "Cashier", "#B8325A", [1, 1, 0, 0, 0, 1]], ["Ravi Kumar", "Manager", "#3E7CB1", [1, 1, 1, 1, 1, 1]], ["Joel M", "Trainee", "#1F8A78", [1, 0, 0, 0, 0, 0]]]
+    acts = ["Sell and take payment", "Discount up to 10%", "Discount above 10% or price change", "Refund an order", "Open drawer without a sale", "Close the register"]
+    out += sec(head("PAYMENTS, CASHIERS &amp; CONTROLS", "How Should Your Point of Sale System Handle Payments, Cashiers and Store-Level Controls?",
+                    "Every cashier signs in with a personal PIN, so each order, refund and discount traces back to a person. Managers approve the risky actions. "
+                    "Split payments across cash, card and UPI are recorded line by line, and the register closes only once cash is counted.", "is-center")
                + '<div class="pl-2"><div class="pl-card"><p class="pl-k">Who can do what at the counter</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th></th>%s</tr></thead><tbody>%s</tbody></table></div>'
                  '<p class="pl-muted" style="margin:10px 0 0;font-size:0.84rem">&times; means the action needs a manager&rsquo;s PIN.</p></div>'
                  '<div class="pl-card"><p class="pl-k">Closing the register &middot; 8 orders, &#8377; 31,185</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Payment</th><th class="is-c">Expected</th><th class="is-c">Counted</th><th class="is-c">Difference</th></tr></thead><tbody>'
                  '<tr><th>Cash</th><td class="is-c">&#8377; 12,491</td><td class="is-c">&#8377; 12,291</td><td class="is-c"><span class="pl-chip is-bad">&minus; &#8377; 200</span></td></tr>'
                  '<tr><th>Card</th><td class="is-c">&#8377; 6,897</td><td class="is-c">&#8377; 6,897</td><td class="is-c"><span class="pl-chip is-ok">0</span></td></tr>'
                  '<tr><th>UPI</th><td class="is-c">&#8377; 16,797</td><td class="is-c">&#8377; 16,797</td><td class="is-c"><span class="pl-chip is-ok">0</span></td></tr></tbody></table></div>'
-                 '<p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem">Small differences are allowed with a note. Above &#8377; 200, only a manager can close, and the difference is posted to the books with the reason.</p></div></div>'
+                 '<p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem">Cash differences above &#8377; 200 need a manager to close, and post to the books with a reason.</p></div></div>'
                  % ("".join('<th class="is-c">%s<br><small>%s</small></th>' % (e[0], e[1]) for e in emps),
                     "".join('<tr><th>%s</th>%s</tr>' % (a, "".join('<td class="is-c">%s</td>' % ('<span class="pl-chip is-ok">&#10003;</span>' if e[3][i] else '<span class="pl-chip is-bad">&times;</span>') for e in emps)) for i, a in enumerate(acts))),
                "ps-sec--ctl")
@@ -200,23 +207,24 @@ def build(g):
             ["kitchen", "Kitchen printer", "Network printer by preparation category", ["Drinks to the bar, food to the kitchen", "Order changes printed as updates"], 86, 78]]
     pins = "".join('<button type="button" class="ps-dev%s" data-p8="%d" style="--x:%d;--y:%d" aria-pressed="%s"><span class="ps-dev-i is-%s" aria-hidden="true"></span><span>%s</span></button>'
                    % (" is-on" if i == 0 else "", i, d[4], d[5], "true" if i == 0 else "false", d[0], d[1]) for i, d in enumerate(devs))
-    out += sec(head("HARDWARE &amp; PAYMENTS", "How Does Unisas Configure POS Hardware and Payment Integrations?",
-                    "We confirm every device during scoping, connect it to the register, and test it at the counter before go-live: scanners, printers, drawers, displays, scales and card terminals. "
-                    "Click a device on the counter, then run its test.", "is-center")
+    out += sec(head("HARDWARE &amp; PAYMENTS", "How Does Unisas Configure POS Hardware and Payment Terminal Integrations?",
+                    ["Hardware is where most rollouts stall, so we treat it as a project step. Every device is confirmed during scoping, connected to the register and tested at your counter before go-live.",
+                     "Click a device on the counter, then run its test."], "is-center")
                + '<div class="ps-hw" data-p8box><div class="ps-counter" aria-label="Store counter"><div class="ps-desk" aria-hidden="true"></div>%s</div>'
                  '<div class="ps-hw-c ox-solo" aria-live="polite" data-p8card></div></div>' % pins + data("ps-devs", devs), "ps-sec--hw")
 
     # 9 ---- multi-store, loyalty, omnichannel
-    scen = [["Out of stock here, ship from another store", [["T. Nagar register", "Chanderi Kurta Set, size M: 0 here", "Product info shows stock in every store"], ["Anna Nagar", "3 in stock, reserved for Meena", "Ship Later on the order"],
+    scen = [["Out of stock here? Ship from another store", [["T. Nagar register", "Chanderi Kurta Set, size M: 0 here", "Product info shows stock in every store"], ["Anna Nagar", "3 in stock, reserved for Meena", "Ship Later on the order"],
              ["Payment", "Paid in full by UPI at T. Nagar", "Delivery created from Anna Nagar"], ["Meena", "Delivered home in 2 days", "+250 points"]], 250],
-            ["Bought online, returned in store", [["Website", "Phulkari Dupatta ordered online", "Shop and POS share products and customers"], ["Coimbatore register", "Refund from the original web order", "Return line linked to the order"],
+            ["Bought online? Return it in store", [["Website", "Phulkari Dupatta ordered online", "Shop and POS share products and customers"], ["Coimbatore register", "Refund from the original web order", "Return line linked to the order"],
              ["Inventory", "Item back into Coimbatore stock", "Sellable again the same day"], ["Meena", "Refund to eWallet", "Spendable in any store"]], 0],
-            ["Points earned in store, spent online", [["T. Nagar register", "&#8377; 3,096 bill, member pricelist", "+310 points"], ["Loyalty", "1,550 points = &#8377; 155 reward", "Same programme for POS and website"],
+            ["Points earned in store? Spend them online", [["T. Nagar register", "&#8377; 3,096 bill, member pricelist", "+310 points"], ["Loyalty", "1,550 points = &#8377; 155 reward", "Same programme for POS and website"],
              ["Website checkout", "Reward applied to an online order", "Points deducted"], ["Reporting", "Reward cost shown per channel", "Marketing sees what loyalty costs"]], 310]]
     stock = [["T. Nagar", 0], ["Anna Nagar", 3], ["Coimbatore", 1], ["Online warehouse", 7]]
-    out += sec(head("STORES, LOYALTY &amp; OMNICHANNEL", "Can Odoo Support Multiple Stores, Customer Loyalty and Omnichannel Selling?",
-                    "Every store, counter and the website share one product list, one customer list and one loyalty programme, so a customer is the same person everywhere. "
-                    "Pick a situation and follow it.", "is-center")
+    out += sec(head("STORES, LOYALTY &amp; OMNICHANNEL", "Can Odoo Support Multiple Stores, a Customer Loyalty Program and Omnichannel POS Selling?",
+                    ["Every store, counter and your website share one product list, one customer list and one rewards scheme. "
+                     "A shopper is the same person in T. Nagar, in Coimbatore and online, with one points balance.",
+                     "Standalone loyalty program software tries to fake that with sync scripts. Here it&rsquo;s native. Pick a situation and follow it:"], "is-center")
                + '<div class="ps-omni" data-p9box><div class="ps-omni-l"><div class="ps-scn" role="group" aria-label="Situation">%s</div><ol class="ps-omni-s ox-solo" data-p9steps aria-live="polite"></ol></div>'
                  '<div class="ps-omni-r"><div class="ps-cust ox-solo"><span class="ox-av is-msg" style="--c:#8E4F83">M</span><span><b>Meena Krishnan</b><small>Member since 2023 &middot; 14 orders in 3 channels</small></span>'
                  '<div class="ps-pts"><b data-p9pts>1,240</b><small>loyalty points</small></div></div>'
@@ -225,14 +233,16 @@ def build(g):
                + data("ps-scen", scen), "ps-sec--omni")
 
     # 10 ---- retail, restaurants, others
-    envs = [["retail", "Retail &amp; fashion"], ["rest", "Restaurant"], ["cafe", "Caf&eacute; &amp; quick service"], ["groc", "Grocery &amp; weighed goods"]]
-    cfgs = {"retail": ["Product variants: size and colour picked on the register", "Exchanges and returns linked to the original receipt", "Barcode labels printed from Inventory", "Ship Later for alterations and home delivery"],
-            "rest": ["Floor plan with tables, seats and status colours", "Orders sent to the kitchen by preparation category", "Split the bill by guest or item", "Tips and service charge"],
-            "cafe": ["Combos: a drink and a snack at one price", "Self-order kiosk or QR menu at the table", "Order number on the customer display", "Fast cash with quick-amount buttons"],
-            "groc": ["Scale reads weight into the line", "Price-embedded barcodes for packed items", "Lots and expiry dates on perishables", "Loyalty and weekly offers on fast movers"]}
-    out += sec(head("YOUR SELLING ENVIRONMENT", "How Does Unisas Adapt POS Workflows for Retail, Restaurants or Other Selling Environments?",
-                    "The same POS runs a boutique, a restaurant, a caf&eacute; counter or a grocery till; what changes is the workflow at the counter. Here is what we set up for each.", "is-center")
+    envs = [["retail", "Retail &amp; fashion"], ["rest", "Restaurant"], ["cafe", "Caf&eacute; &amp; quick service"], ["groc", "Grocery, pharmacy &amp; weighed goods"]]
+    cfgs = {"retail": ["Size and colour variants on the register", "Returns linked to the original receipt", "Barcode labels printed from Inventory", "Ship Later for alterations and delivery"],
+            "rest": ["Floor plan with table status colours", "Orders sent to a kitchen display system by category", "Split the bill by guest or item", "Tips and service charge"],
+            "cafe": ["Combos at one price", "Self order kiosk for peak-hour queues", "Order number on the customer display", "Quick-amount cash buttons"],
+            "groc": ["Scale reads weight into the line", "Price-embedded barcodes for packed items", "Lots and expiry dates on perishables and medicines", "Weekly offers on fast movers"]}
+    out += sec(head("YOUR SELLING ENVIRONMENT", "How Does Unisas Adapt Odoo POS for Retail Billing, Restaurants or Other Selling Environments?",
+                    "The engine stays the same across a boutique, a restaurant, a caf&eacute; counter or a grocery till. What changes is the workflow at the counter, and that&rsquo;s what we tune.", "is-center")
                + '<ul class="pl-grid is-tint" style="--cols:4">%s</ul>'
+                 '<p class="ps-foot">Comparing separate restaurant billing software and supermarket billing software? One platform covers every format, '
+                 'so a business running a store and a caf&eacute; needs one vendor, not two.</p>'
                  % "".join('<li><b>%s</b><ul class="pl-ticks ps-env-t">%s</ul></li>' % (n, "".join("<li>%s</li>" % c for c in cfgs[k])) for k, n in envs),
                "ps-sec--env")
 
@@ -242,8 +252,11 @@ def build(g):
            "cat": [["Sarees", 318000, 74], ["Kurtas", 342000, 266], ["Dupattas", 98000, 112], ["Accessories", 64000, 274], ["Caf&eacute;", 74000, 902]],
            "emp": [["Anitha S", 268000, 284], ["Ravi Kumar", 214000, 176], ["Priya D", 236000, 241], ["Joel M", 82000, 107], ["Caf&eacute; counter", 74000, 902]]}
     out += sec(head("SALES &amp; STORE INSIGHTS", "How Can Odoo Turn POS Transactions Into Useful Sales and Store Insights?",
-                    "Every order carries the store, hour, cashier, products, payment method and customer, so Orders Analysis can slice the month any way you need. "
-                    "Change the measure and the grouping.", "is-center")
+                    ["Every order carries the store, hour, cashier, products, payment method and customer. Orders Analysis slices the month any way you need, without exporting a spreadsheet.",
+                     "Which hour needs a second cashier? Which branch discounts too often? Which category drives weekend footfall? "
+                     "The answer sits one grouping away, and it updates as each order is paid rather than after someone compiles a report.",
+                     "For owners running three or more outlets, we add a store-comparison dashboard during setup, so branch managers see their own numbers while head office sees all of them. "
+                     "Change the measure and grouping to see it."], "is-center")
                + '<div class="ps-an" data-p11box><div class="ox ps-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb">Orders Analysis</span></div><span></span><span></span></div>'
                  '<div class="ox-gtools"><span class="ox-measure">%s</span><span class="ps-gb"><small>Group by</small><select data-p11g><option value="store">Point of Sale</option><option value="hour">Hour</option>'
                  '<option value="cat">Product Category</option><option value="emp">Employee</option></select></span></div><div class="ps-bars" data-p11bars></div></div>'
@@ -252,22 +265,28 @@ def build(g):
                + data("ps-rep", rep), "ps-sec--an")
 
     # 12 ---- setup to go-live
-    phases = [["Discover", "Week 1", ["Store visits and counter walkthrough", "Products, taxes and pricing reviewed", "Hardware list per counter", "Workflows: returns, exchanges, credit"], "Time at a busy counter, and your current billing data."],
-              ["Products &amp; pricing", "Week 1&ndash;2", ["Products, variants and barcodes imported", "GST rates and HSN codes", "Pricelists, promotions, loyalty", "Opening stock per store"], "Product master and a stock count for each store."],
-              ["Configure", "Week 2&ndash;3", ["POS per store and counter", "Employees, PINs and access", "Payment methods and journals", "Receipts, invoices and session rules"], "Bank and payment provider details."],
-              ["Hardware &amp; payments", "Week 3", ["Printers, drawers, scanners, displays", "IoT Box and scales", "Card terminal and UPI QR", "Counter test with real bills"], "Devices on site and terminal credentials."],
-              ["Train &amp; rehearse", "Week 4", ["Cashier and manager training", "Mock day with refunds and closing", "Offline drill", "Quick guides at each counter"], "Staff available for two short sessions."],
-              ["Go-live &amp; support", "Week 4 onward", ["Opening day on site", "First closings checked with you", "Stock and accounts reconciled", "Monthly reviews and new stores"], "A go-live date and a store manager on hand."]]
+    phases = [["Discover", "Week 1", ["Store visits and counter walkthrough", "Products, taxes and pricing reviewed", "Hardware list per counter", "Workflows: returns, exchanges, credit"], "Time at a busy counter, and your current billing data.",
+               "Counters, cashiers, payments and reports mapped."],
+              ["Products &amp; pricing", "Week 1&ndash;2", ["Products, variants and barcodes imported", "GST rates and HSN codes", "Pricelists, promotions, loyalty", "Opening stock per store"], "Product master and a stock count for each store.",
+               "Item master, GST, pricelists and data migration."],
+              ["Configure", "Week 2&ndash;3", ["POS per store and counter", "Employees, PINs and access", "Payment methods and journals", "Receipts, invoices and session rules"], "Bank and payment provider details.",
+               "Register, roles, loyalty, and restaurant or retail flows."],
+              ["Hardware &amp; payments", "Week 3", ["Printers, drawers, scanners, displays", "IoT Box and scales", "Card terminal and UPI QR", "Counter test with real bills"], "Devices on site and terminal credentials.",
+               "Devices and terminals tested."],
+              ["Train &amp; rehearse", "Week 4", ["Cashier and manager training", "Mock day with refunds and closing", "Offline drill", "Quick guides at each counter"], "Staff available for two short sessions.",
+               "Staff run a full mock day."],
+              ["Go-live &amp; support", "Week 4 onward", ["Opening day on site", "First closings checked with you", "Stock and accounts reconciled", "Monthly reviews and new stores"], "A go-live date and a store manager on hand.",
+               "Hypercare, then AMC."]]
     pbt = "".join('<li><button type="button" class="ps-ph%s" data-p12="%d" aria-pressed="%s"><span class="mono">%02d</span><b>%s</b><small>%s</small></button></li>'
-                  % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, n, w) for i, (n, w, d, y) in enumerate(phases))
+                  % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, ph[0], ph[1]) for i, ph in enumerate(phases))
     out += sec(head("SETUP TO GO-LIVE", "What Does Unisas Handle From POS Setup to Store Go-Live?",
-                    "Six steps from your current billing system to a store running on Odoo, each ending with something you can test at the counter. Pick a step.", "is-center")
-               + '<div class="ps-del" data-p12box><ol class="ps-phs">%s</ol><div class="ps-del-c ox-solo" aria-live="polite"><div><p class="ps-gi-h">Unisas delivers</p><ul class="ps-files" data-p12d></ul></div>'
+                    "Six steps take you from your current billing system to a store running on Odoo. Each ends with something you can test at the counter, not a status report.", "is-center")
+               + '<div class="ps-del" data-p12box><ol class="ps-phs">%s</ol><div class="ps-del-c ox-solo" aria-live="polite"><div><p class="ps-del-s" data-p12s></p><p class="ps-gi-h">Unisas delivers</p><ul class="ps-files" data-p12d></ul></div>'
                  '<div class="ps-del-y"><p class="ps-gi-h">We need from you</p><p data-p12y></p></div></div></div>' % pbt + data("ps-phases", phases), "ps-sec--del")
 
     # 13 ---- plan the implementation
     out += sec('<div class="ps-scope"><div>%s<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan my Odoo POS %s</a></div></div>'
-               '<div class="ps-sc ox-solo" data-p13box><p class="ps-sc-h"><b>POS planner</b><small>A first recommendation. We confirm it after a short call.</small></p>'
+               '<div class="ps-sc ox-solo" data-p13box><p class="ps-sc-h"><b>POS planner</b><small>A first recommendation, confirmed after a short call.</small></p>'
                '<div class="ps-sc-in"><label class="is-wide"><span>What do you run?</span><select data-p13="type"><option value="0">Retail shops</option><option value="1">Restaurants or caf&eacute;s</option><option value="2">Supermarket / grocery</option><option value="3">Retail and food together</option></select></label>'
                '<label><span>Stores <b data-p13o="stores">2</b></span><input type="range" min="1" max="30" value="2" data-p13="stores"></label>'
                '<label><span>Counters per store <b data-p13o="counters">2</b></span><input type="range" min="1" max="10" value="2" data-p13="counters"></label>'
@@ -277,7 +296,9 @@ def build(g):
                '<label><input type="checkbox" data-p13x="card"> Integrated card terminal</label></div></div>'
                '<div class="ps-sc-out" data-p13out aria-live="polite"></div></div></div>'
                % (head("PLAN YOUR IMPLEMENTATION", "How Can We Plan an Odoo POS Implementation for Your Business?",
-                       "The plan depends on your stores, counters, products and hardware. Answer a few questions to get a first plan.", "",
+                       ["Your plan depends on stores, counters, product count and hardware. A two-counter pharmacy and a ten-store fashion chain shouldn&rsquo;t get the same quote, and with us they won&rsquo;t.",
+                        "A single-outlet shop moving off pharmacy billing software or Excel usually needs a lean rollout with standard hardware. "
+                        "A chain needs pricelists per branch, inter-store transfers and a phased go-live. Answer a few questions to get a first plan."], "",
                        ["Products, prices and customers moved from your current system", "Printers, scanners, scales and card terminals set up",
                         "Cashiers and store managers trained on the counter", "Fixed scope and go-live date agreed before we start"]), g["ARROW"]), "ps-sec--scope")
 
@@ -285,20 +306,20 @@ def build(g):
 
 
 CTA = ("Let's Plan a Checkout That Runs Your Whole Store",
-       "Tell us about your stores, counters and payments. We&rsquo;ll show your products on the Odoo register and plan the rollout.")
+       "Tell us about your stores, counters and payments. We&rsquo;ll load your own products on the Odoo register, show you a live demo and plan a rollout with a fixed scope and go-live date.")
 
 FAQ = [("Does Odoo POS work without internet?",
-        "Yes. Once a session is open, the register keeps selling offline and saves orders on the device. They sync to Odoo when the connection returns. Card terminals and live UPI confirmation need a connection, so we set a fallback for each."),
+        "Yes. Once a session is open, the register keeps selling offline and stores orders on the device. They sync automatically when the connection returns. Card terminals and live UPI confirmation need internet, so we configure a fallback for each."),
        ("What hardware does Odoo POS support?",
-        "Standard barcode scanners, receipt printers, cash drawers, customer displays and weighing scales, plus integrated card terminals in supported regions. Printers and scales usually connect through an Odoo IoT Box. We confirm your devices during scoping."),
+        "It supports standard barcode scanners, thermal receipt printers, cash drawers, customer displays, weighing scales and integrated card terminals. Printers and scales usually connect through an Odoo IoT Box, and we confirm every device during scoping."),
        ("Can Odoo POS handle GST invoices and receipts?",
-        "Yes. Products carry their GST rates and HSN codes, receipts show the tax breakdown, and a customer can ask for a GST invoice at the counter. Taxes are posted to the right accounts when the session closes."),
+        "Yes. Products carry their GST rates and HSN codes, receipts show the full tax breakdown, and customers can request a GST invoice at the counter. Taxes post to the correct accounts automatically when each session closes."),
        ("Can we run several stores with different prices?",
-        "Yes. Each store has its own POS and stock location, and pricelists can differ by store, customer group or season. Products, customers and loyalty stay shared."),
+        "Yes. Each store gets its own register and stock location, and pricelists can vary by branch, customer group or season. Products, customers and loyalty points stay shared, so your point of sale software reports across every location together."),
        ("Can Odoo POS be used in a restaurant?",
-        "Yes. Restaurant mode adds floor plans, table orders, kitchen printing or a preparation display, bill splitting and tips."),
+        "Absolutely. Restaurant mode adds floor plans, table orders, kitchen printing or a preparation display, bill splitting and tips. Many of our caf&eacute; and restaurant clients replace two separate tools with this single setup on Odoo."),
        ("How long does an Odoo POS implementation take?",
-        "A single store with standard hardware is often live in three to four weeks. Multi-store rollouts, data migration from older billing systems and integrations add time; the planner above gives a first estimate.")]
+        "A single store with standard hardware usually goes live in three to four weeks. Multi-store rollouts, data migration from older billing systems and third-party integrations add time. The planner above gives a realistic first estimate.")]
 
 
 JS = r'''<script>
@@ -457,7 +478,7 @@ JS = r'''<script>
 
   /* --- 12 phases --- */
   (function(){var bx=document.querySelector('[data-p12box]');if(!bx)return;var P=J('ps-phases'),bt=[].slice.call(bx.querySelectorAll('[data-p12]'));
-    function draw(i){bx.querySelector('[data-p12d]').innerHTML=P[i][2].map(function(d,j){return '<li style="--i:'+j+'"><span class="ps-file" aria-hidden="true"></span>'+d+'</li>';}).join('');bx.querySelector('[data-p12y]').innerHTML=P[i][3];}
+    function draw(i){bx.querySelector('[data-p12d]').innerHTML=P[i][2].map(function(d,j){return '<li style="--i:'+j+'"><span class="ps-file" aria-hidden="true"></span>'+d+'</li>';}).join('');bx.querySelector('[data-p12y]').innerHTML=P[i][3];bx.querySelector('[data-p12s]').innerHTML=P[i][4];}
     bt.forEach(function(b){b.addEventListener('click',function(){press(bt,b);draw(+b.getAttribute('data-p12'));});});draw(0);})();
 
   /* --- 13 planner --- */

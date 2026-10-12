@@ -54,10 +54,10 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["GST-ready invoicing &amp; bills", "Bank reconciliation in minutes", "Reports that are always current"])
     copy = ('<div class="ac-hero-copy">%s<p class="ac-eyebrow mono">ODOO ACCOUNTING IMPLEMENTATION</p>'
             '<h1 class="ac-h1">Best Accounting Software Implementation <span>for Your Business with Odoo</span></h1>'
-            '<p class="ac-lead">Unisas sets up Odoo Accounting so invoices, bills, payments, GST and bank reconciliation run in one system, current every day.</p>'
+            '<p class="ac-lead">Unisas, an Odoo partner, replaces patchy bookkeeping software and spreadsheets with one system where invoices, bills, payments, GST and bank reconciliation stay current daily.</p>'
             '<ul class="ac-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Accounting %s</a>'
-            '<a href="#explore" class="btn btn-ghost">Try the accounting demo</a></div></div>' % (crumb, points, g["ARROW"]))
+            '<a href="#explore" class="btn btn-ghost">Try the accounting software demo</a></div></div>' % (crumb, points, g["ARROW"]))
     # bank statement lines on the left, the Odoo entries they reconcile with on the right
     left = [("Oct 12", "NEFT-BLUEBAY RETAIL PVT LTD", 726408), ("Oct 12", "UPI/KAVERI FOODS/412233", 118000), ("Oct 13", "NEFT-KAVERI STEEL WORKS", -253464),
             ("Oct 13", "CHRG/SMS ALERT Q3", -118), ("Oct 14", "RTGS-SHREE DISTRIBUTORS", 300000)]
@@ -102,16 +102,16 @@ def build(g):
 
     # 1 ---- what the best accounting software should manage
     areas = [("inv", "Customer invoicing", "Customers &rsaquo; Invoices", "GST invoices with HSN codes, e-Invoice IRN and payment links, created from sales orders or deliveries.", "Typing invoices in Tally after the sale"),
-             ("bill", "Vendor bills", "Vendors &rsaquo; Bills", "Bills digitized from email, matched to purchase orders and receipts before they are paid.", "Bills checked by hand against challans"),
-             ("bank", "Bank &amp; cash", "Accounting &rsaquo; Closing &rsaquo; Reconcile", "Statement lines imported daily and matched to invoices and bills automatically.", "Ticking bank statements in Excel"),
-             ("tax", "GST &amp; TDS", "Reporting &rsaquo; Tax Report", "CGST, SGST and IGST computed on every line, with GSTR-1 and 3B figures ready to file.", "Rebuilding GST figures every month"),
-             ("ar", "Receivables &amp; follow-up", "Reporting &rsaquo; Aged Receivable", "Overdue invoices by age, with reminder emails sent on a schedule.", "Calling customers from a list"),
-             ("asset", "Assets &amp; depreciation", "Accounting &rsaquo; Assets", "Asset register with depreciation posted every month.", "Year-end depreciation worksheet"),
+             ("bill", "Vendor bills", "Vendors &rsaquo; Bills", "Bills read from email, matched to purchase orders and receipts, then approved before payment.", "Bills checked by hand against challans"),
+             ("bank", "Bank &amp; cash", "Accounting &rsaquo; Closing &rsaquo; Reconcile", "Statement lines imported daily and matched to open invoices and bills automatically.", "Ticking bank statements in Excel"),
+             ("tax", "GST &amp; TDS", "Reporting &rsaquo; Tax Report", "CGST, SGST and IGST computed on every line, with GSTR-1 and 3B figures ready to file. This is accounting software with GST inside the ledger, not added at filing time.", "Rebuilding GST figures every month"),
+             ("ar", "Receivables &amp; follow-up", "Reporting &rsaquo; Aged Receivable", "Overdue invoices by age, with reminders sent on a schedule. Accounts receivable aging stays current every morning.", "Calling customers from a list"),
+             ("asset", "Assets &amp; depreciation", "Accounting &rsaquo; Assets", "An asset register with depreciation posted every month.", "Year-end depreciation worksheet"),
              ("budget", "Budgets &amp; cost centres", "Configuration &rsaquo; Financial Budgets", "Budgets per branch or project, compared with actuals through analytic accounts.", "Branch P&amp;Ls built from exports"),
              ("close", "Closing &amp; reports", "Reporting &rsaquo; Statement Reports", "Profit and Loss, Balance Sheet and Cash Flow, live at any date, with lock dates once filed.", "Waiting for month end to see numbers")]
     out += sec(head("WHAT IT SHOULD MANAGE", "What Should the Best Accounting Software Actually Help Your Business Manage?",
-                    "More than bookkeeping. Good accounting software runs the daily finance work and keeps the books current as it happens. "
-                    "These are the eight areas we set up, and what each one replaces.", "is-center")
+                    "Bookkeeping is only the start. A good accounting system runs the daily finance work and keeps the books current as transactions happen. "
+                    "For an Indian company, it also has to handle GST, e-Invoicing and Tally history without workarounds. Here are the eight areas we set up, and what each one replaces.", "is-center")
                + '<ul class="pl-grid is-plain" style="--cols:4">%s</ul>'
                  % "".join('<li><span class="pl-n">%02d</span><b>%s</b><p>%s</p><p class="pl-foot"><span class="pl-chip is-bad">Replaces</span> %s</p></li>' % (i + 1, a[1], a[3], a[4]) for i, a in enumerate(areas)),
                "ac-sec--areas")
@@ -119,16 +119,17 @@ def build(g):
     # 2 ---- core operations in one system: dashboard, invoices, bills
     menu = "".join('<button type="button" class="ac-menu%s" data-ax-menu="%s" aria-pressed="%s">%s</button>' % (" is-on" if k == "dash" else "", k, "true" if k == "dash" else "false", n)
                    for k, n in [("dash", "Dashboard"), ("out", "Customers"), ("in", "Vendors")])
-    out += sec(head("ONE SYSTEM FOR CORE ACCOUNTING", "How Can Odoo Bring Your Core Accounting Operations Into One System?",
-                    "This is the Odoo Accounting dashboard as your finance team will use it. Open <b>Customer Invoices</b>, confirm the draft invoice for "
-                    "Orbit Motors, then register a payment against it.", "is-center")
+    out += sec(head("ONE SYSTEM FOR CORE ACCOUNTING", "How Can Odoo Accounting Software Bring Your Core Accounting Operations Into One System?",
+                    "This is the screen your finance team opens every morning. Sales, purchase, bank and cash journals sit together on the Odoo accounting dashboard, each showing what needs action. "
+                    "Open <b>Customer Invoices</b>, confirm the draft invoice for Orbit Motors, then register a payment against it.", "is-center")
                + '<div class="ox ac-ox ac-ax" data-ax><div class="ox-nav"><span class="ox-app">%s<b>Accounting</b></span><span class="ac-menus" role="group" aria-label="Accounting menu">%s</span>'
                  '<span class="ox-menu">Accounting</span><span class="ox-menu">Reporting</span><span class="ox-nav-r"><span class="ox-company">Your Company</span><span class="ox-av" style="--c:#C98600">D</span></span></div>'
                  '<div class="ox-cp"><div class="ox-cp-l"><button type="button" class="ox-new" data-ax-new>New</button><span class="ox-crumb ox-crumb--stack" data-ax-crumb>Accounting Dashboard</span></div>'
                  '<label class="ox-search">%s<span class="ox-facet" data-ax-facet hidden></span><input type="search" placeholder="Search..." aria-label="Search invoices and bills" data-ax-q></label><span></span></div>'
                  '<div class="ox-body ac-ax-body" data-ax-body></div></div>'
                  '<p class="ox-hint"><span class="ox-hint-dot"></span>Live preview with sample data. Click a journal, open an invoice, confirm it and register a payment.</p>'
-                 % (app_icon, menu, SEARCH), "ac-sec--explore", "explore")
+                 % (app_icon, menu, SEARCH)
+               + '<p class="ac-sec-note">The entry posts, the receivable clears and the bank journal updates in one step. Your accountant reviews the books instead of building them.</p>', "ac-sec--explore", "explore")
 
     # 3 ---- match Odoo to your finance processes: fit-gap
     fit = [("Invoicing", ["Invoice after delivery", "Invoice on order (advance)", "Milestone billing"],
@@ -148,11 +149,12 @@ def build(g):
         rows += ('<tr><th>%s</th><td><select data-fit="%d" aria-label="Your practice for %s">%s</select></td><td data-fit-odoo="%d">%s</td><td data-fit-k="%d"></td></tr>'
                  % (area, i, area, sel, i, maps[0], i))
     out += sec(head("MATCHED TO YOUR PROCESS", "How Does Unisas Match Odoo Accounting to Your Existing Finance Processes?",
-                    "We don't change how your finance team works to suit the software. We map each practice to the Odoo feature that does it. "
+                    "We don't change how your finance team works to suit the software. We map each practice to the feature that already handles it. "
                     "Choose how you work today and see what we would set up.", "is-center")
                + '<div class="ac-fit ox-solo" data-fitbox><div class="ox-scroll"><table class="ac-fit-t"><thead><tr><th>Process</th><th>How you work today</th><th>What we set up in Odoo</th><th>Fit</th></tr></thead>'
                  '<tbody>%s</tbody></table></div><p class="ac-fit-sum" data-fit-sum aria-live="polite"></p></div>'
-                 '<script type="application/json" id="ac-fit">%s</script>' % (rows, json.dumps([[m for m in f[2]] for f in fit])), "ac-sec--fit")
+                 '<script type="application/json" id="ac-fit">%s</script>' % (rows, json.dumps([[m for m in f[2]] for f in fit]))
+               + '<p class="ac-sec-note">The same mapping works across industries. Distributors and traders need credit control and quick collections. Manufacturers need bills matched to receipts and stock valuation flowing into the books, where generic accounting software for manufacturing often falls short. Retailers on Odoo Point of Sale get each session posted automatically. E-commerce sellers need what most accounting software for ecommerce misses: gateway payouts reconciled against individual orders.</p>', "ac-sec--fit")
 
     # 4 ---- connected: the journal entries each app posts
     ops = [("sale", "Sales", "#EE8A3C", "Invoice the customer", "INV/2026/00412 posted for Bluebay Retail",
@@ -167,40 +169,41 @@ def build(g):
             [["211000 Accounts Payable", 253464, 0], ["101401 Bank", 0, 253464]])]
     obtn = "".join('<li><button type="button" class="ac-op" data-op="%d" style="--c:%s"><span class="ac-op-app">%s</span><b>%s</b><small>%s</small><span class="ac-op-st">Post</span></button></li>'
                    % (i, c, app, t, d) for i, (k, app, c, t, d, l) in enumerate(ops))
-    out += sec(head("CONNECTED APPS", "Can Odoo Connect Accounting With Sales, Purchase and Inventory?",
-                    "Yes, and nobody re-types anything. Every sale, delivery, receipt and bill posts its own journal entry the moment it happens. "
+    out += sec(head("CONNECTED APPS", "Can Odoo Connect Accounting With Sales, Purchase and Inventory in One ERP Accounting System?",
+                    "Yes, and nobody re-types anything. Every sale, delivery, receipt and bill posts its own journal entry the moment it happens, because all Odoo apps share one database. "
                     "Post each step and watch the general ledger build itself, balanced at every step.", "is-center")
                + '<div class="ac-je" data-je><ol class="ac-ops">%s</ol><div class="ac-je-r"><div class="ox ac-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Journal Entries</a><span data-je-name>Nothing posted yet</span></span></div>'
                  '<span></span><button type="button" class="ox-sbtn ac-je-reset" data-je-reset>Reset</button></div><div class="ox-scroll"><table class="ac-jt" data-je-entry></table></div></div>'
                  '<div class="ac-gl ox-solo"><p class="ac-gl-h"><b>General Ledger</b><small data-je-check></small></p><div class="ox-scroll"><table class="ac-jt is-gl" data-je-gl></table></div></div></div></div>'
-                 '<script type="application/json" id="ac-ops">%s</script>' % (obtn, json.dumps([[o[3], o[4], o[5], o[1]] for o in ops])), "ac-sec--je")
+                 '<script type="application/json" id="ac-ops">%s</script>' % (obtn, json.dumps([[o[3], o[4], o[5], o[1]] for o in ops]))
+               + '<p class="ac-sec-note">This is why a finance ERP beats two disconnected tools. Stock and the general ledger never disagree, because they are the same entries.</p>', "ac-sec--je")
 
     # 5 ---- configure before go-live
-    cfg = [("Fiscal localization", "Settings &rsaquo; Fiscal Localization", "<b>India - Accounting</b> package: Indian chart of accounts, GST tax groups and the GSTR reports. Company GSTIN and state set, so the right tax applies:  CGST + SGST and when IGST."),
-           ("Chart of accounts", "Configuration &rsaquo; Chart of Accounts", "Your Tally ledgers mapped to the new accounts and account types, so the Balance Sheet and P&amp;L group correctly from day one."),
-           ("Taxes", "Configuration &rsaquo; Taxes", "GST 5, 12, 18 and 28%, IGST, reverse charge, and TDS sections such as 194C and 194J, with fiscal positions for exports and SEZ."),
-           ("Journals &amp; banks", "Configuration &rsaquo; Journals", "One bank journal per account (HDFC, ICICI), cash journals per branch, and the outstanding receipts and payments accounts."),
-           ("Payment terms &amp; reminders", "Configuration &rsaquo; Payment Terms", "30 Days, 50% advance, end-of-month terms, plus <b>Invoice Reminders</b> at 7, 15 and 30 days overdue."),
-           ("Fiscal year &amp; lock dates", "Accounting &rsaquo; Closing &rsaquo; Lock Dates", "April to March fiscal year. Lock dates set after each filed return so nobody posts into a closed period."),
-           ("Opening balances", "Accounting &rsaquo; Journal Entries", "Trial balance at cut-over, plus every open invoice and bill, so ageing and follow-ups are right from day one."),
-           ("Documents &amp; e-Invoicing", "Settings &rsaquo; Indian Electronic Invoicing", "Invoice layout with HSN and bank details, e-Invoice IRN and e-Way bill credentials on the GST portal."),
-           ("Users &amp; access", "Settings &rsaquo; Users", "<b>Billing</b> for the billing team, <b>Accountant</b> for finance, <b>Auditor</b> read-only access for your CA.")]
-    out += sec(head("BEFORE GO-LIVE", "What Does Your Business Need to Configure Before Going Live?",
-                    "Nine things decide whether your books are right from the first day. We set each one with your accountant.", "is-center")
+    cfg = [("Fiscal localization", "", "The India accounting package: Indian chart of accounts, GST tax groups and GSTR reports. GSTIN and state set, so CGST + SGST or IGST applies correctly."),
+           ("Chart of accounts", "", "Tally ledgers mapped to Odoo accounts and types, so the Balance Sheet and P&amp;L group correctly."),
+           ("Taxes", "", "Current GST slabs, reverse charge and TDS sections such as 194C, with fiscal positions for exports and SEZ."),
+           ("Journals &amp; banks", "", "One bank journal per account and cash journals per branch."),
+           ("Payment terms &amp; reminders", "", "30 days, 50% advance or end-of-month terms, plus reminders at 7, 15 and 30 days overdue."),
+           ("Fiscal year &amp; lock dates", "", "April to March fiscal year, locked after each filed return so nobody posts into a closed period."),
+           ("Opening balances", "", "Trial balance at cut-over plus every open invoice and bill, so ageing is right from day one."),
+           ("Documents &amp; e-Invoicing", "", "Invoice layout with HSN and bank details, plus e-Invoice IRN and e-Way Bill credentials on the GST portal."),
+           ("Users &amp; access", "", "Billing for the billing team, Accountant for finance, read-only Auditor access for your CA.")]
+    out += sec(head("BEFORE GO-LIVE", "What Does Your Business Need to Configure Before Going Live With GST Accounting Software?",
+                    "Nine settings decide whether your books are right from day one. We set each with your accountant.", "is-center")
                + '<ol class="pl-grid is-line" style="--cols:3">%s</ol>'
                  % "".join('<li><span class="pl-n">%02d</span><b>%s</b><p>%s</p></li>' % (i + 1, t, x) for i, (t, p, x) in enumerate(cfg)), "ac-sec--cfg")
 
     # 6 ---- less manual work: bank reconciliation
-    out += sec(head("LESS MANUAL WORK", "How Can Odoo Reduce Manual Invoicing, Payments and Reconciliation Work?",
-                    "Invoices are created from orders, payments come in through payment links, and bank lines match themselves. "
-                    "This is Odoo's bank reconciliation. Select a statement line and validate the match Odoo proposes, or reconcile them all at once.", "is-center")
+    out += sec(head("LESS MANUAL WORK", "How Can Odoo Invoicing Reduce Manual Billing, Payments and Reconciliation Work?",
+                    "Raising invoices, chasing payments and ticking bank lines eat most of a finance week. Odoo's matching models learn from how you reconcile, so the hit rate climbs each month. "
+                    "Select a statement line and validate the proposed match, or reconcile them all at once.", "is-center")
                + '<div class="ac-rec" data-rec><div class="ox ac-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Bank</a><span>HDFC Current A/c &middot; 0042</span></span></div>'
                  '<span></span><button type="button" class="ox-pbtn" data-rec-all>Reconcile all</button></div>'
                  '<div class="ac-rec-grid"><ul class="ac-rec-lines" data-rec-lines></ul><div class="ac-rec-panel" data-rec-panel aria-live="polite"></div></div></div>'
                  '<ul class="ac-auto">'
-                 '<li><b>Invoices from orders</b><span>Delivered quantities become a draft invoice; nothing is typed twice.</span></li>'
-                 '<li><b>Payment links</b><span>Customers pay by UPI or card from the invoice email; Odoo registers the payment.</span></li>'
-                 '<li><b>Bills from email</b><span>Vendor PDFs sent to bills@ are digitized into draft bills.</span></li>'
+                 '<li><b>Invoices from orders</b><span>Delivered quantities become a draft invoice, and recurring invoices go out on schedule.</span></li>'
+                 '<li><b>Payment links</b><span>Customers pay by UPI or card from the invoice email; the payment registers itself.</span></li>'
+                 '<li><b>Bills from email</b><span>Vendor PDFs sent to your bills inbox are digitized into draft bills.</span></li>'
                  '<li><b>Reminders</b><span>Overdue invoices get polite reminders at 7, 15 and 30 days.</span></li></ul></div>', "ac-sec--rec", "reconcile")
 
     # 7 ---- when to customize: decision tree
@@ -213,11 +216,12 @@ def build(g):
     ex = "".join('<li><button type="button" class="ac-ex%s" data-ex="%d" aria-pressed="%s">%s</button></li>' % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", e[0]) for i, e in enumerate(examples))
     qs = [("q1", "Is it about how a document looks, or a field you need to record?"), ("q2", "Does standard Odoo already have a setting or feature for it?"), ("q3", "Does it happen often enough that doing it by hand costs real time?")]
     tree = "".join('<div class="ac-tq" data-tq="%d"><span class="ac-tq-n mono">%d</span><p>%s</p><span class="ac-tq-a"><i data-a="y">Yes</i><i data-a="n">No</i></span></div>' % (i, i + 1, q) for i, (k, q) in enumerate(qs))
-    out += sec(head("CONFIGURE OR CUSTOMIZE", "When Should Odoo Accounting Be Customized for Your Business?",
-                    "Only when configuration and Studio can't do the job and the task repeats often enough to pay for the code. Pick a requirement to see how we decide.", "is-center")
+    out += sec(head("CONFIGURE OR CUSTOMIZE", "When Should the Odoo Accounting Module Be Customized for Your Business?",
+                    "Only when configuration and Studio can't do the job, and the task repeats often enough to pay for the code. Pick a requirement to see how we decide.", "is-center")
                + '<div class="ac-tree" data-tree><ul class="ac-exs">%s</ul><div class="ac-tree-r ox-solo"><div class="ac-tqs">%s</div>'
                  '<div class="ac-verdict" aria-live="polite"><span class="ac-v-kind" data-v-kind></span><b data-v-how></b><small data-v-eff></small></div></div></div>'
-                 '<script type="application/json" id="ac-ex">%s</script>' % (ex, tree, json.dumps(examples)), "ac-sec--tree")
+                 '<script type="application/json" id="ac-ex">%s</script>' % (ex, tree, json.dumps(examples))
+               + '<p class="ac-sec-note">Custom code is upgrade debt, so we write it only when the answers point there.</p>', "ac-sec--tree")
 
     # 8 ---- migration from Tally
     groups = [("Sundry Debtors", "Receivable", "121000 Accounts Receivable"), ("Sundry Creditors", "Payable", "211000 Accounts Payable"),
@@ -227,40 +231,52 @@ def build(g):
               ("Capital Account", "Equity", "301000 Capital"), ("Suspense A/c", "To be mapped", "&mdash;")]
     grows = "".join('<tr class="%s"><td>%s</td><td class="ox-muted">&rarr;</td><td><span class="ac-type">%s</span></td><td>%s</td></tr>'
                     % ("is-gap" if t == "To be mapped" else "", a, t, o) for a, t, o in groups)
-    moved = [("Ledgers &rarr; accounts", "412 &rarr; 186", "Duplicates and dead ledgers merged"), ("Customers &amp; vendors", "1,240", "With GSTIN and state"),
-             ("Open invoices", "318 &middot; " + inr(18640200, False), "So ageing is right on day one"), ("Open bills", "164 &middot; " + inr(7215400, False), "With due dates"),
-             ("Opening trial balance", "31 Mar 2026", "Tallied to the audited books"), ("History", "2 years", "Monthly balances for comparison reports")]
-    out += sec(head("DATA MIGRATION", "How Does Unisas Migrate Your Existing Accounting Data to Odoo?",
-                    "Most of our clients come from Tally. We map every ledger group to an Odoo account, bring across what is still open, and prove the opening trial balance before cut-over.", "is-center")
+    moved = [("Ledgers &rarr; accounts", "412 &rarr; 186", "Duplicates merged"), ("Customers &amp; vendors", "1,240", "With GSTIN and state"),
+             ("Open invoices", "318 &middot; " + inr(18640200, False), ""), ("Open bills", "164 &middot; " + inr(7215400, False), "With due dates"),
+             ("Opening trial balance", "31 Mar 2026", "Tallied to the audited books"), ("History", "2 years", "Monthly balances")]
+    out += sec(head("DATA MIGRATION", "How Does Unisas Migrate Your Existing Accounting Data From Tally to Odoo?",
+                    "Most of our clients come from Tally, so tally data migration is routine work for us. We map every ledger group to an Odoo account, bring across what is still open, and prove the opening trial balance before cut-over.", "is-center")
                + '<div class="ac-mig"><div class="ox ac-ox" data-tb><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Migration</a><span>Tally ledger groups &rarr; Odoo accounts</span></span></div></div>'
                  '<div class="ox-scroll"><table class="ox-table ac-map"><thead><tr><th>Tally group</th><th></th><th>Odoo account type</th><th>Odoo account</th></tr></thead><tbody data-tb-map>%s</tbody></table></div>'
                  '<div class="ac-tb"><p class="ac-tb-h"><b>Opening trial balance check</b><small>As of 31 Mar 2026</small></p>'
                  '<dl class="ac-tb-dl"><div><dt>Tally total debit</dt><dd>%s</dd></div><div><dt>Odoo total debit</dt><dd data-tb-odoo>%s</dd></div><div><dt>Difference</dt><dd data-tb-diff class="ac-red">%s</dd></div></dl>'
                  '<div class="ac-tb-btns"><button type="button" class="ox-pbtn" data-tb-fix>Map Suspense A/c and re-check</button></div><p class="ac-tb-res" data-tb-res aria-live="polite">One ledger is still unmapped, so the books don&rsquo;t tie yet.</p></div></div>'
                  '<ul class="ac-moved ox-solo"><li class="ac-moved-h"><b>What moves to Odoo</b><small>Sample from a 3-branch distributor</small></li>%s</ul></div>'
-                 % (grows, inr(48216540), inr(48204060), inr(12480), "".join('<li><span>%s<small>%s</small></span><b>%s</b></li>' % (a, c, b) for a, b, c in moved)), "ac-sec--mig")
+                 % (grows, inr(48216540), inr(48204060), inr(12480), "".join('<li><span>%s<small>%s</small></span><b>%s</b></li>' % (a, c, b) for a, b, c in moved))
+               + '<p class="ac-sec-note">If you are weighing Odoo as a Tally alternative, this step usually decides it. Your history comes with you, so comparison reports work from the first month.</p>', "ac-sec--mig")
 
     # 9 ---- financial reports
     rtabs = "".join('<button type="button" class="ac-rtab%s" data-rep="%s" aria-pressed="%s">%s</button>' % (" is-on" if i == 0 else "", k, "true" if i == 0 else "false", n)
                     for i, (k, n) in enumerate([("pl", "Profit and Loss"), ("bs", "Balance Sheet"), ("ar", "Aged Receivable"), ("tax", "Tax Report"), ("ex", "Executive Summary")]))
-    out += sec(head("REPORTS &amp; INSIGHTS", "What Financial Reports and Business Insights Can Odoo Provide?",
+    out += sec(head("REPORTS &amp; INSIGHTS", "What Financial Reports and Business Insights Can Odoo Reporting Provide?",
                     "Every report is live, at any date, and drills down to the entry behind each number. Switch reports, compare with last month, and unfold a line.", "is-center")
                + '<div class="ox ac-ox ac-rep" data-rep-box>%s<div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb" data-rep-title>Profit and Loss</span></div><span></span>'
                  '<label class="ac-cmp"><input type="checkbox" data-rep-cmp checked> Compare: Previous Period</label></div>'
                  '<div class="ac-rtabs" role="group" aria-label="Reports">%s</div><div class="ac-rep-filters"><span class="ox-sbtn">&#128197; Sep 2026</span><span class="ox-sbtn">Journals: All</span><span class="ox-sbtn">Analytic: All branches</span><span class="ox-sbtn">PDF</span><span class="ox-sbtn">XLSX</span></div>'
-                 '<div class="ox-scroll"><table class="ac-rt" data-rep-t></table></div></div>' % (odoo_nav(app_icon), rtabs), "ac-sec--rep")
+                 '<div class="ox-scroll"><table class="ac-rt" data-rep-t></table></div></div>' % (odoo_nav(app_icon), rtabs)
+               + '<ul class="ac-auto ac-rep-list">%s</ul>' % "".join('<li><b>%s</b><span>%s</span></li>' % r for r in [
+                   ("Profit and Loss", "By month, branch or analytic account."), ("Balance Sheet", "Assets, liabilities and equity at any date."),
+                   ("Aged Receivable", "Who owes what, bucketed by days overdue."), ("Tax Report", "GSTR-1 and GSTR-3B figures from posted entries."),
+                   ("Executive Summary", "Cash, margins and DSO on one page.")])
+               + '<p class="ac-sec-note">As financial reporting software, it removes the month-end wait between a transaction and the number it changes.</p>', "ac-sec--rep")
 
     # 10 ---- integrations
-    ints = [("Banks", "HDFC, ICICI, Axis", "Daily", "In", [["06:10", "Statement imported: 41 lines, closing balance &#8377; 49,85,880.00"], ["06:10", "38 lines matched automatically"], ["06:11", "3 lines left for review"]]),
-            ("GST e-Invoice", "IRP via GSP", "On posting", "Out", [["11:42", "INV/2026/00412: IRN generated, QR code added to the PDF"], ["11:43", "Acknowledgement 1324 1000 9877 stored on the invoice"], ["15:02", "INV/2026/00398: e-Invoice cancelled within 24 hours"]]),
-            ("e-Way Bill", "NIC portal", "On delivery", "Out", [["12:05", "EWB 4211 0098 7765 generated for WH/OUT/00231, valid till Oct 16"], ["12:05", "Vehicle TN 09 BX 4412 added"]]),
-            ("GSTR filing data", "GSTR-1 / 3B / 2B", "Monthly", "Both", [["Oct 9", "GSTR-2B downloaded: 164 vendor invoices"], ["Oct 9", "Matched 158, 6 missing in vendor filings"], ["Oct 11", "GSTR-1 JSON exported for September"]]),
-            ("Payment gateway", "Razorpay, UPI", "Real time", "In", [["10:21", "&#8377; 1,18,000.00 received from Kaveri Foods for INV/2026/00407"], ["10:21", "Payment registered, invoice In Payment"]]),
-            ("Payroll", "Odoo Payroll or your provider", "Monthly", "In", [["Sep 30", "Salary journal posted: 64 employees, &#8377; 38,42,000.00"], ["Sep 30", "PF, ESI and TDS liabilities booked"]]),
-            ("BI &amp; Excel", "Spreadsheet, Power BI", "Live", "Out", [["Live", "Branch P&amp;L pivot refreshed from the ledger"], ["Live", "Receivables dashboard shared with directors"]]),
-            ("Tally (during transition)", "Parallel run", "Daily", "Out", [["Oct 1", "Day book exported for the parallel run"], ["Oct 1", "Trial balance compared: no differences"]])]
-    ibtn = "".join('<li><button type="button" class="ac-int%s" data-int="%d" aria-pressed="%s"><b>%s</b><small>%s</small></button></li>'
-                   % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", n, w) for i, (n, w, f, d, l) in enumerate(ints))
+    ints = [("Banks", "HDFC, ICICI, Axis", "Daily", "In", [["06:10", "Statement imported: 41 lines, closing balance &#8377; 49,85,880.00"], ["06:10", "38 lines matched automatically"], ["06:11", "3 lines left for review"]],
+             "Statement lines imported daily."),
+            ("GST e-Invoice", "IRP via GSP", "On posting", "Out", [["11:42", "INV/2026/00412: IRN generated, QR code added to the PDF"], ["11:43", "Acknowledgement 1324 1000 9877 stored on the invoice"], ["15:02", "INV/2026/00398: e-Invoice cancelled within 24 hours"]],
+             "IRN and QR code on confirmation."),
+            ("e-Way Bill", "NIC portal", "On delivery", "Out", [["12:05", "EWB 4211 0098 7765 generated for WH/OUT/00231, valid till Oct 16"], ["12:05", "Vehicle TN 09 BX 4412 added"]],
+             "Raised from the invoice or delivery."),
+            ("GSTR filing data", "1 / 3B / 2B", "Monthly", "Both", [["Oct 9", "GSTR-2B downloaded: 164 vendor invoices"], ["Oct 9", "Matched 158, 6 missing in vendor filings"], ["Oct 11", "GSTR-1 JSON exported for September"]],
+             "Return figures from posted entries."),
+            ("Payment gateway", "Razorpay, UPI", "Real time", "In", [["10:21", "&#8377; 1,18,000.00 received from Kaveri Foods for INV/2026/00407"], ["10:21", "Payment registered, invoice In Payment"]],
+             "Payments registered and reconciled."),
+            ("Payroll", "Odoo Payroll or your provider", "Monthly", "In", [["Sep 30", "Salary journal posted: 64 employees, &#8377; 38,42,000.00"], ["Sep 30", "PF, ESI and TDS liabilities booked"]],
+             "One salary journal per run, from Odoo Payroll or your provider."),
+            ("BI &amp; Excel", "Spreadsheet, Power BI", "Live", "Out", [["Live", "Branch P&amp;L pivot refreshed from the ledger"], ["Live", "Receivables dashboard shared with directors"]],
+             "Spreadsheets or Power BI on live data.")]
+    ibtn = "".join('<li><button type="button" class="ac-int%s" data-int="%d" aria-pressed="%s"><b>%s</b><small>%s</small><span class="ac-int-d">%s</span></button></li>'
+                   % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", n, w, x) for i, (n, w, f, d, l, x) in enumerate(ints))
     out += sec('%s<div class="ac-ints"><ul class="ac-int-list">%s</ul><div class="ac-int-log ox-solo" aria-live="polite"><p class="ac-int-h"><b data-int-name></b>'
                '<span><small>Direction</small><em data-int-dir></em></span><span><small>Runs</small><em data-int-freq></em></span></p><ol data-int-log></ol></div></div>'
                '<script type="application/json" id="ac-int">%s</script>'
@@ -273,43 +289,45 @@ def build(g):
           ("Output GST", -1284310, -1271830), ("Sales Accounts / Product Sales", -41260000, -41260000), ("Indirect Expenses / Expenses", 6420500, 6420500)]
     trows = "".join('<tr><th>%s</th><td class="is-c">%s</td><td class="is-c">%s</td><td class="is-c">%s</td></tr>'
                     % (n, inr(t), inr(o), '<span class="pl-chip is-bad">%s</span>' % inr(t - o) if t != o else '<span class="pl-chip is-ok">&#10003; 0.00</span>') for n, t, o in tb)
-    uat = [("Billing", [("Invoice from a delivered sales order", True), ("Send an e-Invoice and check the IRN", False)]),
-           ("Accounts", [("Post a vendor bill from email", True), ("Reconcile a full day of bank lines", False), ("File GSTR-3B figures from the Tax Report", False)]),
+    uat = [("Billing", [("Invoice a delivered order", True), ("Send an e-Invoice and check the IRN", False)]),
+           ("Accounts", [("Post a bill from email", True), ("Reconcile a day of bank lines", False), ("File GSTR-3B figures", False)]),
            ("Management", [("Read the P&amp;L by branch", False)])]
     ul = ""
     for role, items in uat:
         ul += '<li class="ac-uat-role">%s</li>' % role
         ul += "".join('<li><label class="ac-uat-i"><input type="checkbox" data-uat%s><span class="ac-chk" aria-hidden="true">%s</span><span>%s</span></label></li>' % (" checked" if on else "", TICK, t) for t, on in items)
     out += sec(head("TESTING &amp; GO-LIVE", "How Do We Test and Prepare Your Accounting System Before Go-Live?",
-                    "For one month Odoo runs beside your old system. Every difference is explained and fixed before you switch, and each role signs off its own scenarios.", "is-center")
+                    "For one month, Odoo runs beside your old books. Every difference is explained and fixed before you switch, and each role signs off its own scenarios.", "is-center")
                + '<div class="ac-test"><div class="pl-card"><p class="pl-k">Parallel run &middot; trial balance, September 2026</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Account</th><th class="is-c">Old system</th><th class="is-c">New system</th><th class="is-c">Difference</th></tr></thead>'
-                 '<tbody>%s</tbody></table></div><p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem"><b style="color:var(--text)">Explained and fixed:</b> a GST credit note was posted in Tally on Sep 30 and in the new books on Oct 1. Corrected and locked before sign-off.</p></div>'
+                 '<tbody>%s</tbody></table></div><p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem"><b style="color:var(--text)">Example fix:</b> a GST credit note posted on different dates in each system, corrected and locked before sign-off.</p></div>'
                  '<div class="ac-uat ox-solo" data-uatbox><div class="ac-uat-h"><span><small>User acceptance testing</small><b>Go-live readiness</b></span><span class="ac-uat-pct" data-uat-pct></span></div>'
                  '<div class="ac-uat-bar"><i data-uat-bar></i></div><ul>%s</ul><p class="ac-uat-res" data-uat-res aria-live="polite"></p></div></div>' % (trows, ul), "ac-sec--test")
 
     # 12 ---- what changes
     kpis = [("Month-end close", 12, 4, "days"), ("Invoice sent after delivery", 6, 0, "days"), ("Days sales outstanding", 58, 41, "days"),
-            ("Bank reconciliation", 16, 1, "hours a month"), ("GST return preparation", 24, 3, "hours a month"), ("Manual journal entries", 900, 120, "a month")]
+            ("Bank reconciliation", 16, 1, "hrs/month"), ("GST return preparation", 24, 3, "hrs/month"), ("Manual journal entries", 900, 120, "/month")]
     krows = "".join('<li data-b="%d" data-a="%d"><span class="ac-k-n">%s</span><span class="ac-k-bar"><i></i></span><b class="ac-k-v">%d</b><small>%s</small></li>' % (b, a, n, b, u) for n, b, a, u in kpis)
-    out += sec(head("WHAT CHANGES", "What Can a Properly Implemented Accounting System Change for Your Business?",
-                    "Typical results from our accounting projects, measured three months after go-live. Switch between before and after.", "is-center")
+    out += sec(head("WHAT CHANGES", "What Can a Properly Implemented Accounting Solution Change for Your Business?",
+                    "Typical results from our accounting projects, measured three months after go-live.", "is-center")[:-len("</div>")]
+               + '<p class="ac-sub">None of this comes from the licence alone. Clean opening data and the right rules decide whether the best accounting software pays off.</p></div>'
                + '<div class="ac-chg ox-solo" data-chg><div class="ac-chg-sw" role="group" aria-label="Compare"><button type="button" class="is-on" data-chg-m="b" aria-pressed="true">Before Odoo</button>'
                  '<button type="button" data-chg-m="a" aria-pressed="false">After Odoo</button></div><ul class="ac-kl">%s</ul>'
-                 '<p class="ac-chg-note" data-chg-note aria-live="polite"></p></div>' % krows, "ac-sec--chg")
+                 '<p class="ac-chg-note" data-chg-note aria-live="polite"></p></div>' % krows
+              , "ac-sec--chg")
 
     # 13 ---- readiness: maturity check
-    mat = [("Invoicing", ["Typed by hand", "From a separate tool", "From orders, automatically"]),
-           ("Bank reconciliation", ["In Excel at month end", "Weekly in Tally", "Daily, mostly automatic"]),
-           ("GST returns", ["Rebuilt every month", "Exported, then fixed", "Straight from the books"]),
-           ("Reports", ["Built at month end", "From exports when asked", "Live, at any date"]),
-           ("Payments &amp; collections", ["Chased by phone", "Reminders sent by hand", "Links and automatic reminders"])]
+    mat = [("Invoicing", ["Typed by hand", "From a separate tool", "From orders"]),
+           ("Bank reconciliation", ["Excel at month end", "Weekly in Tally", "Daily, automatic"]),
+           ("GST returns", ["Rebuilt monthly", "Exported, then fixed", "Straight from the books"]),
+           ("Reports", ["Built at month end", "From exports when asked", "Live, any date"]),
+           ("Collections", ["Chased by phone", "Reminders sent by hand", "Links and auto reminders"])]
     mrows = "".join('<li><span>%s</span><span class="ac-seg" role="group" aria-label="%s">%s</span></li>'
                     % (a, a, "".join('<button type="button" data-m="%d" data-v="%d" aria-pressed="false">%s</button>' % (i, j, o) for j, o in enumerate(opts))) for i, (a, opts) in enumerate(mat))
     out += sec('<div class="ac-quiz"><div>%s<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Book a finance process review %s</a></div></div>'
-               '<div class="ac-q ox-solo" data-mat><p class="ac-q-h"><b>Finance maturity check</b><small>Choose where you are today in each area</small></p><ol>%s</ol>'
+               '<div class="ac-q ox-solo" data-mat><p class="ac-q-h"><b>Finance maturity check</b><small>Choose where you are today</small></p><ol>%s</ol>'
                '<div class="ac-q-res"><span class="ac-q-dial" data-mat-dial style="--p:0"><b data-mat-score>0</b></span><p data-mat-txt>Answer all five to see your score.</p></div></div></div>'
                % (head("READINESS CHECK", "Is Your Business Ready to Move to a Better Accounting System?",
-                       "Mostly on the left? Your finance team is doing the system&rsquo;s work. We&rsquo;ll show your month in Odoo."),
+                       "Mostly on the left? Your finance team is doing the system&rsquo;s work. Many companies outgrow their first accounting software for small business around the second branch. We&rsquo;ll show your month in Odoo."),
                   g["ARROW"], mrows), "ac-sec--quiz")
 
     return out + JS.replace("__MOVES__", json.dumps(MOVES))
@@ -544,7 +562,7 @@ JS = r'''<script>
   var cg=document.querySelector('[data-chg]');
   if(cg){var cbs=[].slice.call(cg.querySelectorAll('[data-chg-m]'));
     function gdraw(m){cg.classList.toggle('is-after',m==='a');cg.querySelectorAll('.ac-kl li').forEach(function(li){var b=+li.getAttribute('data-b'),a=+li.getAttribute('data-a'),val=m==='a'?a:b;
-        li.querySelector('.ac-k-bar i').style.width=(val/b*100)+'%';li.querySelector('.ac-k-v').textContent=val;});
+        li.querySelector('.ac-k-bar i').style.width=(val/b*100)+'%';li.querySelector('.ac-k-v').textContent=val===0?'Same day':val;li.querySelector('small').hidden=val===0;});
       cg.querySelector('[data-chg-note]').innerHTML=m==='a'?'Month end in <b>4 days</b> instead of 12, and invoices go out the day goods leave.':'Typical starting point: Tally, Excel and a lot of re-typing.';}
     cbs.forEach(function(b){b.addEventListener('click',function(){press(cbs,b);gdraw(b.getAttribute('data-chg-m'));});});gdraw('b');}
 
@@ -563,3 +581,18 @@ JS = r'''<script>
 
 CTA = ("Let's Build Your Accounting System in Odoo",
        "Tell us how you invoice, pay, reconcile and close today. We&rsquo;ll show the same month in Odoo Accounting.")
+
+FAQ = [("Which is the best accounting software in India?",
+        "There is no single winner. Tally suits standalone bookkeeping, Zoho Books suits small online teams, and Odoo suits growing companies that want their books connected to sales, purchase and inventory, with GST, e-Invoicing and e-Way Bills built in."),
+       ("Which accounting software is best for a small business?",
+        "Pick one that grows with you. A five-person firm can start with Odoo Invoicing and add inventory, purchase and payroll later on the same database, so moving off spreadsheets never means another migration two years on."),
+       ("Is Odoo good for accounting?",
+        "Yes, for businesses that want finance tied to operations. Odoo accounting software handles GST invoicing, bank reconciliation, vendor bills, assets, budgets and live reports, and every sale, delivery and bill posts its own journal entry automatically."),
+       ("Can Odoo replace Tally?",
+        "For most growing businesses, yes. Unisas maps Tally ledgers to Odoo accounts, migrates open invoices, bills and two years of balances, then runs both systems in parallel for a month, so switching to a Tally alternative carries little risk."),
+       ("Is Odoo accounting free?",
+        "Odoo Community works as free bookkeeping software for invoicing and payments, while full accounting features such as bank synchronization, financial reports and assets need Odoo Enterprise. Check Odoo's current pricing page before budgeting."),
+       ("How long does it take to implement Odoo accounting?",
+        "Most accounting-only projects take 6 to 12 weeks: setup and configuration, Tally migration, a one-month parallel run and user testing. Adding sales, purchase or inventory as part of a wider finance ERP extends the timeline."),
+       ("Does Odoo support GST e-invoicing in India?",
+        "Yes. With the India localization, Odoo generates the e-Invoice IRN and QR code when an invoice is confirmed, raises e-Way Bills, and prepares GSTR-1 and GSTR-3B figures, which makes it practical GST software for Indian companies.")]

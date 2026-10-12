@@ -457,7 +457,7 @@ PAGES = [
          meta="Odoo HR implementation for small businesses by Unisas: employee records, onboarding, time off, attendance, approvals, access control, skills and appraisals, configured around your workflows.",
          hero=dict(style="split", eyebrow="ODOO HR", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
          sections=[], build=hr_page.build, hero_fn=hr_page.hero, cta=hr_page.CTA, css=("odoo-ui.css", "hr.css"),
-         faq=hr_page.FAQ, faq_title="Frequently Asked Questions About Odoo HR"),
+         faq=hr_page.FAQ, faq_title="Frequently Asked Questions About Odoo Human Resources"),
 
     dict(slug="odoo-crm", icon=1, name="CRM", short="Leads & pipeline",
          title="Odoo CRM Implementation for Smarter Sales | Unisas",
@@ -479,7 +479,8 @@ PAGES = [
          title="Inventory Implementation Services Tailored to Your Business with Odoo | Unisas",
          meta="Odoo Inventory implementation by Unisas: multi-warehouse stock, routes, reordering rules, barcode, lots and serial numbers, data migration and live valuation.",
          hero=dict(style="split", eyebrow="ODOO INVENTORY", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
-         sections=[], build=inventory_page.build, hero_fn=inventory_page.hero, cta=inventory_page.CTA, css=("odoo-ui.css", "inventory.css")),
+         sections=[], build=inventory_page.build, hero_fn=inventory_page.hero, cta=inventory_page.CTA, css=("odoo-ui.css", "inventory.css"),
+         faq=inventory_page.FAQ, faq_title="Odoo Inventory Management Software FAQs"),
 
     dict(slug="odoo-purchase", icon=4, name="Purchase", short="Vendors & POs",
          title="Purchase Order Software for Smarter Procurement with Odoo | Unisas",
@@ -499,13 +500,15 @@ PAGES = [
          title="Manufacturing ERP Software for End-to-End Production Management with Odoo | Unisas",
          meta="Odoo Manufacturing ERP implementation by Unisas: bills of materials, work orders, work centres, production planning, quality, traceability and cost control, set up around your production model.",
          hero=dict(style="split", eyebrow="ODOO MANUFACTURING", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
-         sections=[], build=manufacturing_page.build, hero_fn=manufacturing_page.hero, cta=manufacturing_page.CTA, css=("odoo-ui.css", "manufacturing.css")),
+         sections=[], build=manufacturing_page.build, hero_fn=manufacturing_page.hero, cta=manufacturing_page.CTA, css=("odoo-ui.css", "manufacturing.css"),
+         faq=manufacturing_page.FAQ, faq_title="Frequently Asked Questions About Odoo Manufacturing ERP Software"),
 
     dict(slug="odoo-accounting", icon=7, name="Accounting", short="Invoicing & bank reconciliation",
          title="Best Accounting Software Implementation for Your Business with Odoo | Unisas",
          meta="Odoo Accounting implementation by Unisas: GST invoicing, vendor bills, bank reconciliation, Tally migration, financial reports and integrations, matched to your finance processes.",
          hero=dict(style="split", eyebrow="ODOO ACCOUNTING", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
-         sections=[], build=accounting_page.build, hero_fn=accounting_page.hero, cta=accounting_page.CTA, css=("odoo-ui.css", "accounting.css")),
+         sections=[], build=accounting_page.build, hero_fn=accounting_page.hero, cta=accounting_page.CTA, css=("odoo-ui.css", "accounting.css"),
+         faq=accounting_page.FAQ, faq_title="Frequently Asked Questions"),
 
     dict(slug="odoo-ecommerce", icon=8, name="Website & eCommerce", short="Website, shop &amp; portal",
          title="Business Website Development Connected to Your Sales and Operations with Odoo | Unisas",
@@ -525,7 +528,7 @@ PAGES = [
          meta="Odoo Point of Sale implementation by Unisas: checkout connected to inventory and accounting, offline mode, pricing and GST, cashier controls, hardware and payments, multi-store loyalty and restaurant workflows.",
          hero=dict(style="split", eyebrow="ODOO POINT OF SALE", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
          sections=[], build=pos_page.build, hero_fn=pos_page.hero, cta=pos_page.CTA, css=("odoo-ui.css", "pos.css"),
-         faq=pos_page.FAQ, faq_title="Frequently Asked Questions About Odoo Point of Sale"),
+         faq=pos_page.FAQ, faq_title="Frequently Asked Questions About Odoo Point of Sale Software"),
 ]
 ALL_PAGES = PAGES + SERVICES + COMPANY
 

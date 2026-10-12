@@ -108,7 +108,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Bills of materials &amp; routings", "Work orders on shop-floor tablets", "Actual cost on every order"])
     copy = ('<div class="mf-hero-copy">%s<p class="mf-eyebrow mono">ODOO MANUFACTURING IMPLEMENTATION</p>'
             '<h1 class="mf-h1">Manufacturing ERP Software for <span>End-to-End Production Management</span></h1>'
-            '<p class="mf-lead">Unisas implements Odoo Manufacturing so orders, BoMs, work orders, stock, quality and costs run in one connected system.</p>'
+            '<p class="mf-lead">Unisas, an Odoo partner in India, implements material requirements planning software that runs orders, BoMs, work orders, stock, quality and costs in one connected system.</p>'
             '<ul class="mf-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Manufacturing %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the manufacturing demo</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -132,49 +132,49 @@ def build(g):
     # 1 ---- why manufacturing ERP is hard: a factory floor plan
     zones = [("sales", "Sales desk", "Delivery dates promised without seeing capacity",
               "Sales confirms 400 fans for the 26th. Nobody checked that the paint shop is already full that week, or that capacitors are short.",
-              "Production capacity and component stock live in different places, so the promise is a guess.",
-              "Sales order lines show the forecasted date from stock and open manufacturing orders, and Planning by Work Center shows the load before anyone commits."),
+              "Capacity and component stock live in different places, so the promised date is a guess.",
+              "Order lines show a forecasted date, and Planning shows work-centre load before anyone commits."),
              ("plan", "Planning office", "Bills of materials kept in Excel, in several versions",
               "Engineering changed the capacitor last month. The shop floor is still building from the old sheet.",
-              "Every product has variants, sub-assemblies and revisions, and they change while orders are running.",
-              "One BoM per product and variant in Odoo, with sub-assemblies as their own BoMs. Changes go through engineering change orders when PLM is used."),
+              "Variants, sub-assemblies and revisions change while orders run.",
+              "One BoM per product, sub-assemblies as their own BoMs, and changes via engineering change orders."),
              ("store", "Stores", "Shortages found at the machine",
               "Assembly starts the order and stops two hours later: the canopy kits are in another warehouse.",
-              "Component reservation only works if stock levels in the system are right, and they rarely are on day one.",
-              "Manufacturing orders reserve components when confirmed and show Component Status. Reordering rules raise purchase or manufacturing orders before stock runs out."),
+              "Component reservation only works when stock levels are right, and they rarely are on day one.",
+              "Orders reserve components on confirmation, and reordering rules raise purchases before stock runs out."),
              ("floor", "Shop floor", "Progress lives on whiteboards",
               "The supervisor walks the line twice a day to find out what is done. Times are written on the job card at shift end.",
-              "Operators need a screen that is faster than paper, or they will not use it.",
-              "Shop Floor tablets at each work centre: operators start, pause and finish work orders, read the worksheet and record quantities, so times are captured as they happen."),
+              "Operators need a screen faster than paper, or they will not use it.",
+              "Shop Floor tablets at each work centre let operators start, pause and finish jobs as they happen."),
              ("qc", "Quality lab", "Checks on paper, recorded after the fact",
               "A batch of blades with the wrong pitch is found at final testing, after painting.",
-              "Quality checks must sit in the right operation, with clear pass and fail rules, without slowing the line.",
-              "Quality control points on each operation: measurements, pass/fail and photos, with alerts raised automatically when a check fails."),
+              "Checks must sit in the right operation without slowing the line.",
+              "Control points on each operation capture measurements and photos, and a failed check raises an alert."),
              ("acct", "Accounts", "Product cost known only at year end",
               "The Aero 48 is priced on a cost sheet from 2023. Copper prices have moved twice since.",
-              "Costing needs real consumption, real work-centre time and cost rates that someone maintains.",
-              "Every manufacturing order records components consumed and work-centre time, so the Cost Analysis shows expected against actual cost per order.")]
+              "Costing needs real consumption, real machine time and maintained cost rates.",
+              "Every order records components and time, so Cost Analysis shows expected against actual cost.")]
     zb = "".join('<button type="button" class="mf-zone mf-zone--%s%s" data-zone="%d" aria-pressed="%s"><span class="mf-zone-n mono">%s</span><b>%s</b><span class="mf-zone-pin" aria-hidden="true">!</span></button>'
                  % (k, " is-on" if i == 0 else "", i, "true" if i == 0 else "false", "%02d" % (i + 1), n) for i, (k, n, *_r) in enumerate(zones))
     out += sec(head("WHY IT IS HARD", "What Makes Manufacturing ERP Difficult to Implement Across Production Operations?",
-                    "A manufacturing ERP touches every department at once, and each one keeps its own version of the truth today. "
-                    "Projects stall when BoMs, stock and shop-floor reporting are not fixed together. Pick an area of the factory to see where it usually breaks.", "is-center")
+                    "Every department in a factory keeps its own version of the truth. A manufacturing ERP touches all of them at once, so projects stall when BoMs, stock and shop-floor reporting "
+                    "are not fixed together. Pick an area of the plant to see where it usually breaks.", "is-center")
                + '<div class="mf-plan" data-zones><div class="mf-floor" role="group" aria-label="Factory areas">%s<span class="mf-floor-flow" aria-hidden="true"></span></div>'
                  '<div class="mf-zone-card ox-solo" aria-live="polite"><p class="mf-zc-k mono" data-z-area></p><h3 data-z-title></h3>'
                  '<p class="mf-zc-story" data-z-story></p><dl><div><dt>Why it is hard</dt><dd data-z-why></dd></div><div class="is-fix"><dt>How we handle it in Odoo</dt><dd data-z-fix></dd></div></dl></div></div>'
                  % zb + data("mf-zones", zones), "mf-sec--why")
 
     # 2 ---- connected workflow: the document chain from one sales order
-    chain = [("Sales", "#EE8A3C", "S00231", "Sales order confirmed", "250 &times; Aero 48 Ceiling Fan for Shree Distributors, delivery Oct 30.", "Quotation signed online"),
-             ("Manufacturing", "#0E7C86", "WH/MO/00042", "Manufacturing order created", "Replenish on Order (MTO) creates the order from BoM Aero 48, with 4 work orders.", "Manufacturing"),
-             ("Manufacturing", "#0E7C86", "WH/MO/00043", "Sub-assembly order created", "The motor has its own BoM, so 250 Motor Assembly 48W are planned first.", "Manufacturing"),
-             ("Inventory", "#1F8A78", "WH/PC/00118", "Components picked", "1,500 component units moved from stock to pre-production and reserved for the order.", "Transfers"),
-             ("Shop floor", "#714B67", "4 work orders", "Work orders done", "Blade pressing, assembly, powder coating, test and pack. 31 h 40 min recorded on tablets.", "Work Orders"),
-             ("Quality", "#B5567E", "QC/00391", "Final test passed", "248 passed, 2 failed for noise and were reworked on Assembly Line 2.", "Quality Checks"),
-             ("Inventory", "#1F8A78", "WH/OUT/00231", "Delivered", "250 fans shipped with lot FAN-2610-0042; e-Way bill generated.", "Delivery"),
-             ("Accounting", "#B7791F", "INV/2026/00431", "Invoiced and costed", "Invoice posted, and finished-goods value booked at the actual order cost.", "Invoices")]
+    chain = [("Sales", "#EE8A3C", "S00231", "Sales order confirmed", "Order S00231 confirmed for 250 Aero 48 ceiling fans, delivery Oct 30.", "Quotation signed online"),
+             ("Manufacturing", "#0E7C86", "WH/MO/00042", "Manufacturing order created", "WH/MO/00042 created from the BoM, with four work orders.", "Manufacturing"),
+             ("Sub-assembly", "#0E7C86", "WH/MO/00043", "Sub-assembly order created", "The motor has its own BoM, so 250 motors are planned first.", "Manufacturing"),
+             ("Inventory", "#1F8A78", "WH/PC/00118", "Components picked", "1,500 components picked and reserved for the order.", "Transfers"),
+             ("Shop floor", "#714B67", "4 work orders", "Work orders done", "Pressing, assembly, coating and testing, with 31 h 40 min recorded on tablets.", "Work Orders"),
+             ("Quality", "#B5567E", "QC/00391", "Final test passed", "248 passed; 2 failed for noise and were reworked.", "Quality Checks"),
+             ("Delivery", "#1F8A78", "WH/OUT/00231", "Delivered", "250 fans shipped with lot FAN-2610-0042 and an e-Way bill.", "Delivery"),
+             ("Accounting", "#B7791F", "INV/2026/00431", "Invoiced and costed", "Invoice posted, with stock valued at the actual order cost.", "Invoices")]
     out += sec(head("CONNECTED WORKFLOW", "How Can Manufacturing ERP Software Connect Your Production Workflow?",
-                    "One sales order sets off every document the factory needs, each linked back to it, one click from the order.", "is-center")
+                    "One confirmed sales order sets off every document the factory needs. Each record links back to it, so nobody re-keys data.", "is-center")
                + '<ol class="pl-grid is-side" style="--cols:4">%s</ol>'
                  % "".join('<li style="--c:%s"><span class="pl-n">%02d &middot; %s</span><b>%s</b><em>%s</em><p>%s</p></li>' % (c, i + 1, app, t, d, x) for i, (app, c, d, t, x, sb) in enumerate(chain)),
                "mf-sec--chain")
@@ -182,15 +182,16 @@ def build(g):
     # 3 ---- the explorer: MOs, BoM, work centres, planning
     menu = "".join('<button type="button" class="mf-menu%s" data-mx-menu="%s" aria-pressed="%s">%s</button>' % (" is-on" if k == "wc" else "", k, "true" if k == "wc" else "false", n)
                    for k, n in [("wc", "Work Centers"), ("mo", "Manufacturing Orders"), ("bom", "Bills of Materials"), ("plan", "Planning")])
-    out += sec(head("BOMS, WORK ORDERS &amp; PLANNING", "How Can Odoo Manage Bills of Materials, Work Orders and Production Planning?",
-                    "This is Odoo Manufacturing with a fan factory's data. Start on the <b>Work Centers</b> overview, open <b>WH/MO/00042</b> to finish its work orders, "
-                    "change the quantity in the <b>BoM Overview</b>, then see the load in <b>Planning</b>.", "is-center")
+    out += sec(head("BOMS, WORK ORDERS &amp; PLANNING", "How Can Odoo MRP Manage Bills of Materials, Work Orders and Production Planning?",
+                    "This is the real Odoo app with a fan factory's data. Open a work centre, finish a job, change the BoM quantity, then check the load in Planning. "
+                    "Plants replace standalone BOM software here because the bill of materials, stock check and schedule update together. "
+                    "One app replaces separate work order management software, with no second login.", "is-center")
                + '<div class="ox mf-ox mf-mx" data-mx><div class="ox-nav"><span class="ox-app">%s<b>Manufacturing</b></span><span class="mf-menus" role="group" aria-label="Manufacturing menu">%s</span>'
                  '<span class="ox-menu">Reporting</span><span class="ox-nav-r"><span class="ox-company">Your Company</span><span class="ox-av" style="--c:#0E7C86">D</span></span></div>'
                  '<div class="ox-cp"><div class="ox-cp-l"><button type="button" class="ox-new" data-mx-new>New</button><span class="ox-crumb ox-crumb--stack" data-mx-crumb></span></div>'
                  '<label class="ox-search">%s<input type="search" placeholder="Search..." aria-label="Search" data-mx-q></label><span></span></div>'
                  '<div class="ox-body mf-mx-body" data-mx-body></div></div>'
-                 '<p class="ox-hint"><span class="ox-hint-dot"></span>Live preview with sample data. Open a work centre or an order, start and finish work orders, and watch the load change.</p>'
+                 '<p class="ox-hint"><span class="ox-hint-dot"></span>Live preview with sample data.</p>'
                  % (app_icon, menu, SEARCH)
                + data("mf-wc", WC) + data("mf-routes", ROUTES) + data("mf-products", PRODUCTS) + data("mf-mos", MOS) + data("mf-bom", BOM) + data("mf-plan", PLAN),
                "mf-sec--explore", "explore")
@@ -204,12 +205,12 @@ def build(g):
                ("mps", "Master Production Schedule", "Plan production weeks ahead from a demand forecast", False)]
     _tl = "".join('<li><label class="mf-set"><span class="mf-set-t"><b>%s</b><small>%s</small></span><input type="checkbox" data-set="%s"%s><span class="mf-sw" aria-hidden="true"></span></label></li>'
                  % (n, x, k, " checked" if on else "") for k, n, x, on in toggles)
-    route = [("Sales order or reorder rule", "Creates the manufacturing order"), ("Components reserved", "Shortages show before work starts"),
-             ("Pick components", "Stores move them to the production area (2 steps)"), ("Work orders", "One per operation, at its work centre, timed on a tablet"),
-             ("Quality checks", "Inside the operation, with pass and fail rules"), ("Finished goods by lot", "Recorded against the order and put into stock")]
-    out += sec(head("CONFIGURED AROUND YOU", "How Does Unisas Configure Manufacturing Workflows Around Your Business?",
-                    "We set the system to match how your factory actually runs, not the other way round. In the design workshop we decide each option with you, "
-                    "and that decides the flow every manufacturing order follows.", "is-center")
+    route = [("Sales order or reorder rule", "Creates the order."), ("Components reserved", "Shortages show before work starts."),
+             ("Pick components", "Stores move them to production in two steps."), ("Work orders", "One per operation, timed on a tablet."),
+             ("Quality checks", "Inside the operation, with pass and fail rules."), ("Finished goods by lot", "Recorded against the order and put into stock.")]
+    out += sec(head("CONFIGURED AROUND YOU", "How Does Unisas Configure Odoo Manufacturing Workflows Around Your Business?",
+                    "Good manufacturing ERP software should match how your factory actually runs, not the other way round. In the design workshop we decide each option with your production head, "
+                    "stores in-charge and accountant, and those answers fix the path every order follows.", "is-center")
                + '<div class="pl-2"><div class="pl-card"><p class="pl-k">Decided in the workshop &middot; example fan plant</p><div class="pl-scroll"><table class="pl-table"><tbody>%s'
                  '<tr><th>Manufacture steps<br><small class="pl-muted">Pick components, then manufacture</small></th><td class="is-c"><span class="pl-chip">2 steps</span></td></tr></tbody></table></div></div>'
                  '<div class="pl-card"><p class="pl-k">The flow one manufacturing order follows</p><ol class="pl-steps">%s</ol></div></div>'
@@ -219,56 +220,57 @@ def build(g):
     # 5 ---- Manufacturing with Inventory, Purchase and Quality: one shortage, end to end
     apps = [("mrp", "Manufacturing", "#0E7C86"), ("inv", "Inventory", "#1F8A78"), ("pur", "Purchase", "#3E7CB1"), ("qc", "Quality", "#B5567E")]
     cols = "".join('<div class="mf-cx-app" data-cx-app="%s" style="--c:%s"><p class="mf-cx-h"><i></i>%s</p><div class="mf-cx-b" data-cx-b="%s"></div></div>' % (k, c, n, k) for k, n, c in apps)
-    out += sec(head("CONNECTED APPS", "How Can Odoo Connect Manufacturing With Inventory, Purchase and Quality?",
-                    "They share one database, so a shortage becomes an action in the next app. Confirm a big order and follow it.", "is-center")
+    out += sec(head("CONNECTED APPS", "How Can Odoo Manufacturing ERP Connect Production With Inventory, Purchase and Quality?",
+                    "All four apps share one database, so a shortage in one becomes an action in the next. Confirm a large order and follow it: a missing capacitor triggers a purchase, "
+                    "and quality inspects the receipt before the line starts. That chain is what separates an integrated MRP system from separate tools stitched together with exports.", "is-center")
                + '<div class="mf-cx" data-cx><div class="mf-cx-bar"><span class="mf-cx-step" data-cx-step></span><span class="mf-cx-acts" data-cx-acts></span><button type="button" class="ox-sbtn" data-cx-reset>Reset</button></div>'
                  '<div class="mf-cx-grid">%s</div><ol class="mf-cx-log" data-cx-log aria-live="polite"></ol></div>' % cols, "mf-sec--cx")
 
     # 6 ---- configure, customize or integrate: a sorting board
-    reqs = [("Fan colours as product variants, one BoM for all", "cfg", "BoM lines apply to specific variants, so one BoM covers white, brown and ivory."),
-            ("Send work to Assembly Line 2 when Line 1 is full", "cfg", "Alternative work centres on the operation; planning moves the work order automatically."),
-            ("Operators see the drawing at each step", "cfg", "A PDF or Google Slide worksheet on the operation, shown on the Shop Floor tablet."),
-            ("Approve BoM changes before they reach the floor", "cfg", "Engineering change orders in Odoo PLM, with approval stages and BoM versions."),
-            ("Job card printed in our own format", "custom", "A custom QWeb report for the work order, with your layout and barcode."),
-            ("Winding length calculated from motor rating", "custom", "A small module that computes wire quantity on the BoM line from the motor's attributes."),
-            ("Machine counters post produced quantities", "int", "PLC or IoT Box connection that records quantities on the running work order."),
-            ("Weighing scale on the packing line", "int", "IoT Box device read directly into the quality check or quantity field."),
-            ("Customer schedules arrive by EDI", "int", "A scheduled connector that creates sales orders, which then trigger production.")]
+    reqs = [("Fan colours as variants", "cfg", "BoM lines apply to specific variants, so one BoM covers white, brown and ivory."),
+            ("Overflow to Assembly Line 2", "cfg", "Alternative work centres on the operation; planning moves the work order automatically."),
+            ("Drawings at each step", "cfg", "A PDF or Google Slide worksheet on the operation, shown on the Shop Floor tablet."),
+            ("Approve BoM changes first", "cfg", "Engineering change orders in Odoo PLM, with approval stages and BoM versions."),
+            ("Job card in our own format", "custom", "A custom QWeb report for the work order, with your layout and barcode."),
+            ("Winding length from motor rating", "custom", "A small module that computes wire quantity on the BoM line from the motor's attributes."),
+            ("Machine counters post quantities", "int", "PLC or IoT Box connection that records quantities on the running work order."),
+            ("Weighing scale on packing", "int", "IoT Box device read directly into the quality check or quantity field."),
+            ("Customer schedules by EDI", "int", "A scheduled connector that creates sales orders, which then trigger production.")]
     rq = "".join('<li><button type="button" class="mf-req" data-req="%d">%s</button></li>' % (i, r[0]) for i, r in enumerate(reqs))
     lanes = "".join('<div class="mf-lane mf-lane--%s"><p class="mf-lane-h"><b>%s</b><small>%s</small></p><ul data-lane="%s"></ul></div>' % (k, n, x, k)
-                    for k, n, x in [("cfg", "Configure", "Standard Odoo settings and data. Upgrades with no extra work."),
+                    for k, n, x in [("cfg", "Configure", "Standard settings and data. Upgrades need no extra work."),
                                     ("custom", "Customize", "Code or Studio, kept small, tested and documented."),
-                                    ("int", "Integrate", "Connect a machine or another system through the API or IoT.")])
-    out += sec(head("CONFIGURE, CUSTOMIZE OR INTEGRATE", "When Should Manufacturing ERP Be Configured, Customized or Integrated?",
-                    "Most requirements are met by configuration. We customize only where it saves real time every week, and integrate where the data already lives in a machine or another system. "
-                    "Pick a requirement to see where it lands and why.", "is-center")
+                                    ("int", "Integrate", "Connect a machine or system through the API or IoT Box.")])
+    out += sec(head("CONFIGURE, CUSTOMIZE OR INTEGRATE", "When Should Manufacturing ERP Software Be Configured, Customized or Integrated?",
+                    "Most requirements are met by configuration. We customize only where it saves real time weekly, and integrate where data already lives in a machine or another system.", "is-center")
                + '<div class="mf-sort" data-sort><div class="mf-pile"><p class="mf-pile-h"><b>Requirements from the workshop</b><span><button type="button" class="ox-sbtn" data-sort-all>Sort all</button><button type="button" class="ox-sbtn" data-sort-reset>Reset</button></span></p><p class="mf-pile-tip">Click a requirement to sort it &rarr;</p><ul data-pile>%s</ul></div>'
                  '<div class="mf-lanes">%s</div><p class="mf-sort-why" data-sort-why aria-live="polite">Click any requirement on the left to see where it lands and why, or press <b>Sort all</b>.</p></div>'
-                 % (rq, lanes) + data("mf-reqs", reqs), "mf-sec--sort")
+                 % (rq, lanes) + '<p class="mf-sec-note">Seven of nine need no custom code. That is typical for our projects.</p>' + data("mf-reqs", reqs), "mf-sec--sort")
 
     # 7 ---- production models
-    models = [("mts", "Make to Stock", "Fans, pumps, packaged goods", "Reordering rules keep finished goods between a minimum and maximum, and manufacturing orders are raised in batches.",
+    models = [("mts", "Make to Stock", "Fans, pumps, packaged goods", "Reordering rules keep finished goods between a minimum and maximum, ideal for electricals and FMCG.",
                {"Route": "Manufacture", "BoM type": "Manufacture this product", "Trigger": "Reordering rule (min 300, max 900)", "Tracking": "By lot"},
                ["Forecast or reorder rule", "Batch MO", "Finished stock", "Sales orders ship from stock"]),
-              ("mto", "Make to Order", "Custom panels, furniture, machines", "Each confirmed sales order creates its own manufacturing order, linked both ways, so the customer's order and the build stay together.",
+              ("mto", "Make to Order", "Custom panels, furniture, machines", "Each sales order creates its own linked production order, common in ERP for automobile industry suppliers.",
                {"Route": "Manufacture + Replenish on Order (MTO)", "BoM type": "Manufacture this product", "Trigger": "Sales order confirmation", "Tracking": "By serial number"},
                ["Sales order", "MO for that order", "Delivery to that customer", "Invoice"]),
-              ("batch", "Batch &amp; process", "Food, chemicals, cosmetics", "Recipes as BoMs with by-products and scrap, lots with expiry dates, and quality checks on every batch.",
+              ("batch", "Batch &amp; process", "Food, chemicals, cosmetics", "Recipes with by-products, scrap and expiry-dated lots for food, dairy and chemical plants.",
                {"Route": "Manufacture", "BoM type": "Manufacture this product (flexible consumption)", "Trigger": "MPS or reorder rule", "Tracking": "By lot, with expiry dates"},
                ["Weigh ingredients", "Batch MO", "Lab check", "Lot released with expiry"]),
-              ("eto", "Engineer to order", "Special machines, projects", "Design and production run as a project: the BoM is built per order, and costs post to the project's analytic account.",
+              ("eto", "Engineer to order", "Special machines, projects", "BoMs built per order, with costs posted to a project.",
                {"Route": "Manufacture + MTO", "BoM type": "BoM per order, via PLM", "Trigger": "Project milestone", "Tracking": "By serial number"},
                ["Design in PLM", "Approved BoM", "MO per milestone", "Cost to project"]),
-              ("sub", "Subcontracting (job work)", "Plating, heat treatment, winding", "Components are sent to the job worker, who returns finished parts. Stock at the vendor is tracked, and the bill is matched to what came back.",
+              ("sub", "Subcontracting (job work)", "Plating, heat treatment, winding", "Components go to the job worker, stock at the vendor is tracked, and bills match what came back. Essential in ERP for garment manufacturing.",
                {"Route": "Buy + Resupply Subcontractor on Order", "BoM type": "Subcontracting", "Trigger": "Purchase order to the job worker", "Tracking": "By lot"},
                ["PO to job worker", "Components dispatched", "Finished parts received", "Bill matched"]),
-              ("kit", "Kits &amp; assembly", "Spare kits, gift packs, combos", "Kits are sold and delivered as their components, with no manufacturing order at all. Light assembly uses a one-step order.",
+              ("kit", "Kits &amp; assembly", "Spare kits, gift packs, combos", "Kits ship as their components, with no production order needed.",
                {"Route": "None (kit)", "BoM type": "Kit", "Trigger": "Sales order", "Tracking": "On components"},
                ["Sales order", "Components picked", "Delivered as one kit", "Invoice"])]
     mt = "".join('<button type="button" role="tab" class="mf-mtab%s" id="mf-mtab-%s" aria-selected="%s"%s data-model="%d">%s</button>'
                  % (" is-on" if i == 0 else "", k, "true" if i == 0 else "false", "" if i == 0 else ' tabindex="-1"', i, n) for i, (k, n, *_r) in enumerate(models))
-    out += sec(head("PRODUCTION MODELS", "How Does Unisas Adapt Odoo for Different Production Models?",
-                    "The same Odoo app runs a make-to-stock fan line and a make-to-order machine shop. What changes is the route, the BoM type, what triggers production and how you track it.")
+    out += sec(head("PRODUCTION MODELS", "How Does Unisas Adapt Odoo ERP for Manufacturing Across Different Production Models?",
+                    "One app runs a make-to-stock fan line and a make-to-order machine shop. What changes is the route, the BoM type, what triggers production and how you track it. "
+                    "That flexibility lets us deploy it as food ERP software, plastics ERP and ERP for the textile industry without separate products.")
                + '<div class="mf-models" data-models><div class="mf-mtabs" role="tablist" aria-label="Production models">%s</div>'
                  '<div class="mf-mpanel" role="tabpanel" aria-live="polite"><div class="mf-mp-copy"><p class="mf-mp-for mono" data-m-for></p><h3 data-m-name></h3><p data-m-text></p><ol class="mf-mp-flow" data-m-flow></ol></div>'
                  '<div class="ox mf-ox mf-mp-form"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Product</a><span>Setup in Odoo</span></span></div><span></span><span></span></div>'
@@ -280,11 +282,11 @@ def build(g):
              ("Unit", "BoM Lines / Product Unit of Measure", "Nos"), ("Operation", "Operations / Operation", "Final assembly"),
              ("Work Centre", "Operations / Work Center", "Assembly Line 1"), ("Std Time (min)", "Operations / Default Duration", "1.5"), ("Rev", "", "C")]
     mrows = "".join('<tr><th>%s<br><small class="pl-muted">e.g. %s</small></th><td class="is-c">&rarr;</td><td>%s</td></tr>' % (c, ex, f or '<span class="pl-chip is-gold">Kept as a note on the BoM</span>') for c, f, ex in cols8)
-    order = [("Units of measure", "Nos, kg, m, sets", "14"), ("Products &amp; components", "With internal reference and HSN", "1,860"), ("Work centres", "Costs per hour, capacity", "6"),
-             ("Bills of materials", "Lines and operations", "212"), ("Opening stock", "By location, lot and serial", "3,940 lines"), ("Open orders &amp; WIP", "Started work recreated as MOs", "37")]
-    out += sec(head("DATA MIGRATION", "How Does Unisas Handle Manufacturing Data Migration?",
-                    "BoMs are where migrations fail: codes that don't match, units written three ways, work centres that changed names. We load in a fixed order and test every file before it goes in. "
-                    "Here is a BoM export from Excel.", "is-center")
+    order = [("Units of measure", "Nos, kg, m, sets", "14"), ("Products &amp; components", "With internal reference and HSN", "1,860"), ("Work centres", "Cost per hour and capacity", "6"),
+             ("Bills of materials", "Lines and operations", "212"), ("Opening stock", "By location, lot and serial", "3,940 lines"), ("Open orders &amp; WIP", "Started work recreated as orders", "37")]
+    out += sec(head("DATA MIGRATION", "How Does Unisas Handle Manufacturing ERP Data Migration?",
+                    "BoMs are where migrations fail: mismatched codes, units written three ways, renamed work centres. Our team loads data in a fixed order and tests every file before it goes in, "
+                    "whether the source is Tally, Excel or a legacy system.", "is-center")
                + '<div class="pl-2 is-w"><div class="pl-card"><p class="pl-k">Column mapping &middot; bom_aero_breeze_turbo.xlsx</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Your column</th><th></th><th>Becomes</th></tr></thead><tbody>%s</tbody></table></div>'
                  '<p style="margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px"><span class="pl-chip is-bad">Found: units written as Nos, nos and pcs</span><span class="pl-chip is-ok">&#10003; Cleaned and re-tested: 62 rows ready</span></p></div>'
                  '<div class="pl-card"><p class="pl-k">Load order &middot; each file depends on the one before it</p><ol class="pl-steps">%s</ol></div></div>'
@@ -314,10 +316,15 @@ def build(g):
         (97, 96, 98, [["Material availability", 1.5]])])]
     tabs9 = "".join('<button type="button" class="mf-vtab%s" data-vt="%s" aria-pressed="%s">%s</button>' % (" is-on" if i == 0 else "", k, "true" if i == 0 else "false", n)
                     for i, (k, n) in enumerate([("trace", "Traceability"), ("cost", "Cost Analysis"), ("oee", "Overall Equipment Effectiveness")]))
-    out += sec(head("VISIBILITY &amp; COST CONTROL", "How Can Odoo Improve Production Visibility, Traceability and Cost Control?",
-                    "Because every move, minute and component is recorded against the order, the reports below come straight from the shop floor, not from a spreadsheet at month end.", "is-center")
+    out += sec(head("VISIBILITY &amp; COST CONTROL", "How Can Odoo Improve Production Tracking, Traceability and Cost Control?",
+                    "Every move, minute and component is recorded against the order, so these reports come from the shop floor, not a month-end spreadsheet.", "is-center")
                + '<div class="ox mf-ox mf-vis" data-vis>%s<div class="mf-vtabs" role="group" aria-label="Reports">%s</div><div class="mf-vis-body" data-vis-body></div></div>'
-                 % (nav(app_icon), tabs9) + data("mf-trace", trace) + data("mf-cost", {"rows": cost, "real": real_min}) + data("mf-oee", oee), "mf-sec--vis")
+                 % (nav(app_icon), tabs9)
+               + '<ul class="pl-grid is-plain" style="--cols:3;margin-top:16px">%s</ul>' % "".join('<li><b>%s</b><p>%s</p></li>' % r for r in [
+                   ("Traceability", "Follow any lot upstream to the supplier batch and downstream to every dealer who received it."),
+                   ("Cost Analysis", "Expected against actual cost per order, split into components, labour and machine time. Variance shows the week it happens."),
+                   ("Overall Equipment Effectiveness", "OEE per work centre, with losses grouped by reason, so you fix the right problem first.")])
+               + data("mf-trace", trace) + data("mf-cost", {"rows": cost, "real": real_min}) + data("mf-oee", oee), "mf-sec--vis")
 
     # 10 ---- testing before go-live
     tests = [("Planner", "Sales order for 250 fans creates MO and motor sub-order", "pass", ""),
@@ -328,8 +335,8 @@ def build(g):
              ("Quality", "Failed noise test sends fan to rework", "pass", ""),
              ("Planner", "Paint Shop overload moves orders to the next day", "fail", "Working hours had no lunch break, so capacity was overstated. Corrected the Paint Shop calendar."),
              ("Accounts", "Finished-goods value equals MO actual cost", "pass", "")]
-    out += sec(head("TESTING", "How Does Unisas Test Manufacturing Workflows Before Go-Live?",
-                    "We run your real products through test cycles in a copy of your database. Each person tests the steps they will do on day one, and every failure is fixed and re-run before sign-off.", "is-center")
+    out += sec(head("TESTING", "How Does Unisas Test Manufacturing ERP Workflows Before Go-Live?",
+                    "We run your real products through test cycles in a copy of your database. Each person tests the steps they will do on day one. Every failure is fixed and re-run before sign-off.", "is-center")
                + '<div class="pl-card" style="max-width:1000px;margin:0 auto"><p class="pl-k">Test cycle 1 &middot; 8 scenarios, 2 failed, both fixed and passed in cycle 2</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Role</th><th>Scenario</th><th class="is-c">Cycle 1</th><th class="is-c">Cycle 2</th></tr></thead><tbody>%s</tbody></table></div></div>'
                  % "".join('<tr><th>%s</th><td>%s%s</td><td class="is-c"><span class="pl-chip %s">%s</span></td><td class="is-c"><span class="pl-chip is-ok">Pass</span></td></tr>'
                            % (r, t, '<br><small class="pl-muted"><b>Fix:</b> %s</small>' % n if n else "", "is-ok" if st == "pass" else "is-bad", "Pass" if st == "pass" else "Fail") for r, t, st, n in tests),
@@ -339,39 +346,31 @@ def build(g):
     base = [("Discover &amp; design", ["Process workshops on the shop floor", "Production model, routes and steps agreed", "BoM and routing structure designed", "Fit-gap with effort for every gap"]),
             ("Configure", ["Manufacturing, Inventory and Purchase set up", "Work centres, calendars and cost rates", "Operations, worksheets and quality points", "Reordering rules and replenishment"]),
             ("Data &amp; integrations", ["Products, BoMs and routings loaded", "Opening stock by lot and location", "Open orders and work in progress", "Accounting, valuation and costing linked"]),
-            ("Train &amp; go live", ["Role-based training on your products", "Shop-floor tablets set up at each station", "Test cycles and sign-off", "Hypercare on the floor after go-live"])]
-    addons = [("qc", "Quality", "Control points, checks and alerts", 1), ("mnt", "Maintenance", "Preventive plans and breakdown requests per work centre", 1),
+            ("Train &amp; go live", ["Role-based training on your products", "Shop-floor tablets at each station", "Test cycles and sign-off", "Hypercare on the floor after go-live"])]
+    addons = [("qc", "Quality", "Control points, checks and alerts as built-in quality management software", 1), ("mnt", "Maintenance", "Preventive maintenance software plans and breakdown requests per work centre", 1),
               ("plm", "PLM", "Engineering change orders and BoM versions", 2), ("iot", "IoT &amp; machines", "Scales, counters and PLC connections", 2),
               ("mps", "MPS", "Weekly production plan from forecast", 1), ("sub", "Subcontracting", "Job-work flows with resupply", 1)]
     bc = "".join('<div class="mf-pk-col"><span class="mf-pk-n mono">%02d</span><h3>%s</h3><ul>%s</ul></div>' % (i + 1, t, "".join("<li>%s%s</li>" % (TICK, p) for p in pts)) for i, (t, pts) in enumerate(base))
     ad = "".join('<li><label class="mf-add"><input type="checkbox" data-add="%d" value="%s"><span class="mf-add-b"><b>%s</b><small>%s</small></span><em>+%d wk</em></label></li>' % (w, k, n, x, w) for k, n, x, w in addons)
-    out += sec(head("WHAT'S INCLUDED", "What Does a Manufacturing ERP Implementation With Unisas Include?",
-                    "One fixed-scope project from the first shop-floor walk to the first weeks after go-live. Add the apps your plant needs and see how the plan changes.", "is-center")
+    out += sec(head("WHAT'S INCLUDED", "What Does an Odoo Manufacturing ERP Implementation With Unisas Include?",
+                    "One fixed-scope project runs from the first shop-floor walk to the weeks after go-live. Unlike generic ERP implementation services, every step is built around production.", "is-center")
                + '<div class="mf-pkg"><div class="mf-pk-head"><span class="mono">ODOO MANUFACTURING IMPLEMENTATION</span><strong data-pk-sum>Core scope &middot; 10 to 12 weeks</strong></div>'
-                 '<div class="mf-pk-body">%s</div><div class="mf-pk-add"><p><b>Add to the scope</b><small>Each one is configured, loaded with your data and trained.</small></p><ul data-pk>%s</ul></div>'
+                 '<div class="mf-pk-body">%s</div><div class="mf-pk-add"><p><b>Add to the scope</b><small>Each one configured, loaded with your data and trained.</small></p><ul data-pk>%s</ul></div>'
                  '<div class="mf-pk-foot"><span data-pk-apps>Manufacturing &middot; Inventory &middot; Purchase &middot; Accounting</span>'
                  '<a href="#get-demo" class="link-arrow" data-svc-cta="implementation">Get a scoped quote %s</a></div></div>' % (bc, ad, g["ARROW"]), "mf-sec--pkg")
 
     # 12 ---- support after go-live
-    tickets = [("new", "WO for Paint Shop stuck in Waiting", "Assembly Line 1", "Urgent", 2, "red",
-                "The preceding work order was finished on paper, not on the tablet. We closed it with the right quantity, and added a supervisor check to the end-of-shift list."),
-               ("new", "Add BoM for the new Aero 52 model", "Engineering", "Normal", 18, "green",
-                "Copied the Aero 48 BoM as a new version, swapped the motor and blades, and set the new routing times from the pilot run."),
-               ("prog", "Copper wire cost looks too high", "Accounts", "Normal", 9, "orange",
-                "The last receipt was valued in grams. We corrected the vendor's unit of measure on the purchase line and revalued the stock."),
-               ("prog", "Train the new night-shift supervisor", "Production", "Low", 30, "green",
-                "A one-hour session on the shop floor, with the short guide for starting, blocking and closing work orders."),
-               ("done", "Paint Shop OEE dropped to 58%", "Production", "Urgent", 0, "",
-                "Colour changes were logged as equipment failures. We added a 'Colour change' loss reason so OEE now shows setup time correctly."),
-               ("done", "Label printer on the packing line", "Stores", "Normal", 0, "",
-                "Re-paired the printer with the IoT Box after a network change and printed a test lot label.")]
+    tickets = [("new", "Paint Shop job stuck in Waiting", "Paint Shop", "Urgent", 2, "red",
+                "The previous step was closed on paper, not the tablet. We fixed the quantity and added a supervisor check."),
+               ("done", "Paint Shop OEE fell to 58%", "Paint Shop", "Urgent", 0, "",
+                "Colour changes were logged as failures. A new loss reason now shows setup time correctly.")]
     stl = {"new": ("New", ""), "prog": ("In progress", " is-gold"), "done": ("Solved", " is-ok")}
-    plans = [("First 4 weeks", "Hypercare", "A consultant on the floor or on call during every shift change, fixing issues the same day."),
-             ("Every month", "Support desk", "Tickets with response times by priority, small changes and new BoMs included."),
-             ("Every quarter", "Improvement review", "OEE, cost variance and late orders reviewed with you, and the next improvements planned.")]
-    out += sec(head("AFTER GO-LIVE", "How Does Unisas Support Manufacturing Operations After Go-Live?",
-                    "Production does not stop for software questions. Our support desk answers by priority. Here are real kinds of tickets and how they were solved.", "is-center")
-               + '<ol class="pl-grid is-tint" style="--cols:3">%s</ol><ul class="pl-grid is-plain" style="--cols:3;margin-top:16px">%s</ul>'
+    plans = [("First 4 weeks", "Hypercare", "A consultant on the floor or on call at every shift change, fixing issues the same day."),
+             ("Every month", "Support desk", "Response times by priority, with small changes and new BoMs included."),
+             ("Every quarter", "Improvement review", "OEE, cost variance and late orders reviewed, and next steps planned.")]
+    out += sec(head("AFTER GO-LIVE", "How Does Unisas Support Odoo Manufacturing Operations After Go-Live?",
+                    "Production does not stop for software questions, so the consultants who configured your plant handle the tickets.", "is-center")
+               + '<ol class="pl-grid is-tint" style="--cols:3">%s</ol><p class="pl-k" style="margin:22px 0 10px">Ticket board</p><ul class="pl-grid is-plain" style="--cols:2">%s</ul>'
                  % ("".join('<li><span class="pl-n">%s</span><b>%s</b><p>%s</p></li>' % (n, t, x) for n, t, x in plans),
                     "".join('<li><p style="margin:0;display:flex;gap:6px;flex-wrap:wrap"><span class="pl-chip%s">%s</span><span class="pl-chip%s">%s</span></p><b>%s</b><em>%s</em><p>%s</p></li>'
                             % (stl[t[0]][1], stl[t[0]][0], " is-bad" if t[3] == "Urgent" else "", t[3], t[1], t[2], t[6]) for t in tickets)), "mf-sec--sup")
@@ -385,8 +384,9 @@ def build(g):
                '<div class="mf-pl-seg"><span>Plants</span><span class="mf-seg" role="group" aria-label="Plants"><button type="button" data-plants="1" class="is-on" aria-pressed="true">1</button><button type="button" data-plants="2" aria-pressed="false">2</button><button type="button" data-plants="3" aria-pressed="false">3+</button></span></div>'
                '<div class="mf-pl-chk"><label><input type="checkbox" data-pl-x="2"> Machine or IoT integration</label><label><input type="checkbox" data-pl-x="1"> Quality &amp; maintenance</label><label><input type="checkbox" data-pl-x="2"> Migration from another ERP</label></div></div>'
                '<div class="mf-pl-out"><ol class="mf-pl-bars" data-pl-bars></ol><p class="mf-pl-tot" data-pl-tot aria-live="polite"></p></div></div></div>'
-               % (head("PLAN YOUR PROJECT", "How Can You Plan Your Manufacturing ERP Implementation?",
-                       "Start with one plant and your key products, get shop-floor reporting right, then add the rest. Try the planner."), g["ARROW"]), "mf-sec--plan")
+               % (head("PLAN YOUR PROJECT", "How Can You Plan Your Manufacturing ERP Software Implementation?",
+                       "Start with one plant and your key products, get shop-floor reporting right, then add the rest. Phasing keeps risk low for MSMEs and gives multi-plant groups a proven template. "
+                       "Use the planner for a first estimate of your manufacturing ERP software rollout; we confirm it after a shop-floor visit."), g["ARROW"]), "mf-sec--plan")
 
     return out + JS
 
@@ -642,5 +642,20 @@ JS = r'''<script>
 </script>
 '''
 
-CTA = ("Let's Map Your Production Process to Odoo",
-       "Tell us about your products, work centres and systems. We&rsquo;ll walk your flow in Odoo and suggest a scope.")
+CTA = ("Let's Map Your Production Process to Odoo Manufacturing",
+       "Tell us about your products, work centres and systems. We&rsquo;ll walk your flow in Odoo, show where material requirements planning software replaces spreadsheets, and suggest a scope.")
+
+FAQ = [("What is manufacturing ERP software?",
+        "It is one system that runs sales orders, bills of materials, work orders, stock, purchasing, quality and costing together. Manufacturing ERP software replaces disconnected spreadsheets, so every department works from the same live production data."),
+       ("What is MRP, and how is it different from ERP?",
+        "Material requirements planning calculates which components you need, how many, and when, based on BoMs and orders. MRP software covers planning only, while an ERP also connects sales, inventory, accounting and quality around it."),
+       ("Is Odoo a good fit for manufacturing companies in India?",
+        "Yes, for most discrete and batch producers. It handles GST, e-Way bills, HSN codes, job work and multi-plant stock, which makes it a practical ERP for manufacturing companies that have outgrown Tally and Excel."),
+       ("How long does an Odoo manufacturing implementation take?",
+        "It depends on your products, work centres, plants and integrations. Our planner gives a first estimate, and Unisas confirms the timeline after a shop-floor visit. Each Odoo ERP implementation is fixed-scope, so the plan doesn't drift."),
+       ("Can Odoo schedule production by machine and work-centre capacity?",
+        "Yes. Work orders are planned against each work centre's calendar and capacity, shown on a Gantt chart, and moved to alternative lines when one is full. It replaces separate production scheduling software for most plants."),
+       ("Can you migrate our data from Tally, Excel or another ERP?",
+        "Yes. We clean and load units, products, work centres, BoMs, opening stock and open orders in a fixed sequence. Every file in an ERP data migration is test-loaded first, so errors surface before go-live."),
+       ("Does Odoo cover quality checks and machine maintenance?",
+        "It does. Quality control points sit inside each operation with pass/fail rules and alerts, and the Maintenance app plans preventive and breakdown work per work centre, tracking MTBF and MTTR over time.")]

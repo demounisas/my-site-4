@@ -615,3 +615,4 @@ button.mf-sb:hover{background:#F6F7F9;}
 @media (min-width:1024px){.mf-sec--cx>.container{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}.mf-sec--cx>.container>.mf-head>.mf-title{font-size:clamp(1.4rem,1.9vw,1.7rem);}}
 @media (min-width:1024px){.mf-plan2{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}.mf-plan2 .mf-title{font-size:clamp(1.4rem,1.9vw,1.7rem);}}
 /* fit:end */
+.mf-sec-note{max-width:860px;margin:22px auto 0;text-align:center;color:var(--text-muted);line-height:1.7;}

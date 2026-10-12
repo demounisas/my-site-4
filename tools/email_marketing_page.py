@@ -55,7 +55,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Audiences from CRM &amp; sales data", "Scheduled, tested campaigns", "Opens, clicks &amp; revenue in one report"])
     copy = ('<div class="em-hero-copy">%s<p class="em-eyebrow mono">ODOO EMAIL MARKETING IMPLEMENTATION</p>'
             '<h1 class="em-h1">Powerful <span>Email Marketing Software</span> with Odoo</h1>'
-            '<p class="em-lead">Unisas sets up Odoo Email Marketing on the same database as your CRM and sales, so every campaign reports the orders it brought in.</p>'
+            '<p class="em-lead">Unisas, an Odoo partner, runs your email marketing tools on the same database as CRM and sales, so every campaign reports the orders it brought.</p>'
             '<ul class="em-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan your email marketing %s</a>'
             '<a href="#compose" class="btn btn-ghost">Build a mailing</a></div></div>' % (crumb, points, g["ARROW"]))
@@ -84,9 +84,10 @@ def build(g):
     camps = [["Diwali trade offer", "Gift boxes at trade price", ["ret", "dist"], "Tue 07:30", "before shops open"],
              ["New: Chettinad Sambar Mix", "Product launch with a recipe", ["home", "rep", "new"], "Thu 19:00", "when dinner is planned"],
              ["We miss you: 10% back", "Win-back offer", ["lap"], "Sat 10:00", "weekend shopping hour"]]
-    out += sec(head("RIGHT PEOPLE, RIGHT TIME", "Are Your Email Campaigns Reaching the Right Customers at the Right Time?",
-                    "One newsletter to the whole list is easy to send and expensive in unsubscribes. Pick a campaign, then compare sending it to everyone at one time "
-                    "with sending it to the right segment at the hour they read email.", "is-center")
+    out += sec(head("RIGHT PEOPLE, RIGHT TIME", "Is Your Email Marketing Campaign Reaching the Right Customers at the Right Time?",
+                    "One newsletter blasted to the whole list is easy to send and expensive in unsubscribes. A retailer in Madurai, a home cook in Pune and a distributor on credit terms "
+                    "do not want the same offer, and they do not read email at the same hour.</p><p class=\"em-sub\">"
+                    "Generic bulk email software treats all three as one row. Pick a campaign, then compare sending it to everyone at once with sending it to the right segment at the right hour.", "is-center")
                + '<div class="em-aim" data-e1box><div class="em-camps" role="group" aria-label="Campaign">%s</div>'
                  '<div class="em-lst ox-solo"><div class="em-lst-h"><p><b>Your list</b><small>12,300 contacts in Odoo</small></p>'
                  '<p class="em-lst-k"><span class="is-rel">Written for this campaign</span><span class="is-irr">Not written for it</span></p></div>'
@@ -113,9 +114,10 @@ def build(g):
                            ["Salesperson", "is in", "Priya Raman", 0.4, 3, "eq", "Priya Raman"]]},
     }
     lists = [["Newsletter", 8912, True], ["Recipe Club", 4380, False], ["Retailer offers", 1736, False], ["Distributors", 212, False]]
-    out += sec(head("TARGETED AUDIENCES", "How Can Odoo Organize Contacts Into Targeted Email Audiences?",
-                    "In Odoo the audience is part of the mailing. Choose mailing lists, or point the mailing at contacts, leads or customers and filter them by anything Odoo knows: "
-                    "tags, location, orders, stage or salesperson. Turn rules on and off and watch the recipient count.", "is-center")
+    out += sec(head("TARGETED AUDIENCES", "How Can Odoo Organize Contacts Into Targeted Audiences With Email List Segmentation?",
+                    "In Odoo, the audience is part of the mailing itself. Choose mailing lists, or point the mailing at contacts, leads or customers and filter them by anything the system knows: "
+                    "tags, city, last order date, pipeline stage or salesperson.</p><p class=\"em-sub\">"
+                    "Turn each rule on or off and watch the recipient count update. Because the data comes straight from sales and CRM, segments stay current with no exports.", "is-center")
                + '<div class="em-aud" data-e2box><div class="ox em-ox">%s<div class="em-rcp"><div class="em-fld"><span class="em-lbl">Recipients</span><div class="em-seg" role="group" aria-label="Recipients">'
                  '<button type="button" class="is-on" data-e2m="list" aria-pressed="true">Mailing List</button><button type="button" data-e2m="contact" aria-pressed="false">Contact</button>'
                  '<button type="button" data-e2m="lead" aria-pressed="false">Lead/Opportunity</button></div></div><div data-e2body></div></div></div>'
@@ -125,34 +127,27 @@ def build(g):
                + data("em-models", models) + data("em-lists", lists), "em-sec--aud")
 
     # 3 ---- segments to workflows
-    segs = [["New subscribers", "~380 a month", "Signed up on the website or at an expo stall", "Marketing Automation",
-             "Contact &middot; on list <b>Newsletter</b> &middot; created in the last 24 hours",
-             [["Day 0", "Welcome + recipe e-book"], ["Day 1", "10% first-order code, if opened"], ["Day 4", "Reminder, if code not used"]],
-             "First orders within 14 days", "Moved to Recipe Club after the first order"],
-            ["Home cooks &amp; repeat buyers", "2,460 contacts", "Bought online at least twice", "Email Marketing mailings",
-             "Contact &middot; tag <b>Home cook</b> &middot; Sale Order Count &gt; 1",
-             [["Monthly", "Recipe newsletter"], ["Launches", "New product mailer"], ["Festivals", "Festive offer, Thu 19:00"]],
-             "Repeat-order rate, revenue per email", "Website orders tagged with the campaign"],
-            ["Lapsed customers", "1,230 contacts", "No order in 90 days", "Marketing Automation",
-             "Contact &middot; Last Order Date before 90 days ago &middot; not blocklisted",
-             [["Day 0", "&lsquo;We miss you&rsquo; with best sellers"], ["Day 3", "10% back code, if no order"], ["Day 30", "Moved to a quiet list, if never opened"]],
-             "Win-back orders, list health", "Reactivated customers reported in Sales"],
-            ["Retailers", "1,736 contacts", "Shops that stock Amudha products", "Mailings + automation",
+    segs = [["Retailers", "1,736 contacts", "Monthly trade mailing with price list and bulk-order link", "Mailings + automation",
              "Contact &middot; tag <b>Retailer</b> &middot; on list <b>Retailer offers</b>",
              [["Tue 07:30", "Monthly trade offer"], ["On click", "&lsquo;Bulk order&rsquo; creates a CRM lead"], ["24 h", "Salesperson calls the shop"]],
              "Leads, quotations and trade revenue", "Lead to the territory salesperson"],
-            ["Distributors", "212 contacts", "Area distributors with credit terms", "Plain-text mailings",
-             "Contact &middot; tag <b>Distributor</b> &middot; Salesperson is set",
-             [["Quarterly", "Price list from the area manager"], ["On reply", "Reply lands in the manager&rsquo;s inbox"], ["Logged", "Conversation saved on the contact"]],
-             "Replies and price-list downloads", "Account manager follows up"],
-            ["Expo &amp; event leads", "~640 per event", "Scanned at trade fairs and food expos", "Marketing Automation",
-             "Lead &middot; source <b>Expo</b> &middot; Event is the current fair",
-             [["2 hours", "Thank-you and catalogue"], ["Day 2", "Stockist offer"], ["On click", "&lsquo;Become a stockist&rsquo; assigns sales"]],
-             "Stockist enquiries per event", "Opportunity in the Stockist pipeline"]]
+            ["New subscribers", "~380 a month", "Five-step welcome journey with a first-order code", "Marketing Automation",
+             "Contact &middot; on list <b>Newsletter</b> &middot; created in the last 24 hours",
+             [["Day 0", "Welcome + recipe e-book"], ["Day 1", "10% first-order code, if opened"], ["Day 4", "Reminder, if code not used"]],
+             "First orders within 14 days", "Moved to Recipe Club after the first order"],
+            ["Home cooks &amp; repeat buyers", "2,460 contacts", "Recipe newsletter timed for the evening", "Email Marketing mailings",
+             "Contact &middot; tag <b>Home cook</b> &middot; Sale Order Count &gt; 1",
+             [["Monthly", "Recipe newsletter"], ["Launches", "New product mailer"], ["Festivals", "Festive offer, Thu 19:00"]],
+             "Repeat-order rate, revenue per email", "Website orders tagged with the campaign"],
+            ["Lapsed 90+ days", "1,230 contacts", "Win-back email sent in the salesperson&rsquo;s name", "Marketing Automation",
+             "Contact &middot; Last Order Date before 90 days ago &middot; not blocklisted",
+             [["Day 0", "&lsquo;We miss you&rsquo; with best sellers"], ["Day 3", "10% back code, if no order"], ["Day 30", "Moved to a quiet list, if never opened"]],
+             "Win-back orders, list health", "Reactivated customers reported in Sales"]]
     sb = "".join('<button type="button" class="em-sg%s" data-e3="%d" aria-pressed="%s"><b>%s</b><small>%s</small></button>'
                  % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", s[0], s[1]) for i, s in enumerate(segs))
-    out += sec(head("SEGMENTS TO WORKFLOWS", "How Does Unisas Map Your Customer Segments to the Right Campaign Workflows?",
-                    "Not every segment needs the same treatment: a monthly mailing, a timed journey or a plain email from sales. We map each one to its audience, sequence and owner in Odoo. Pick a segment.", "is-center")
+    out += sec(head("SEGMENTS TO WORKFLOWS", "How Does Unisas Map Your Customer Segments to the Right Email Automation Workflows?",
+                    "Not every segment needs the same treatment. Retailers want a monthly price list. New subscribers need a timed welcome journey. Lapsed buyers respond better to a plain note from their salesperson.</p><p class=\"em-sub\">"
+                    "We map each segment to its audience, sequence and owner inside Odoo. Pick a segment:", "is-center")
                + '<div class="em-map" data-e3box><div class="em-sgs" role="group" aria-label="Customer segment">%s</div><div class="em-wf ox-solo" aria-live="polite" data-e3card></div></div>' % sb
                + data("em-segs", segs), "em-sec--map")
 
@@ -172,9 +167,11 @@ def build(g):
     views = [("kanban", "Kanban", ox.V_KANBAN), ("list", "List", ox.V_LIST), ("calendar", "Calendar", V_CAL), ("graph", "Graph", ox.V_GRAPH)]
     switch = "".join('<button type="button" class="ox-vbtn%s" data-e4view="%s" aria-label="%s view" title="%s" aria-pressed="%s">%s</button>'
                      % (" is-on" if k == "kanban" else "", k, n, n, "true" if k == "kanban" else "false", svg) for k, n, svg in views)
-    out += sec(head("CREATE &amp; SCHEDULE", "What Can Odoo Email Marketing Do for Campaign Creation and Scheduling?",
-                    "This is the Odoo Email Marketing app with Amudha Spices&rsquo; mailings. Switch between Kanban, List, Calendar and Graph, open a mailing to see its results, "
-                    "or press <b>New</b>: pick a template, send yourself a test, then schedule it or send it now.", "is-center")
+    out += sec(head("CREATE &amp; SCHEDULE", "What Can Odoo Email Marketing Software Do for Campaign Creation and Scheduling?",
+                    "Below is the Email Marketing app as it runs for Amudha Spices. Switch between Kanban, List, Calendar and Graph views, open any mailing to see its results, "
+                    "or press <b>New</b>: pick a template, send yourself a test, then schedule it or send it now.</p><p class=\"em-sub\">"
+                    "The drag-and-drop editor works as an email template builder, with blocks for product grids, coupons and events. A built-in email scheduler queues the Diwali price list "
+                    "for Tuesday 07:30 while the recipe newsletter waits for Thursday evening.", "is-center")
                + '<div class="ox em-ox em-app" data-e4box><div class="ox-nav"><span class="ox-app">%s<b>Email Marketing</b></span><span class="ox-menu">Mailings</span><span class="ox-menu">Mailing Lists</span>'
                  '<span class="ox-menu">Reporting</span><span class="ox-menu">Configuration</span><span class="ox-nav-r"><span class="ox-company">Amudha Spices</span><span class="ox-av" style="--c:#B5541B">P</span></span></div>'
                  '<div class="ox-cp"><div class="ox-cp-l"><button type="button" class="ox-new" data-e4new>New</button><span class="ox-crumb" data-e4crumb>Mailings</span></div>'
@@ -184,36 +181,35 @@ def build(g):
                  % (app_icon, ox.SEARCH, switch) + data("em-mailings", mailings), "em-sec--mf", "compose")
 
     # 5 ---- configured around your process
-    steps = [["Plan", "Marketing manager", "Agrees the quarter&rsquo;s campaigns and dates.",
+    steps = [["Plan", "Marketing manager", "Mailings, SMS and social posts grouped under one budget.",
               [["Settings &rsaquo; Mailing Campaigns", "Campaigns group mailings, SMS and social posts with one budget and report"],
                ["Campaigns &rsaquo; stages", "New &rarr; Schedule &rarr; Design &rarr; Sent, so the calendar shows what is ready"],
                ["Campaign tags", "Festive, Launch, Trade, Win-back"]]],
-             ["Audience", "Marketing executive", "Picks who gets it.",
+             ["Audience", "Marketing executive", "One list per audience, opt-in source recorded.",
               [["Mailing Lists", "One list per audience, with opt-in source recorded"], ["Saved filters", "Favourites such as &lsquo;Lapsed 90 days&rsquo; and &lsquo;Retailers, Tamil Nadu&rsquo;"],
                ["Access rights", "Sales can add contacts to lists, only marketing can send"]]],
-             ["Design", "Designer", "Builds the email.",
+             ["Design", "Designer", "A brand template with your colours, fonts and footer.",
               [["Brand template", "Saved as a favourite mailing, with your colours, fonts and footer"], ["Building blocks", "Product grid, coupon, recipe card and event blocks"],
                ["Placeholders", "Customer name and salesperson filled in per recipient"]]],
-             ["Approve", "Sales head", "Checks prices and offers.",
+             ["Approve", "Sales head", "A &lsquo;Review mailing&rsquo; activity with a due date.",
               [["Responsible", "Each mailing has an owner"], ["Activities", "&lsquo;Review mailing&rsquo; assigned to the approver, with a due date"],
                ["Chatter", "Comments and approvals kept on the mailing"]]],
-             ["Test", "Marketing executive", "Checks it on phone and desktop.",
+             ["Test", "Marketing executive", "Test sends to Gmail, Outlook and mobile inboxes.",
               [["Test recipients", "A saved list of team inboxes on Gmail, Outlook and mobile"], ["Preview text", "Set for every mailing"],
                ["Links", "Every link tracked and tagged with the campaign"]]],
-             ["Send", "Marketing executive", "Schedules for the right hour.",
+             ["Send", "Marketing executive", "Retailers at 07:30, home cooks at 19:00.",
               [["Scheduled date", "Retailers 07:30, home cooks 19:00"], ["Outgoing mail server", "Dedicated server for bulk mail, separate from invoices"],
                ["Sending limits", "Batches sized to your email plan"]]],
-             ["Report", "Marketing manager", "Reviews results each Monday.",
+             ["Report", "Marketing manager", "Revenue grouped by UTM campaign each Monday.",
               [["24H Stat Mailing Reports", "Results emailed to the owner a day after sending"], ["Reporting &rsaquo; Mailings", "Pivot by campaign, list and month"],
                ["CRM &amp; Sales", "Pipeline and revenue grouped by UTM campaign"]]]]
     def plain(n):
         n = re.sub(r"^(Settings|Reporting|Campaigns) &rsaquo; ", "", n)
         return n[:1].upper() + n[1:]
-    out += sec(head("YOUR MARKETING PROCESS", "How Does Unisas Configure Email Campaigns Around Your Marketing Process?",
+    out += sec(head("YOUR MARKETING PROCESS", "How Does Unisas Configure Email Campaign Tools Around Your Marketing Process?",
                     "Your team already has a way of planning, approving and reporting campaigns. We give each step an owner, a place in the system and a record of what was done.", "is-center")
-               + '<ol class="pl-grid is-rows" style="--cols:4">%s</ol>'
-                 % "".join('<li><span class="pl-n">%02d</span><b>%s</b><em>%s</em><p>%s</p><ul class="pl-ticks em-pl-t">%s</ul></li>'
-                           % (i + 1, x[0], x[1], x[2], "".join("<li><span><b>%s:</b> %s</span></li>" % (plain(c[0]), c[1]) for c in x[3])) for i, x in enumerate(steps)), "em-sec--proc")
+               + '<ol class="pl-grid is-line" style="--cols:4">%s</ol>'
+                 % "".join('<li><span class="pl-n">%02d</span><b>%s</b><em>%s</em><p>%s</p></li>' % (i + 1, x[0], x[1], x[2]) for i, x in enumerate(steps)), "em-sec--proc")
 
     # 6 ---- CRM and customer activity
     flows = [["A retailer clicks &lsquo;Order for my store&rsquo;", [["em", "Email Marketing", "Opened and clicked", "Diwali trade offer &middot; Sri Murugan Stores &middot; 07:42"],
@@ -236,9 +232,10 @@ def build(g):
     apps6 = [["em", "Email Marketing", "#B5541B"], ["web", "Website", "#2F6BD8"], ["crm", "CRM", "#8E4F83"], ["sale", "Sales", "#EE8A3C"], ["ct", "Contacts", "#1F8A78"]]
     fb = "".join('<button type="button" class="em-flow%s" data-e6="%d" aria-pressed="%s">%s</button>' % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", f[0]) for i, f in enumerate(flows))
     lanes = "".join('<div class="em-lane" data-e6lane="%s" style="--c:%s"><p class="em-lane-h"><i></i>%s</p><div class="em-lane-b"></div></div>' % (k, c, n) for k, n, c in apps6)
-    out += sec(head("CRM &amp; CUSTOMER ACTIVITY", "How Can Odoo Connect Email Campaigns With CRM and Customer Activity?",
-                    "Mailings, contacts, leads and orders share one database, so a click or a reply turns into work for sales, and every order can be traced back to the email that started it. "
-                    "Pick what a recipient does and follow it across the apps.", "is-center")
+    out += sec(head("CRM &amp; CUSTOMER ACTIVITY", "How Does Odoo Connect Email Campaigns With CRM Email Marketing and Customer Activity?",
+                    "Mailings, contacts, leads and orders share one database. A click or a reply turns into work for sales, and every order traces back to the email that started it.</p><p class=\"em-sub\">"
+                    "Most standalone email marketing software reports opens and stops there. When a retailer clicks &ldquo;Order for my store&rdquo;, Odoo creates a lead, assigns it to the area salesperson "
+                    "and logs the activity on the contact. When it becomes an invoice, the revenue rolls back to the original mailing. Pick what a recipient does and follow it across the apps.", "is-center")
                + '<div class="em-x" data-e6box><div class="em-flows ox-solo" role="group" aria-label="Recipient action">%s<button type="button" class="ox-pbtn" data-e6run>Run again</button></div>'
                  '<div class="em-lanes">%s</div><div class="em-sbtns ox-solo" aria-live="polite"><span class="em-sbtns-h">On the mailing</span><span class="em-sbtn"><b data-e6k="0">0</b>Leads</span>'
                  '<span class="em-sbtn"><b data-e6k="1">0</b>Quotations</span><span class="em-sbtn"><b data-e6k="2">&#8377; 0</b>Revenues</span></div></div>'
@@ -249,37 +246,30 @@ def build(g):
             ["Welcome each new subscriber, then send a first-order code the next day", "auto", "It runs for each person from the day they join, so it is a journey."],
             ["Send the Diwali price list to all retailers on Tuesday morning", "mail", "Same message, same moment, one audience: a scheduled mailing."],
             ["Resend the welcome email with a new subject to people who didn&rsquo;t open it", "auto", "&lsquo;Mail: Not opened&rsquo; is a Marketing Automation trigger."],
-            ["Ask buyers for a review 10 days after delivery", "auto", "Timed from each customer&rsquo;s own delivery date, so it needs a workflow."],
-            ["The monthly recipe newsletter", "mail", "A regular mailing, often duplicated from last month&rsquo;s."],
             ["Tell the salesperson when a retailer clicks the bulk-order link", "auto", "&lsquo;Mail: Clicked&rsquo; can trigger a server action that creates a lead or an activity."]]
     lab = {"mail": "Mailing", "auto": "Marketing Automation"}
     rq = "".join('<li class="em-q" data-e7="%d"><p>%s</p><span class="em-q-b">%s</span><small class="em-q-why"></small></li>'
                  % (i, r[0], "".join('<button type="button" data-e7a="%s">%s</button>' % (k, v) for k, v in lab.items())) for i, r in enumerate(reqs))
     out += sec(head("MAILINGS OR AUTOMATION", "When Should Email Marketing Be Combined With Odoo Marketing Automation?",
                     "Use a mailing when the same message goes to a list at one moment. Add Marketing Automation when timing depends on each person: when they joined, opened, clicked or ordered. "
-                    "Make your call for each campaign.", "is-center")
+                    "Make your call for each campaign:", "is-center")
                + '<div class="em-quiz" data-e7box><ol>%s</ol><div class="em-quiz-s ox-solo"><p class="mono">YOUR SCORE</p><b data-e7score>0 / %d</b><p data-e7msg>Pick an answer for each campaign.</p>'
                  '<ul><li><i class="is-mail"></i><b>Mailing</b> one message, one send time, one audience</li><li><i class="is-auto"></i><b>Marketing Automation</b> per-person timing and triggers</li></ul></div></div>'
                  % (rq, len(reqs)) + data("em-reqs", reqs), "em-sec--quiz")
 
     # 8 ---- marketing automation workflow
-    acts = [["a", "", "Beginning of workflow", "Email", "Welcome + recipe e-book", 0, "Immediately", 982, 18],
-            ["b", "a", "Mail: Opened", "Email", "Your 10% first-order code", 1, "1 Days after", 498, 0],
-            ["c", "b", "Mail: Clicked", "Server Action", "Add to list &lsquo;First-order intent&rsquo;", 1, "Immediately after", 197, 0],
-            ["d", "b", "Mail: Not clicked", "Email", "Your code expires in 48 hours", 4, "3 Days after", 301, 0],
-            ["e", "a", "Mail: Not opened", "Email", "Resend with a new subject line", 3, "2 Days after", 484, 0]]
-    trig = {"Beginning of workflow": "Start", "Mail: Opened": "If opened", "Mail: Clicked": "If clicked", "Mail: Not clicked": "If not clicked", "Mail: Not opened": "If not opened"}
-    order8 = ["a", "b", "c", "d", "e"]
-    by = {x[0]: x for x in acts}
-    depth = {"a": 0, "b": 1, "c": 2, "d": 2, "e": 1}
-    out += sec(head("AUTOMATED JOURNEYS", "How Does Unisas Build and Configure Automated Customer Journeys?",
-                    "A welcome journey for new subscribers. Each step waits on the one above. First-week results for 1,000 people.", "is-center",
-                    ["Triggers on opens, clicks, sign-ups and orders", "A wait time and condition on every step",
-                     "Lists, tags and CRM leads updated automatically", "Results shown for each step of the journey"])
-               + '<div class="pl-card" style="max-width:900px;margin:0 auto"><p class="pl-k">Welcome &amp; first order &middot; newsletter sign-ups in the last 24 hours</p><ul class="pl-steps">%s</ul>'
-                 '<p style="margin:14px 0 0;display:flex;flex-wrap:wrap;gap:6px"><span class="pl-chip is-ok">1,000 completed in 7 days</span><span class="pl-chip">2,265 emails sent</span><span class="pl-chip is-gold">197 showed first-order intent</span></p></div>'
-                 % "".join('<li style="margin-left:%dpx"><span class="pl-n">%d</span><b>%s</b><em>%s &middot; %s</em><p>%s &middot; reached <b>%s</b></p></li>'
-                           % (depth[k] * 28, i + 1, by[k][4], trig[by[k][2]], by[k][6], "Email" if by[k][3] == "Email" else "Automatic action", "{:,}".format(by[k][7])) for i, k in enumerate(order8)),
+    # step, when it runs, reached, indent
+    journey = [("Welcome + recipe e-book", "immediately", 982, 0), ("Your 10% first-order code", "if opened, 1 day after", 498, 1),
+               ("Add to &lsquo;First-order intent&rsquo; list", "if clicked", 197, 2), ("Your code expires in 48 hours", "if not clicked, 3 days after", 301, 2),
+               ("Resend with a new subject line", "if not opened, 2 days after", 484, 1)]
+    out += sec(head("AUTOMATED JOURNEYS", "How Does Unisas Build and Configure Automated Customer Journeys for Drip Email Marketing?",
+                    "A welcome journey for new subscribers, where each step waits on the one above. Teams usually pay for this in separate email automation tools; in Odoo it runs on the same contacts "
+                    "and sales data, so a first order ends the journey automatically.", "is-center",
+                    ["Triggers on opens, clicks, sign-ups and orders", "A wait time and condition on every step", "Lists, tags and CRM leads updated automatically"])
+               + '<div class="pl-card" style="max-width:900px;margin:0 auto"><p class="pl-k">Welcome &amp; first order: first-week results for 1,000 sign-ups</p><ul class="pl-steps">%s</ul>'
+                 '<p style="margin:14px 0 0;display:flex;flex-wrap:wrap;gap:6px"><span class="pl-chip">2,265 emails sent in 7 days</span><span class="pl-chip is-gold">197 showed first-order intent</span></p></div>'
+                 % "".join('<li style="margin-left:%dpx"><span class="pl-n">%d</span><b>%s</b><em>%s</em><p>reached <b>%s</b></p></li>'
+                           % (ind * 28, i + 1, n, w, "{:,}".format(r)) for i, (n, w, r, ind) in enumerate(journey)),
                "em-sec--ma")
 
     # 9 ---- measure
@@ -289,8 +279,9 @@ def build(g):
              ["We miss you: 10% back", "Lapsed 90 days", "19 Sep", 1230, 96.4, 29.5, 1.2, 7.1, 3.6, 0, 0, 74300]]
     rows = "".join('<tr data-e9="%d"%s><td><b>%s</b></td><td>%s</td><td>%s</td><td class="ox-num">%s</td><td class="ox-num">%.1f%%</td><td class="ox-num">%.1f%%</td></tr>'
                    % (i, ' class="is-on"' if i == 0 else "", m[0], m[1], m[2], "{:,}".format(m[3]), m[5], m[7]) for i, m in enumerate(mails))
-    out += sec(head("OPENS, CLICKS, LEADS &amp; REVENUE", "How Can Odoo Help Measure Opens, Clicks, Leads and Campaign Revenue?",
-                    "Every sent mailing carries its own statistics, and because CRM and Sales sit in the same database it also shows the leads, quotations and revenue it produced. "
+    out += sec(head("OPENS, CLICKS, LEADS &amp; REVENUE", "How Can Odoo Email Analytics Measure Opens, Clicks, Leads and Campaign Revenue?",
+                    "Every sent mailing carries its own statistics, from open rate to bounces. Because CRM and Sales sit in the same database, it also shows the leads, quotations and revenue each send produced.</p><p class=\"em-sub\">"
+                    "Your team sees that the trade mailing brought 31 quotations and the recipe newsletter brought none. Campaigns get judged by email marketing ROI, not vanity metrics. "
                     "Click a mailing to open its results.", "is-center")
                + '<div class="em-meas" data-e9box><div class="ox em-ox">%s<div class="ox-scroll"><table class="ox-table em-ml"><thead><tr><th>Subject</th><th>Recipients</th><th>Sent on</th>'
                  '<th class="ox-num">Sent</th><th class="ox-num">Opened</th><th class="ox-num">Clicked</th></tr></thead><tbody>%s</tbody></table></div></div>'
@@ -304,30 +295,30 @@ def build(g):
              ["wa.me/919800000000", "Diwali 2026", "Email", "Diwali trade offer", 37]]
     ab = {"n": 1736, "a": "Diwali gift boxes: 15% off for your store", "b": "Your Diwali shelf, sorted: gift boxes at trade price",
           "res": {"open": [44.1, 51.8, "%"], "click": [12.3, 11.6, "%"], "lead": [9, 13, ""], "rev": [310000, 422000, "inr"]}}
-    out += sec(head("TRACKING, TESTING &amp; REPORTING", "How Does Unisas Configure Tracking, Testing and Campaign Reporting?",
-                    "We switch on A/B testing for subject lines and offers, tag every link with the campaign, and set the reports your team reads each week. "
-                    "Here is how one test played out.", "is-center")
+    out += sec(head("TRACKING, TESTING &amp; REPORTING", "How Does Unisas Configure UTM Tracking, A/B Testing and Campaign Reporting?",
+                    "We switch on A/B testing for subject lines and offers, tag every link with its campaign, and set up the reports your team reads each week.", "is-center")
                + '<div class="pl-2"><div class="pl-card"><p class="pl-k">A/B test &middot; Diwali trade offer to %s retailers</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th></th><th>Subject line</th><th class="is-c">Open rate</th><th class="is-c">Leads</th></tr></thead><tbody>'
                  '<tr><th>A</th><td>%s</td><td class="is-c">44.1%%</td><td class="is-c">9</td></tr><tr><th>B</th><td>%s</td><td class="is-c"><span class="pl-chip is-ok">51.8%%</span></td><td class="is-c"><span class="pl-chip is-ok">13</span></td></tr></tbody></table></div>'
                  '<p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem">Tested on 20%% of the list, winner chosen by open rate. <b>Version B</b> went to the other 1,389 retailers on Tue 13 Oct, 07:30.</p></div>'
                  '<div class="pl-card"><p class="pl-k">Every link tagged with its campaign</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Link</th><th>Campaign</th><th class="is-c">Clicks</th></tr></thead><tbody>%s</tbody></table></div>'
+                 '<p class="pl-muted" style="margin:10px 0 0;font-size:0.88rem">Every link tagged with its campaign by Odoo&rsquo;s link tracker, so website orders land in the right report.</p>'
                  '<p class="pl-k" style="margin-top:18px">Reports your team reads each week</p><ul class="pl-ticks"><li>Results emailed to the mailing owner a day after sending</li><li>Mailing analysis by campaign, list and month</li><li>Pipeline and revenue grouped by campaign</li></ul></div></div>'
                  % ("{:,}".format(ab["n"]), ab["a"], ab["b"], "".join('<tr><td style="font-size:0.84rem;word-break:break-all">%s</td><td>%s</td><td class="is-c">%d</td></tr>' % (l[0], l[1], l[4]) for l in links)),
                "em-sec--ab", "ab-test")
 
     # 11 ---- deliverability and unsubscriptions
-    recs = [["SPF", "TXT", "@", "v=spf1 include:_spf.odoo.com ~all", 12, "Tells inboxes Odoo may send for amudhaspices.in"],
+    recs = [["SPF", "TXT", "@", "v=spf1 include:_spf.odoo.com ~all", 12, "Tells inboxes Odoo may send for your domain"],
             ["DKIM", "CNAME", "odoo._domainkey", "odoo._domainkey.odoo.com", 14, "Signs every email so it cannot be forged"],
             ["DMARC", "TXT", "_dmarc", "v=DMARC1; p=quarantine; rua=mailto:dmarc@amudhaspices.in", 8, "Tells inboxes what to do with failures, and reports them"],
-            ["From address", "", "", "offers@amudhaspices.in, not a Gmail address", 6, "Sender on your own authenticated domain"],
-            ["Bounce handling", "", "", "Hard bounces blocklisted automatically", 7, "Keeps dead addresses from hurting your reputation"],
-            ["List hygiene", "", "", "Contacts with no opens in 12 months moved to a quiet list", 7, "Fewer sends to people who never read"]]
+            ["From address", "", "", "offers@amudhaspices.in, not a Gmail address", 6, "Your own authenticated domain, not a Gmail address"],
+            ["Bounce handling", "", "", "Hard bounces blocklisted automatically", 7, "Hard bounces blocklisted automatically, keeping your email bounce rate low"],
+            ["List hygiene", "", "", "Contacts with no opens in 12 months moved to a quiet list", 7, "Contacts with no opens in 12 months moved to a quiet list"]]
     rc = "".join('<li><label class="em-dns"><input type="checkbox" data-e11="%d"><span class="em-sw" aria-hidden="true"></span><span class="em-dns-t"><b>%s%s</b><code>%s</code><small>%s</small></span></label></li>'
                  % (i, r[0], ' <em class="mono">%s %s</em>' % (r[1], r[2]) if r[1] else "", r[3], r[5]) for i, r in enumerate(recs))
     subs = [["Newsletter", True], ["Recipe Club", True], ["Retailer offers", False]]
     reasons = ["I never subscribed to this list", "I receive too many emails from this list", "The content of these emails is not relevant to me", "Other"]
     out += sec(head("DELIVERABILITY &amp; UNSUBSCRIPTIONS", "How Should Your Odoo Email Marketing Setup Handle Deliverability and Unsubscriptions?",
-                    "A campaign only works if it reaches the inbox, and people who want fewer emails can say so in one click. "
+                    "A campaign only works if it reaches the inbox, and people who want fewer emails should be able to say so in one click. Gmail and Yahoo now reject unauthenticated bulk mail. "
                     "Configure the sending domain on the left; unsubscribe as a recipient on the right and see what Odoo records.", "is-center")
                + '<div class="em-dlv"><div class="em-dlv-l" data-e11box><ul class="em-dnss">%s</ul><div class="em-gauge ox-solo"><span class="em-ring" data-e11ring style="--p:43"><b data-e11v>43%%</b></span>'
                  '<span><b>Expected inbox placement</b><small data-e11msg></small></span></div></div>'
@@ -335,17 +326,17 @@ def build(g):
                  % rc + data("em-recs", recs) + data("em-subs", subs) + data("em-reasons", reasons), "em-sec--dlv")
 
     # 12 ---- setup to launch
-    phases = [["Discover", "Week 1", ["Audiences and segments mapped", "Campaign calendar for the quarter", "Current tool and lists reviewed", "KPIs agreed per segment"], "Access to your current email tool, last year&rsquo;s campaigns and the people who run them."],
-              ["Contacts &amp; lists", "Week 1&ndash;2", ["Contacts imported and de-duplicated", "Consent and source recorded", "Mailing lists and saved filters", "Blocklist imported from the old tool"], "Contact exports and the unsubscribe list from your current tool."],
-              ["Domain &amp; sending", "Week 2", ["SPF, DKIM and DMARC records", "From and reply-to addresses", "Outgoing mail server and limits", "Test sends to Gmail, Outlook and Yahoo"], "Access to your DNS, or 20 minutes with whoever manages it."],
-              ["Templates", "Week 2&ndash;3", ["Brand template in your colours", "Newsletter, offer, launch and plain-text layouts", "Footer with address and unsubscribe", "Mobile checks"], "Logo, brand colours and two past emails you liked."],
-              ["Campaigns &amp; journeys", "Week 3&ndash;4", ["First mailings built and scheduled", "Welcome and win-back journeys", "A/B tests and link tracking", "CRM lead rules on clicks and replies"], "Approval of copy and offers."],
-              ["Launch &amp; report", "Week 4 onward", ["First campaign sent with us on hand", "Team trained by role", "24H reports and monthly dashboard", "Monthly review and improvements"], "A launch date and an owner for each campaign."]]
+    phases = [["Discover", "Week 1", ["Audiences and segments mapped", "Campaign calendar for the quarter", "Current tool and lists reviewed", "KPIs agreed per segment"], "Access to your current email tool, last year&rsquo;s campaigns and the people who run them.", "Audiences, send frequency and reporting needs agreed."],
+              ["Contacts &amp; lists", "Week 1&ndash;2", ["Contacts imported and de-duplicated", "Consent and source recorded", "Mailing lists and saved filters", "Blocklist imported from the old tool"], "Contact exports and the unsubscribe list from your current tool.", "Contacts imported with consent source, unsubscribes carried across."],
+              ["Domain &amp; sending", "Week 2", ["SPF, DKIM and DMARC records", "From and reply-to addresses", "Outgoing mail server and limits", "Test sends to Gmail, Outlook and Yahoo"], "Access to your DNS, or 20 minutes with whoever manages it.", "SPF, DKIM and DMARC published, sending limits set."],
+              ["Templates", "Week 2&ndash;3", ["Brand template in your colours", "Newsletter, offer, launch and plain-text layouts", "Footer with address and unsubscribe", "Mobile checks"], "Logo, brand colours and two past emails you liked.", "Brand template and reusable blocks approved."],
+              ["Campaigns &amp; journeys", "Week 3&ndash;4", ["First mailings built and scheduled", "Welcome and win-back journeys", "A/B tests and link tracking", "CRM lead rules on clicks and replies"], "Approval of copy and offers.", "First mailings and automated journeys tested."],
+              ["Launch &amp; report", "Week 4 onward", ["First campaign sent with us on hand", "Team trained by role", "24H reports and monthly dashboard", "Monthly review and improvements"], "A launch date and an owner for each campaign.", "First campaign sent, team trained on live data."]]
     pbt = "".join('<li><button type="button" class="em-ph%s" data-e12="%d" aria-pressed="%s"><span class="mono">%02d</span><b>%s</b><small>%s</small></button></li>'
-                  % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, n, w) for i, (n, w, d, y) in enumerate(phases))
-    out += sec(head("SETUP TO LAUNCH", "What Does Unisas Handle From Email Marketing Setup to Campaign Launch?",
-                    "Six steps from your current list to your first measured campaign. Each ends with something you can see and approve. Pick a step to see what we hand over and what we need from you.", "is-center")
-               + '<div class="em-del" data-e12box><ol class="em-phs">%s</ol><div class="em-del-c ox-solo" aria-live="polite"><div><p class="em-gi-h">Unisas delivers</p><ul class="em-files" data-e12d></ul></div>'
+                  % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, n, w) for i, (n, w, d, y, line) in enumerate(phases))
+    out += sec(head("SETUP TO LAUNCH", "What Does Unisas Handle From Setting Up Your Email Marketing Tools to Campaign Launch?",
+                    "Six steps take you from your current list to your first measured campaign. Each ends with something you can approve. Pick a step to see what we hand over and what we need from you.", "is-center")
+               + '<div class="em-del" data-e12box><ol class="em-phs">%s</ol><div class="em-del-c ox-solo" aria-live="polite"><div><p class="em-del-s" data-e12s></p><p class="em-gi-h">Unisas delivers</p><ul class="em-files" data-e12d></ul></div>'
                  '<div class="em-del-y"><p class="em-gi-h">We need from you</p><p data-e12y></p></div></div></div>' % pbt + data("em-phases", phases), "em-sec--del")
 
     # 13 ---- plan the implementation
@@ -358,29 +349,30 @@ def build(g):
                '<div class="em-sc-chk is-wide"><label><input type="checkbox" data-e13x="auto" checked> Automated journeys (welcome, win-back)</label><label><input type="checkbox" data-e13x="ab"> A/B testing and revenue reporting</label>'
                '<label><input type="checkbox" data-e13x="sms"> SMS or WhatsApp alongside email</label></div></div>'
                '<div class="em-sc-out" data-e13out aria-live="polite"></div></div></div>'
-               % (head("PLAN YOUR IMPLEMENTATION", "How Can We Plan an Odoo Email Marketing Implementation for Your Business?",
-                       "The plan depends on your contacts, how often you send and the journeys you need. Answer a few questions to start.", "",
+               % (head("PLAN YOUR IMPLEMENTATION", "How Can We Plan an Odoo Email Marketing Implementation for Ecommerce, B2B and Small Business?",
+                       "The plan depends on your contacts, how often you send and the journeys you need. A store sending daily offers needs a different setup from a manufacturer emailing 400 dealers monthly.</p><p class=\"em-sub\">"
+                       "We configure email marketing for ecommerce brands, B2B distributors and D2C food companies across India. Answer a few questions to start.", "",
                        ["Contacts, lists and unsubscribes moved from your current tool", "Sending domain, templates and journeys set up for you",
                         "Your team trained on its own campaigns", "Fixed scope and timeline agreed before we start"]), g["ARROW"]), "em-sec--scope")
 
     return out + JS
 
 
-CTA = ("Let's Plan Email Campaigns That Bring In Orders",
-       "Tell us who you email, how often and why. We&rsquo;ll show your campaigns in Odoo and recommend the right setup.")
+CTA = ("Let's Plan Email Marketing Campaigns That Bring In Orders",
+       "Tell us who you email, how often and why. We&rsquo;ll show your campaigns in Odoo and recommend the right email marketing software setup.")
 
 FAQ = [("Do we still need Mailchimp or another email tool with Odoo?",
-        "Usually not. Odoo Email Marketing covers mailing lists, templates, scheduling, A/B tests and tracking, and it reads your CRM and sales data directly. Most clients move their lists across and cancel the separate tool."),
+        "Usually not. Odoo covers mailing lists, templates, scheduling, A/B tests and tracking, and reads your CRM and sales data directly. Most clients treat it as a Mailchimp alternative, move their lists across and cancel the separate subscription."),
        ("Can we import our existing contacts and unsubscribe list?",
-        "Yes. We import contacts with their consent source, de-duplicate them, and import your unsubscribe and bounce lists into the Odoo blocklist so nobody who opted out is emailed again."),
+        "Yes. We import contacts with their consent source, remove duplicates, and load your unsubscribe and bounce lists into the Odoo blocklist. Nobody who opted out of your old newsletter software is ever emailed again by mistake."),
        ("What is the difference between Email Marketing and Marketing Automation?",
-        "Email Marketing sends a mailing to a list at a chosen time. Marketing Automation runs journeys for each contact, with steps triggered by when they joined, opened, clicked or ordered. Many businesses use both."),
+        "Email Marketing sends one mailing to a list at a chosen time. Marketing Automation runs a journey for each contact, with steps triggered when they join, open, click or order. Many businesses use both apps together."),
        ("Will our emails land in the inbox?",
-        "We set up SPF, DKIM and DMARC on your domain, send from your own address, handle bounces automatically and keep lists clean. Those four things decide inbox placement more than anything else."),
+        "Unisas sets up SPF, DKIM and DMARC on your domain, sends from your own address, handles bounces automatically and keeps lists clean. Those four things decide inbox placement on any email marketing platform more than content does."),
        ("Can we see revenue from each campaign?",
-        "Yes. With CRM and Sales in Odoo, each mailing shows the leads, quotations and revenue that came from it, and links are tagged with the campaign for website orders."),
+        "Yes. With CRM and Sales in Odoo, each mailing shows the leads, quotations and revenue it produced. Links carry UTM tracking tags, so website orders are credited to the right campaign without manual matching in a spreadsheet."),
        ("Is there a limit on how many emails we can send?",
-        "Odoo Online includes a daily allowance and you can buy more mail credits; on Odoo.sh or your own server you can use a dedicated mail service. We size it to your list during scoping.")]
+        "Odoo Online includes a daily allowance, and you can buy extra mail credits. On Odoo.sh or your own server, a dedicated mail service removes the cap. We size this to your list during scoping, before go-live.")]
 
 
 JS = r'''<script>
@@ -593,7 +585,7 @@ JS = r'''<script>
 
   /* --- 12 phases --- */
   (function(){var bx=document.querySelector('[data-e12box]');if(!bx)return;var P=J('em-phases'),bt=[].slice.call(bx.querySelectorAll('[data-e12]'));
-    function draw(i){bx.querySelector('[data-e12d]').innerHTML=P[i][2].map(function(d,j){return '<li style="--i:'+j+'"><span class="em-file" aria-hidden="true"></span>'+d+'</li>';}).join('');bx.querySelector('[data-e12y]').innerHTML=P[i][3];}
+    function draw(i){bx.querySelector('[data-e12d]').innerHTML=P[i][2].map(function(d,j){return '<li style="--i:'+j+'"><span class="em-file" aria-hidden="true"></span>'+d+'</li>';}).join('');bx.querySelector('[data-e12y]').innerHTML=P[i][3];bx.querySelector('[data-e12s]').innerHTML=P[i][4];}
     bt.forEach(function(b){b.addEventListener('click',function(){press(bt,b);draw(+b.getAttribute('data-e12'));});});draw(0);})();
 
   /* --- 13 planner --- */

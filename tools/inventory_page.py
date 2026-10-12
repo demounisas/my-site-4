@@ -73,8 +73,8 @@ def hero(g):
              '<a href="index.html#modules">Solutions</a><span>/</span><span aria-current="page">Inventory</span></nav>')
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Live stock in every warehouse", "Barcode, lots &amp; serials", "Reorders that raise themselves"])
     copy = ('<div class="iv-hero-copy">%s<p class="iv-eyebrow mono">ODOO INVENTORY IMPLEMENTATION</p>'
-            '<h1 class="iv-h1">Inventory Implementation Services <span>Tailored to Your Business with Odoo</span></h1>'
-            '<p class="iv-lead">We set up Odoo Inventory around your warehouses, so stock updates as it moves and reorders go out on time.</p><ul class="iv-hero-points">%s</ul>'
+            '<h1 class="iv-h1">Inventory Management Software Implementation Services <span>Tailored to Your Business with Odoo</span></h1>'
+            '<p class="iv-lead">Unisas sets up Odoo as your stock management software, built around your warehouses, so every movement updates live and reorders leave on time.</p><ul class="iv-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Inventory %s</a>'
             '<a href="#explore" class="btn btn-ghost">Explore live stock</a></div></div>' % (crumb, points, g["ARROW"]))
     # a receipt being scanned on the shop floor with the Odoo Barcode app
@@ -139,7 +139,7 @@ def build(g):
     inv_icon = g["TILE_ICONS"][3]
 
     # 1 ---- can your system keep up? the spreadsheet everyone edits
-    signs = ["Stock figures differ between the warehouse, sales and accounts", "Shortages are found when the order is already promised",
+    signs = ["Stock figures differ between the warehouse, sales and accounts", "Shortages surface only after the order is promised",
              "Each branch keeps its own sheet, updated at day end", "Nobody can say which batch went to which customer",
              "Stock value is worked out once a month, by hand"]
     rows = [("FURN-0101", "Ergo task chair", "40", "18", "6", "29 Sep"), ("FURN-0204", "Height-adj. desk", "9", "4", "#REF!", "12 Sep"),
@@ -155,10 +155,11 @@ def build(g):
              '<div class="iv-xl-tabs"><span class="is-on">Chennai</span><span>BLR_new</span><span>Copy of CBE</span><span>Dispatch</span></div>'
              '<p class="iv-note-pin is-1"><b>Karthik (Warehouse)</b>Counted 37 on Friday, not 40. Who changed it?</p>'
              '<p class="iv-note-pin is-2"><b>Divya (Accounts)</b>Is this the sheet with September&rsquo;s value?</p></div>' % grid)
-    out += sec('<div class="iv-ready"><div>%s<ul class="iv-signs">%s</ul><p class="iv-note">If two or more of these sound familiar, your stock has outgrown spreadsheets '
-               'and standalone billing software.</p></div>%s</div>'
-               % (head("READINESS CHECK", "Can Your Inventory System Keep Up With Your Growing Operations?",
-                       "More SKUs, more locations and more channels all put pressure on the same weak point: one shared file that is never quite current."),
+    out += sec('<div class="iv-ready"><div>%s<ul class="iv-signs">%s</ul><p class="iv-note">Two or more sound familiar? Your business has outgrown spreadsheets and standalone billing tools. '
+               'An inventory management system excel file simply cannot record what happens on the floor as it happens.</p></div>%s</div>'
+               % (head("READINESS CHECK", "Can Your Inventory Management System Keep Up With Your Growing Operations?",
+                       "More SKUs, more locations and more sales channels all strain the same weak point: one file that is never quite current. "
+                       "Four people edit it, three tabs disagree, and the formula in C14 broke last week."),
                   "".join('<li>%s%s</li>' % (CROSS, s) for s in signs), sheet), "iv-sec--ready")
 
     # 2 ---- one move, every app: Moves History with app filter
@@ -171,12 +172,13 @@ def build(g):
                     '<td class="ox-num"><b class="%s">%d.00</b></td><td><span class="iv-done">Done</span></td></tr>'
                     % (a, d, r, o, p, f, t, "iv-in" if t.startswith(("CHN/Stock", "BLR/Stock", "CBE/Stock")) else "iv-out", q)
                     for d, r, p, f, t, q, a, o in MOVES)
-    effects = [("Sales", "Free-to-use stock shown on every order line, deliveries created on confirmation"),
-               ("Purchase", "Receipts expected from each PO, bills checked against what arrived"),
-               ("Manufacturing", "Components reserved and consumed, finished goods put away"),
-               ("Accounting", "Every move posts its stock value, no month-end re-entry")]
-    out += sec(head("ONE DATABASE", "How Can Odoo Connect Inventory, Warehouses and Business Operations?",
-                    "In Odoo, every app moves stock through the same ledger. Filter one day of real movements by the app that created them.", "is-center")
+    effects = [("Sales", "Free-to-use stock shows on every order line, and deliveries are created on confirmation."),
+               ("Purchase", "Each PO becomes an expected receipt, and vendor bills are checked against what arrived."),
+               ("Manufacturing", "Components are reserved and consumed, and finished goods are put away automatically."),
+               ("Accounting", "Every move posts its stock value, with no month-end re-entry.")]
+    out += sec(head("ONE DATABASE", "How Can Odoo Inventory Management Connect Warehouses and Business Operations?",
+                    "Every Odoo app moves stock through the same ledger. Sales, receipts, production and cycle counts all post to one record, with no re-keying or end-of-day sync. "
+                    "That shared ledger is exactly what standalone inventory tracking software lacks.", "is-center")
                + '<div class="iv-moves"><div class="iv-apps" role="group" aria-label="Filter moves by app">%s</div>'
                  '<div class="ox iv-ox">%s<div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb">Moves History</span></div>'
                  '<span class="ox-search">%s<span class="ox-facet">%sDone</span><span class="ox-facet" data-mv-facet hidden></span></span><span></span></div>'
@@ -186,12 +188,13 @@ def build(g):
                + '<ul class="iv-effects">%s</ul>' % "".join('<li><b>%s</b><span>%s</span></li>' % e for e in effects), "iv-sec--moves")
 
     # 3 ---- what can it manage: live stock explorer
-    feats = [("Warehouses &amp; bins", "Every warehouse, zone, rack and shelf as its own location."),
-             ("Free vs reserved", "See what is promised and what is still free to sell."),
-             ("Incoming &amp; outgoing", "Forecasts built from confirmed POs, SOs and MOs."),
-             ("Units &amp; packages", "Buy in boxes, store in units, sell by the pack.")]
-    out += sec(head("WHAT ODOO INVENTORY MANAGES", "What Can Odoo Inventory Manage Across Your Warehouses?",
-                    "One stock report for every warehouse. Switch warehouse, search a product, and open a row to see exactly which shelf holds it.", "is-center")
+    feats = [("Warehouses &amp; bins", "Every warehouse, zone, rack and shelf exists as its own location."),
+             ("Free vs reserved", "See what is already promised and what is still free to sell."),
+             ("Incoming &amp; outgoing", "Forecasts are built from confirmed POs, SOs and MOs."),
+             ("Units &amp; packages", "Buy in boxes, store in units and sell by the pack.")]
+    out += sec(head("WHAT ODOO INVENTORY MANAGES", "What Can Odoo Inventory Software Manage Across Your Warehouses?",
+                    "Multi warehouse inventory management starts with one stock report for every location you run. Switch warehouse, search a product and open any row to see exactly which shelf holds it. "
+                    "That is real time inventory management in practice: the screen reflects the floor, not yesterday&rsquo;s upload.", "is-center")
                + '<div class="ox iv-ox" data-st>%s<div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb">Stock</span></div>'
                  '<label class="ox-search">%s<span class="ox-facet">%s<span data-st-facet>All Warehouses</span></span><input type="search" placeholder="Search product..." aria-label="Search products" data-st-q></label>'
                  '<div class="iv-whs" role="group" aria-label="Warehouse">%s</div></div><div class="ox-body iv-st-body" data-st-body></div></div>'
@@ -202,10 +205,10 @@ def build(g):
                + '<ul class="iv-feats">%s</ul>' % "".join('<li><b>%s</b><span>%s</span></li>' % f for f in feats), "iv-sec--explore", "explore")
 
     # 4 ---- configure around your workflows: warehouse routes
-    impl = [("Walk your warehouse", "We follow goods from the dock to the shelf to the truck, and note every hand-off."),
-            ("Mirror your layout", "Warehouses, zones and bins in Odoo match the labels on your racks."),
+    impl = [("Walk your warehouse", "We follow goods from the dock to the shelf to the truck and note every hand-off."),
+            ("Mirror your layout", "Warehouses, zones and bins in Odoo match the labels already on your racks."),
             ("Choose the steps", "One-step or multi-step receipts and deliveries, only where they add control."),
-            ("Test with real orders", "Your team runs real receipts and dispatches before go-live.")]
+            ("Test with real orders", "Your team runs actual receipts and dispatches before go-live.")]
     def radios(name, opts, on):
         return "".join('<label class="iv-radio"><input type="radio" name="%s" value="%d"%s><span></span>%s</label>' % (name, i + 1, " checked" if i + 1 == on else "", o)
                        for i, o in enumerate(opts))
@@ -214,26 +217,28 @@ def build(g):
                '<div class="iv-wf"><div class="iv-wf-sheet"><h3>Chennai Warehouse <small>CHN</small></h3>'
                '<div class="ox-ftabs"><span>General Information</span><span class="is-on">Warehouse Configuration</span><span>Technical Information</span></div>'
                '<div class="iv-wf-grid"><fieldset><legend>Incoming Shipments</legend>%s</fieldset><fieldset><legend>Outgoing Shipments</legend>%s</fieldset></div>'
-               '<p class="iv-route-label">Route for one pallet through Chennai Warehouse</p><ol class="iv-route" data-route-flow aria-live="polite"></ol></div></div></div></div>'
-               % (head("CONFIGURED FOR YOUR FLOOR", "How Does Unisas Configure Odoo Inventory Around Your Existing Workflows?",
-                       "We don't change how your warehouse works to suit the software. We set Odoo's own warehouse options to match it. Try the settings on the right."),
+               '<p class="iv-route-label">Pick a receipt or delivery setting to see the route one pallet takes through the Chennai warehouse.</p><ol class="iv-route" data-route-flow aria-live="polite"></ol></div></div></div></div>'
+               % (head("CONFIGURED FOR YOUR FLOOR", "How Does Unisas Configure Odoo Warehouse Management Around Your Existing Workflows?",
+                       "We don't change how your warehouse works to suit the software. We set Odoo's own warehouse options to match how your team already receives, stores and ships. "
+                       "Most businesses need fewer steps than they expect."),
                   steps(impl), odoo_nav(inv_icon, "Inventory", MENUS_S),
                   radios("iv-in", ["Receive and Store (1 step)", "Receive then Store (2 steps)", "Receive, Quality Control, then Store (3 steps)"], 2),
                   radios("iv-out", ["Deliver (1 step)", "Pick then Deliver (2 steps)", "Pick, Pack, then Deliver (3 steps)"], 1)), "iv-sec--cfg")
 
     # 5 ---- automate replenishment: Replenishment screen
-    rules = [("Reordering rules", "Min and max per product and warehouse, so orders go out on time."),
+    rules = [("Reordering rules", "Set min and max per product and warehouse, so purchase orders go out on time."),
              ("Make to order", "A confirmed sale can raise its own PO or manufacturing order."),
              ("Resupply between warehouses", "Branches top up from your main warehouse automatically."),
-             ("Putaway rules", "Received goods are sent straight to the right shelf.")]
+             ("Putaway rules", "Received goods are directed straight to the right shelf.")]
     out += sec('<div class="iv-rep">%s<div><div class="ox iv-ox" data-rp>%s<div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb">Replenishment</span></div>'
                '<span class="ox-search">%s<span class="ox-facet">%sTrigger: Manual</span><span class="ox-facet">%sTo Reorder</span></span><span></span></div>'
                '<div class="ox-scroll"><table class="ox-table iv-rp-table"><thead><tr><th>Product</th><th>Location</th><th class="ox-num">On Hand</th><th class="ox-num">Forecast</th>'
                '<th>Route</th><th class="ox-num">Min</th><th class="ox-num">Max</th><th class="ox-num">To Order</th><th></th></tr></thead><tbody data-rp-body></tbody></table></div>'
                '<div class="iv-toast" data-rp-toast role="status" aria-live="polite"></div></div>'
-               '<p class="ox-hint"><span class="ox-hint-dot"></span>Click <b>Order Once</b> to raise the order, or <b>Automate</b> to let Odoo do it from now on.</p></div></div>'
-               % ('<div class="iv-rep-copy">' + head("REPLENISHMENT", "How Can Odoo Automate Replenishment and Stock Movement?",
-                                                     "Odoo compares forecasted stock against your rules every day and tells you, or simply orders, what is about to run out.")
+               '<p class="ox-hint"><span class="ox-hint-dot"></span><b>Order Once</b> raises the order; <b>Automate</b> lets Odoo handle it from now on.</p></div></div>'
+               % ('<div class="iv-rep-copy">' + head("REPLENISHMENT", "How Can Odoo Reordering Rules Automate Replenishment and Stock Movement?",
+                                                     "Running out is rarely a buying problem; it is a timing problem. Each day, Odoo compares forecasted stock against your rules and either alerts you "
+                                                     "or simply raises the order for items about to run short. This is where inventory replenishment software pays for itself.")
                   + '<ul class="iv-rules">%s</ul></div>' % "".join('<li>%s<div><b>%s</b><span>%s</span></div></li>' % (TICK, t, x) for t, x in rules),
                   odoo_nav(inv_icon, "Inventory", MENUS), SEARCH, FUNNEL, FUNNEL), "iv-sec--rep")
 
@@ -242,13 +247,15 @@ def build(g):
              ("mrp", "CHN/MO/00213", "Built into Height-adjustable desk", "Sep 29 &middot; 1 unit"),
              ("out", "CHN/OUT/00031", "Delivered to Bluebay Retail Pvt Ltd", "Oct 01 &middot; 1 unit"),
              ("ret", "Warranty", "Covered until Oct 2028", "Linked to the customer invoice")]
-    cfgs = [("GS1 or your own barcodes", "Products, locations, lots and packages all scannable."),
-            ("Lots with expiry dates", "FEFO picking so the oldest batch leaves first."),
+    cfgs = [("GS1 or your own barcodes", "Products, locations, lots and packages are all scannable."),
+            ("Lots with expiry dates", "FEFO picking makes sure the oldest batch leaves first, which is essential for batch tracking software in regulated goods."),
             ("Serial numbers", "One record per unit, from vendor to customer to warranty."),
             ("Labels that print", "Product, lot and location labels for your Zebra or office printer.")]
-    out += sec(head("BARCODE &amp; TRACEABILITY", "How Can Unisas Configure Barcode, Lot and Serial Number Tracking?",
-                    "We decide with you what gets a barcode, which products need lots or serial numbers, and what labels you print. Then any unit can be traced from vendor to customer.", "is-center")
-               + '<div class="pl-2"><ul class="pl-grid" style="--cols:2">%s</ul><div class="pl-card"><p class="pl-k">One serial number, end to end &middot; SN-MTR-000481</p><ol class="pl-steps">%s</ol></div></div>'
+    out += sec(head("BARCODE &amp; TRACEABILITY", "How Can Unisas Configure Odoo Barcode, Lot and Serial Number Tracking?",
+                    "Scanning only helps when the right things carry a code. We decide with you which items get barcodes, which products need lots or serial numbers, and which labels you print. "
+                    "Then any unit traces from vendor to customer.", "is-center")
+               + '<div class="pl-2"><ul class="pl-grid" style="--cols:2">%s</ul><div class="pl-card"><p class="pl-k">One serial number, end to end &middot; SN-MTR-000481</p><ol class="pl-steps">%s</ol>'
+                 '<p class="pl-muted" style="margin:12px 0 0;font-size:0.88rem">One serial number, end to end: vendor receipt, production, customer delivery and warranty until 2028.</p></div></div>'
                  % ("".join('<li><span class="pl-n">%02d</span><b>%s</b><p>%s</p></li>' % (i + 1, t, x) for i, (t, x) in enumerate(cfgs)),
                     "".join('<li><span class="pl-n">%d</span><b>%s</b><em>%s</em><p>%s</p></li>' % (i + 1, w, d, r) for i, (k, r, w, d) in enumerate(trace))), "iv-sec--bc")
 
@@ -272,11 +279,12 @@ def build(g):
              '<line x1="0" x2="%d" y1="%d" y2="%d" class="iv-fc-min"/></svg>' % (W, H, path, H, path, W, minline, minline))
     tabs = "".join('<button type="button" class="iv-fc-tab%s" data-fc="%s" aria-pressed="%s">%s</button>' % (" is-on" if k == "all" else "", k, "true" if k == "all" else "false", n)
                    for k, n in [("all", "All"), ("sales", "Sales"), ("purchase", "Purchase"), ("mrp", "Manufacturing")])
-    links = [("sales", "Sales", "Salespeople see free stock and the expected date on the order line, and confirming reserves it."),
+    links = [("sales", "Sales", "Salespeople see free stock and the expected date on the order line, and confirming the order reserves it."),
              ("purchase", "Purchase", "Every PO becomes an expected receipt, and you pay only for what was received."),
-             ("mrp", "Manufacturing", "Components are reserved when an MO is confirmed and finished goods arrive in stock.")]
+             ("mrp", "Manufacturing", "Components are reserved when an MO is confirmed, and finished goods arrive in stock on completion. For inventory management for manufacturing, this removes the guesswork between the shop floor and the store.")]
     out += sec(head("CONNECTED APPS", "How Does Unisas Connect Odoo Inventory With Sales, Purchase and Manufacturing?",
-                    "This is Odoo's Forecasted Report for one product. Every confirmed order from every app is already in it, so the future stock line is always current.", "is-center")
+                    "This is Odoo's Forecasted Report for a single product. Every confirmed order from every app already sits inside it, so the future stock line is always current. "
+                    "Sales sees incoming purchases, and production sees committed sales.", "is-center")
                + '<div class="iv-fc"><ul class="iv-fc-links">%s</ul><div class="ox iv-ox" data-fcr><div class="iv-fc-top"><div><small>Forecasted Report</small><h3>[FURN-0101] Ergo task chair</h3></div>'
                  '<dl><div><dt>On Hand</dt><dd>40</dd></div><div><dt>Forecasted</dt><dd>%d</dd></div><div><dt>Min</dt><dd>30</dd></div></dl></div>'
                  '<div class="iv-fc-graph">%s<span class="iv-fc-minl">Reorder point 30</span></div><div class="iv-fc-tabs" role="group" aria-label="Filter by app">%s</div>'
@@ -284,12 +292,12 @@ def build(g):
                  % ("".join('<li data-fc-link="%s"><b>%s</b><span>%s</span></li>' % l for l in links), pts[-1], chart, tabs, lrows), "iv-sec--fc")
 
     # 8 ---- integrations
-    systems = [("Marketplaces &amp; store", "Shopify, Amazon, Flipkart", "Orders in, stock levels out", "in-out"),
-               ("Couriers", "Shiprocket, Delhivery, Blue Dart", "Rates, labels and AWB tracking", "out"),
-               ("Accounting history", "Tally, Busy, Zoho Books", "Masters and opening balances", "in"),
-               ("GST e-Way bill", "NIC portal", "e-Way bill on dispatch", "out"),
-               ("Devices", "Scanners, Zebra printers, scales", "Scans in, labels out", "in-out"),
-               ("3PL &amp; custom apps", "REST / XML-RPC API", "Receipts and dispatch confirmations", "in-out")]
+    systems = [("Marketplaces &amp; store", "Shopify, Amazon, Flipkart", "Orders come in and stock levels go out, the core of inventory management for ecommerce.", "in-out"),
+               ("Couriers", "Shiprocket, Delhivery, Blue Dart", "Rates, shipping labels and AWB tracking.", "out"),
+               ("Accounting history", "Tally, Busy, Zoho Books", "Masters and opening balances.", "in"),
+               ("GST e-Way bill", "NIC portal", "e-Way bill generated on dispatch.", "out"),
+               ("Devices", "Scanners, Zebra printers, scales", "Scans in, labels out.", "in-out"),
+               ("3PL &amp; custom apps", "REST / XML-RPC API", "Receipts and dispatch confirmations.", "in-out")]
     arrows = {"in": "&larr;", "out": "&rarr;", "in-out": "&harr;"}
     nodes = "".join('<li><span class="iv-sys-dir">%s</span><b>%s</b><small>%s</small><span>%s</span></li>' % (arrows[d], t, s, x) for t, s, x, d in systems)
     log = [("10:42:08", "Amazon", "Order 402-8812 imported as S00511, 2 units reserved in BLR/Stock"),
@@ -298,14 +306,14 @@ def build(g):
            ("11:02:47", "e-Way bill", "EWB 3410 2287 6612 generated for CHN/OUT/00032"),
            ("11:15:02", "Zebra ZD421", "12 lot labels printed for CHN/IN/00010")]
     out += sec('%s<div class="iv-int"><ul class="iv-sys">%s</ul><div class="iv-log ox-solo"><p class="iv-log-h"><b>Integration log</b><span class="iv-live">Live</span></p>'
-               '<ol>%s</ol><p class="iv-log-f">Failed syncs retry automatically and alert your team in Odoo.</p></div></div>'
-               % (head("INTEGRATIONS", "How Can Unisas Integrate Odoo Inventory With Your Existing Systems?",
-                       "Your stock rarely lives in one system. We connect Odoo to the channels, carriers and devices around it, so one stock figure feeds them all."),
+               '<ol>%s</ol><p class="iv-log-f">Failed syncs retry automatically and alert your team inside Odoo.</p></div></div>'
+               % (head("INTEGRATIONS", "How Can Unisas Integrate Your Inventory Management Software With Existing Systems?",
+                       "Your stock rarely lives in one place. We connect Odoo to the channels, carriers and devices around it, so one stock figure feeds them all."),
                   nodes, "".join('<li><span class="mono">%s</span><b>%s</b><p>%s</p></li>' % l for l in log)), "iv-sec--int")
 
     # 9 ---- data migration: Odoo import screen + reconciliation
     mig = [("Extract", "Item masters, godowns, batches and closing stock from Tally, Excel or your old ERP."),
-           ("Clean", "Duplicates merged, units standardised, dead SKUs archived with your sign-off."),
+           ("Clean", "Duplicates merged, units standardised and dead SKUs archived with your sign-off."),
            ("Test import", "A trial load into a copy of your database, with every warning fixed."),
            ("Reconcile", "Quantity and value matched warehouse by warehouse before cutover.")]
     maps = [("Item Code", "Internal Reference"), ("Item Name", "Name"), ("UOM", "Unit of Measure"), ("Godown", "Location"),
@@ -319,14 +327,16 @@ def build(g):
                + '<div class="iv-mig">%s<div class="pl-card"><p class="pl-k">Column mapping &middot; tally_closing_stock_30Sep.xlsx</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Your file</th><th></th><th>Becomes</th></tr></thead><tbody>%s</tbody></table></div></div>'
                  '<div class="pl-card"><p class="pl-k">Opening stock reconciliation</p><p class="pl-muted" style="margin:-6px 0 10px;font-size:0.86rem">Tally closing 30 Sep vs new opening 01 Oct</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Warehouse</th><th class="is-c">Units</th><th class="is-c">Value</th></tr></thead><tbody>%s</tbody>'
                  '<tfoot><tr><th>Total</th><td class="is-c"><b>2,487</b></td><td class="is-c"><b>%s</b></td></tr></tfoot></table></div><p style="margin:12px 0 0"><span class="pl-chip is-ok">&#10003; All warehouses matched &middot; signed off</span></p></div></div>'
+                 '<p class="pl-muted" style="margin:18px auto 0;max-width:820px;text-align:center">Tally columns map to Odoo fields, and 30 September closing stock matches 1 October opening stock, signed off per warehouse.</p>'
                  % (steps(mig), mrows2, rrows, inr(sum(v for _w, _q, v in rec))),
                "iv-sec--mig")
 
     # 10 ---- visibility & valuation: costing method switch
-    kpis = [("Stock value", inr(6304300), "All warehouses, live"), ("Days of cover", "38", "Ergo task chair, at current sales"),
-            ("Ageing &gt; 90 days", inr(412800), "17 products to clear"), ("Count accuracy", "98.6%", "Last 30 cycle counts")]
-    out += sec(head("VISIBILITY &amp; VALUATION", "How Can Odoo Improve Inventory Visibility and Valuation?",
-                    "Every movement carries its cost, so stock value is live, not a month-end estimate. Switch the costing method to see how Odoo values the same movements.", "is-center")
+    kpis = [("Stock value", inr(6304300), "Across all warehouses, updated live."), ("Days of cover", "38", "How long current stock lasts at today&rsquo;s sales rate."),
+            ("Ageing over 90 days", inr(412800), "Slow moving inventory flagged for clearance."), ("Count accuracy", "98.6%", "Measured across your last 30 cycle counts.")]
+    out += sec(head("VISIBILITY &amp; VALUATION", "How Can Odoo Inventory Valuation Improve Stock Visibility?",
+                    "Every movement carries its cost, so stock value is live instead of a month-end estimate. Switch the costing method between FIFO and AVCO to see how Odoo values the same movements. "
+                    "Finance and operations finally read from one number.", "is-center")
                + '<ul class="iv-kpis">%s</ul>' % "".join('<li><small>%s</small><b>%s</b><span>%s</span></li>' % k for k in kpis)
                + '<div class="ox iv-ox" data-val><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Valuation</a><span>[FURN-0101] Ergo task chair</span></span></div>'
                  '<span></span><div class="iv-cost" role="group" aria-label="Costing method"><span>Costing Method</span><button type="button" class="is-on" data-cost="fifo" aria-pressed="true">FIFO</button>'
@@ -337,13 +347,13 @@ def build(g):
 
     # 11 ---- what's included: an Odoo receipt from Unisas
     scope = [("Discovery &amp; design", [("Warehouse walk-through &amp; process map", "Receipt, storage, picking and dispatch flows agreed"),
-                                         ("Warehouse, location &amp; route design", "Bins, zones and 1/2/3-step operations")]),
+                                         ("Warehouse, location &amp; route design", "Bins, zones and one-, two- or three-step operations")]),
              ("Configuration", [("Products, variants &amp; units", "Categories, packaging and units of measure"),
                                 ("Reordering &amp; putaway rules", "Min/max, MTO and resupply between warehouses"),
                                 ("Lots, serials &amp; expiry", "Tracking rules and FEFO removal strategy"),
                                 ("Valuation &amp; accounting link", "FIFO or AVCO with automated stock entries")]),
              ("Data, devices &amp; people", [("Opening stock migration", "Tested import and warehouse-wise reconciliation"),
-                                              ("Barcode &amp; label printing", "Scanners, mobile app and label templates"),
+                                              ("Barcode &amp; label printing", "Scanners, the mobile app and label templates"),
                                               ("Role-based training", "Storekeepers, buyers and accounts on their own data"),
                                               ("Go-live &amp; first cycle count", "Hypercare support through the first weeks")])]
     body = ""
@@ -359,19 +369,19 @@ def build(g):
                '<div class="ox-ftabs"><span class="is-on">Operations</span><span>Additional Info</span></div>'
                '<table class="iv-scope-t"><thead><tr><th>Product</th><th class="ox-num">Demand</th><th class="ox-num">Quantity</th><th>Picked</th></tr></thead><tbody>%s</tbody></table></div></div></div>'
                % (head("WHAT'S INCLUDED", "What Does an Odoo Inventory Implementation With Unisas Include?",
-                       "Our standard scope, written as the Odoo receipt you'll get from us. Press Validate to request it for your warehouses.", "is-center"), body), "iv-sec--scope")
+                       "Our standard scope for inventory management software rollouts, written as the Odoo receipt you'll get from us. Press Validate to request it for your warehouses.", "is-center"), body), "iv-sec--scope")
 
     # 12 ---- businesses: product labels
     biz = [("Distribution &amp; wholesale", "Several warehouses, bulk storage and fast pick-pack-ship.", "CHN / Bulk B-04", "PALLET &middot; 40 units", "8 901234 567012"),
-           ("Manufacturing", "Components reserved for production and finished goods put away.", "COMP-2210", "SN-MTR-000481", "8 901234 221007"),
-           ("Retail &amp; eCommerce", "One stock figure for stores, website and marketplaces.", "Cotton kurta &middot; M &middot; Blue", "VARIANT &middot; 3 stores", "8 901234 880145"),
+           ("Manufacturing", "Components reserved for production and finished goods put away on completion.", "COMP-2210", "SN-MTR-000481", "8 901234 221007"),
+           ("Retail &amp; eCommerce", "One stock figure for stores, website and marketplaces, making it dependable inventory management software for retail and online sellers.", "Cotton kurta &middot; M &middot; Blue", "VARIANT &middot; 3 stores", "8 901234 880145"),
            ("Pharma &amp; food", "Lots with expiry dates and first-expiry-first-out picking.", "LOT-2026-0912", "EXP 03/2027 &middot; FEFO", "8 901234 450092"),
            ("Electronics &amp; equipment", "Serial numbers tied to warranty and service history.", "Laptop 14&Prime; i5", "SN 5CG2481KQ7", "8 901234 330218"),
            ("Spare parts &amp; trading", "Thousands of SKUs, bin locations and reorder points.", "Bearing 6204-2RS", "BIN R12-S3 &middot; MIN 200", "8 901234 620421")]
     cards = "".join('<li><div class="iv-label" aria-hidden="true"><small>%s</small><b>%s</b><i class="iv-bars"></i><span class="mono">%s</span></div><h3>%s</h3><p>%s</p></li>'
                     % (a, b, c, t, x) for t, x, a, b, c in biz)
-    out += sec(head("WHO IT'S FOR", "Which Businesses Can Use Odoo for Inventory and Warehouse Management?",
-                    "Any business that holds stock. What changes from one industry to the next is how stock is tracked, so here is the label each one would print.", "is-center")
+    out += sec(head("WHO IT'S FOR", "Which Businesses Can Use Odoo for Inventory and Warehouse Stock Management?",
+                    "Any business that holds stock can run on Odoo. What changes from one industry to the next is how that stock is tracked, so here is the label each one would print.", "is-center")
                + '<ul class="iv-biz">%s</ul>' % cards, "iv-sec--biz")
 
     # 13 ---- plan
@@ -383,7 +393,7 @@ def build(g):
              ("A warehouse visit", "On site or by video, to see your racks, labels and paperwork."),
              ("A fixed-scope plan", "Phases, timeline and price, agreed before any work starts.")]
     out += sec('<div class="iv-plan"><div>%s<ol class="iv-first">%s</ol><div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan my Odoo Inventory rollout %s</a></div></div>'
-               '<div class="iv-pl ox-solo"><p class="iv-pl-h"><b>Typical rollout</b><small>8 to 10 weeks, single company, up to 3 warehouses</small></p>'
+               '<div class="iv-pl ox-solo"><p class="iv-pl-h"><b>Typical rollout</b><small>8 to 10 weeks for one company with up to three warehouses, from discovery to go-live and the first cycle count.</small></p>'
                '<div class="iv-pl-weeks"><span></span><div>%s</div></div>%s</div></div>'
                % (head("NEXT STEPS", "How Can We Plan Your Odoo Inventory Implementation?",
                        "Every plan starts with your warehouse, not a template. Here is how a typical rollout runs."),
@@ -486,5 +496,17 @@ JS = r'''<script>
 </script>
 '''
 
-CTA = ("Let's Get Your Stock Under Control in Odoo",
-       "Tell us your warehouses, SKUs and channels. We&rsquo;ll show the same flow in Odoo Inventory and recommend a setup.")
+CTA = ("Let's Get Your Stock Under Control With Odoo",
+       "Tell us about your warehouses, SKUs and channels. We&rsquo;ll show the same flow running in Odoo and recommend a setup.")
+
+# 16 FAQ (rendered above the final CTA)
+FAQ = [("Is Odoo a good fit for a small business with one warehouse?",
+        "Yes. Odoo works well as inventory management software for small business teams because you only switch on the steps you need. Many start with simple receipts, then add barcodes or a second location later."),
+       ("How long does an Odoo Inventory implementation take?",
+        "A typical rollout runs 8 to 10 weeks for one company with up to three warehouses. Complex routes, heavy integrations or large data clean-ups can extend that, and we confirm timelines in a fixed-scope plan."),
+       ("Can Odoo replace Tally for stock tracking?",
+        "Odoo can take over stock movement, warehouse locations and valuation while Tally history is migrated in as opening balances. Some businesses keep Tally for statutory accounts during transition, and we can integrate the two."),
+       ("Does Odoo support barcode scanning and label printing?",
+        "Yes. Odoo Barcode works on handheld scanners and the mobile app, covering receipts, picking, transfers and counts. Unisas configures label templates for products, lots and locations on Zebra or standard office printers."),
+       ("How is this different from standalone inventory software?",
+        "Standalone inventory control software tracks quantities but stops there. In Odoo, sales, purchase, manufacturing and accounting share one database, so stock, orders and valuation update together without exports, duplicate entries or month-end reconciliation work.")]
