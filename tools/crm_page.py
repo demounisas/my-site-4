@@ -65,7 +65,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Leads from web, email &amp; WhatsApp", "Stages that match your process", "Forecasts you can trust"])
     copy = ('<div class="crm-hero-copy">%s<p class="crm-eyebrow mono">ODOO CRM IMPLEMENTATION</p>'
             '<h1 class="crm-h1">CRM Implementation for <span>Smarter Sales</span>, Powered by Odoo</h1>'
-            '<p class="crm-lead">We set up Odoo CRM around how your team sells, so every lead lands in one pipeline and forecasts come from real deals.</p><ul class="crm-hero-points">%s</ul>'
+            '<p class="crm-lead">Unisas, an Odoo partner, delivers CRM implementation built around how your team sells, so every lead reaches one pipeline and forecasts reflect real deals.</p><ul class="crm-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo CRM %s</a>'
             '<a href="#setup" class="btn btn-ghost">How we set it up</a></div></div>' % (crumb, points, g["ARROW"]))
     journey = '''<div class="crm-journey" aria-hidden="true">
@@ -104,12 +104,13 @@ def build(g):
     out = ""
 
     # 2 ---- what is Odoo CRM: interactive Odoo CRM explorer
-    benefits = [(IC["inbox"], "One home for every enquiry", "Leads from your website, email, WhatsApp and calls land in one pipeline, tagged by source."),
+    benefits = [(IC["inbox"], "One home for every enquiry", "Leads from your website, email, WhatsApp and calls land in one Odoo sales pipeline, tagged by source."),
                 (IC["bell"], "No follow-up forgotten", "Every deal carries its next activity, coloured green, orange or red as it comes due."),
                 (IC["target"], "Forecasts from real deals", "Expected revenue and probability come straight from the pipeline, not a spreadsheet.")]
     ben = "".join('<li><span class="crm-ic">%s</span><span><strong>%s</strong>%s</span></li>' % b for b in benefits)
     out += sec(head("WHAT IS ODOO CRM", "What Is Odoo CRM and How Can It Improve Your Sales Process?",
-                    "Odoo CRM is the sales pipeline app in Odoo ERP. It tracks every lead from first enquiry to signed deal and shares data with Sales and Invoicing. Try it below.",
+                    "Think of it as the Odoo CRM module that runs every deal inside Odoo ERP. It follows every lead from first enquiry to signed deal and shares data with Sales and Invoicing. "
+                    "Most teams we meet run sales across a shared inbox, a spreadsheet and a few phones. A good customer relationship management implementation replaces all three with one screen your whole team trusts. Try it below.",
                     "is-center is-wide")
                + ox.frame(g["TILE_ICONS"][1]) + '<ul class="crm-benefits is-row">%s</ul>' % ben, "crm-sec--what")
 
@@ -125,20 +126,22 @@ def build(g):
                '<div class="crm-q-result" aria-live="polite"><div class="crm-q-meter"><i style="--p:0"></i></div>'
                '<p class="crm-q-msg"><strong class="mono">0 / 6</strong><span>Tick the statements that sound like your team.</span></p>'
                '<a href="#get-demo" class="btn btn-primary btn-red crm-q-cta" data-svc-cta="implementation" hidden>Map my pipeline %s</a></div></div>'
-               % (head("READINESS CHECK", "Is Your Sales Process Ready for a CRM?", "Tick what sounds familiar. Two or more and a CRM will pay for itself quickly. You don't need a perfect process first; we help you define it.", "is-center"),
+               % (head("READINESS CHECK", "Is Your Business Ready for the Process of Implementing CRM?",
+                       "Tick what sounds familiar. Two or more, and a CRM will pay for itself quickly. You don't need a perfect process first. Rolling out Odoo is usually where it gets defined, and we help you do it.", "is-center"),
                   chips, g["ARROW"]), "crm-sec--quiz")
 
     # 4 ---- designed around your process: Kanban board
     cols = [("CAPTURE", "01", "Every enquiry lands in one place", "Website forms, email aliases and WhatsApp create leads automatically, tagged by source.",
              ["Website & landing page forms", "Email-to-lead aliases", "Duplicate detection & merging"]),
-            ("QUALIFY", "02", "The right lead reaches the right person", "Scoring and assignment rules route good leads by region, product or deal size.",
+            ("QUALIFY", "02", "The right lead reaches the right person", "Odoo lead management rules score and route good leads by region, product or deal size.",
              ["Assignment by territory or product", "Lead scoring on your criteria", "Lost reasons you can report on"]),
             ("CLOSE", "03", "Deals keep moving until they're won", "Stages mirror your sales steps, and quotes are created straight from the deal.",
              ["Stages that match your process", "Quote directly from the deal", "Won deals flow into Sales & Invoicing"])]
     board = "".join('<div class="crm-col crm-col--%d"><p class="crm-col-head mono"><span>%s</span><b>%s</b></p><h3>%s</h3><p>%s</p>%s</div>'
                     % (i, tag, n, t, x, "".join('<div class="crm-kcard"><i></i>%s</div>' % p for p in pts)) for i, (tag, n, t, x, pts) in enumerate(cols))
-    out += sec(head("OUR CRM DESIGN", "How We Design Odoo CRM Around Your Sales Process",
-                    "We start from how your team actually sells, then shape Odoo's stages, rules and views around it.") + '<div class="crm-board">%s</div>' % board,
+    out += sec(head("OUR CRM DESIGN", "How We Apply the Best CRM Implementation Strategies to Odoo CRM",
+                    "We start from how your team actually sells, then shape Odoo's stages, rules and views around it. The principle is simple: fit the tool to the work, not the work to the tool. "
+                    "Each board below shows one part of the pipeline we configure for you.") + '<div class="crm-board">%s</div>' % board,
                "crm-sec--board", "setup")
 
     # 5 ---- what you can manage: bento
@@ -151,14 +154,14 @@ def build(g):
             '<span class="ox-c-foot"><span class="ox-stars">%s</span><span class="ox-act ox-act--red">%s</span><span class="ox-team">Sales</span><span class="ox-av" style="--c:#4C9F70">M</span></span></article></div>'
             % (stars(2), icon('<circle cx="9" cy="8" r="3"/><path d="M3 19c.6-3 3-5 6-5s5.4 2 6 5"/>', 14), stars(3),
                icon('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>', 14)))
-    tiles = [("is-big", IC["funnel"], "Opportunities &amp; Pipeline", "Drag deals through stages on a Kanban board, with value, probability and expected close date on every card.", mini),
+    tiles = [("is-big", IC["funnel"], "Opportunities &amp; Pipeline", "Drag deals through your Odoo CRM pipeline on a Kanban board, with value, probability and expected close date on every card.", mini),
              ("", IC["inbox"], "Leads &amp; Enquiries", "Capture, de-duplicate and qualify enquiries before they reach the pipeline.", ""),
              ("is-dark", IC["bell"], "Activities &amp; Follow-ups", "Calls, meetings and to-dos on each deal, with reminders when they're due.", ""),
              ("", IC["people"], "Customers &amp; Contacts", "Companies, contacts and the full history of calls, emails and deals.", ""),
-             ("", IC["doc"], "Quotations", "Turn an opportunity into a branded quote in one click.", ""),
+             ("", IC["doc"], "Quotations", "Turn an opportunity into a branded Odoo quotation in one click.", ""),
              ("is-tint", IC["target"], "Sales Teams &amp; Targets", "Teams, territories and targets, with a dashboard for each manager.", "")]
     bento = "".join('<div class="crm-tile %s"><span class="crm-ic">%s</span><h3>%s</h3><p>%s</p>%s</div>' % t for t in tiles)
-    out += sec(head("WHAT YOU CAN MANAGE", "What Can You Manage With Odoo CRM?", "One app covers the whole sales cycle, from first enquiry to the quote that wins the deal.")
+    out += sec(head("WHAT YOU CAN MANAGE", "What Can You Manage With Odoo CRM?", "From first enquiry to the quote that wins the deal, Odoo CRM features cover the whole sales cycle.")
                + '<div class="crm-bento">%s</div>' % bento, "crm-sec--bento")
 
     # 6 ---- automations: rule cards on navy
@@ -172,7 +175,7 @@ def build(g):
                     '<span class="crm-toggle" aria-hidden="true"><i></i></span></li>' % (trg.upper(), w, t) for trg, w, t in rules)
     out += sec('<div class="crm-auto-wrap">%s<ul class="crm-rules">%s</ul></div>'
                % (head("AUTOMATION", "What CRM Processes Can Unisas Automate?",
-                       "We automate the steps between sales stages, so your team sells instead of doing admin."), cards),
+                       "We automate the steps between sales stages using Odoo CRM automation rules, so your team spends its day talking to buyers instead of updating fields."), cards),
                "crm-sec--auto")
 
     # 7 ---- integrations: orbit
@@ -182,38 +185,40 @@ def build(g):
     core = g["TILE_ICONS"][1]
     out += sec('<div class="crm-integ">%s<div class="crm-orbit" style="--n:%d"><div class="crm-o-core"><span class="crm-o-logo">%s</span><strong>Odoo CRM</strong><small class="mono">TWO-WAY SYNC</small></div><ul>%s</ul></div></div>'
                % (head("INTEGRATIONS", "How Can Odoo CRM Connect With Your Existing Business Systems?",
-                       "Odoo CRM logs enquiries, emails and calls from your channels against the right deal."
-                       ' <a class="crm-inline-link" href="odoo-integration.html">See our integration service</a>'),
+                       "Every enquiry, email, chat and call from each channel is logged against the right deal. Where no connector exists, our developers build a custom Odoo CRM integration through the API."
+                       ' <a class="crm-inline-link" href="odoo-integration.html">See our integration service &rarr;</a>'),
                   len(nodes), core, orbit), "crm-sec--integ")
 
     # 8 ---- what's included: one package card
-    pk = [(IC["gear"], "Setup &amp; configuration", ["Pipeline stages &amp; sales teams", "Lead scoring &amp; assignment rules", "Activity types &amp; email templates", "Dashboards for each manager"]),
+    pk = [(IC["gear"], "Setup &amp; configuration", ["Pipeline stages &amp; sales teams", "Lead scoring &amp; assignment rules", "Activity types &amp; email templates", "An Odoo CRM dashboard for each manager"]),
           (IC["plug"], "Data &amp; integrations", ["Import from Excel or your current CRM", "Website, email &amp; WhatsApp capture", "Calendar &amp; phone integration", "Link to Sales and Invoicing"]),
-          (IC["grad"], "Training &amp; support", ["Role-based training for sales &amp; managers", "Short user guides for daily tasks", "Hypercare support after launch", "Improvements as you grow"])]
+          (IC["grad"], "Training &amp; support", ["Role-based Odoo CRM training for sales &amp; managers", "Short user guides for daily tasks", "Hypercare support after launch", "Odoo CRM customization as you grow"])]
     colsh = "".join('<div class="crm-pk-col"><span class="crm-ic">%s</span><h3>%s</h3><ul>%s</ul></div>' % (ic, t, "".join("<li>%s%s</li>" % (TICK, p) for p in pts)) for ic, t, pts in pk)
-    out += sec(head("WHAT'S INCLUDED", "What Does an Odoo CRM Implementation With Unisas Include?", "Everything needed to take your team from spreadsheets to a working pipeline, in one fixed-scope project.", "is-center")
+    out += sec(head("WHAT'S INCLUDED", "What Do Our Odoo CRM and Customer Experience Implementation Services Include?",
+                    "Our CRM implementation services take your team from spreadsheets to a working Odoo pipeline in one fixed-scope project. No surprise add-ons later. "
+                    "We treat customer relationship management implementation as a business change, not a software install, so training and support come in every package.", "is-center")
                + '<div class="crm-package"><div class="crm-pk-head"><span class="mono">ODOO CRM IMPLEMENTATION PACKAGE</span><strong>Fixed scope · agreed up front</strong></div>'
                  '<div class="crm-pk-body">%s</div><div class="crm-pk-foot"><span>Need more than CRM? We extend the same project to Sales, Invoicing or Email Marketing.</span>'
                  '<a href="#get-demo" class="link-arrow" data-svc-cta="implementation">Get a scoped quote %s</a></div></div>' % (colsh, g["ARROW"]), "crm-sec--pkg")
 
     # 9 ---- process: six phases, and how the client's CRM pipeline takes shape in each
-    phases = [("Discover", "Week 1", "Workshops with your sales team: how leads arrive, who follows them up, and what managers need to see.",
-               "Sales process map", "2 workshops of 2 hours"),
-              ("Design", "Week 2", "Pipeline stages, lead rules, automations and reports agreed on paper before anything is built.",
-               "Design document with your stages", "1 review meeting"),
-              ("Configure", "Weeks 3&ndash;4", "Sales teams, assignment rules, activity types, email templates and dashboards set up on a test database.",
-               "Walkthrough of the test database", "1 hour a week"),
-              ("Migrate &amp; connect", "Weeks 4&ndash;5", "Leads and customers imported from your spreadsheets or old CRM; website forms, email and WhatsApp connected.",
-               "Data check: 2,340 leads and 860 customers", "Your current data exports"),
-              ("Train", "Week 6", "Salespeople and managers learn on their own pipeline, with short guides for daily tasks.",
-               "Every user logs a test deal", "Half a day per team"),
-              ("Go live &amp; hypercare", "Weeks 6&ndash;8", "Switch-over to Odoo, daily check-ins in the first weeks, rules refined as the team settles in.",
-               "Hypercare report after two weeks", "A go-live date")]
+    phases = [("Discover", "Week 1", "Workshops with your sales team: how leads arrive, who follows them up and what managers need.",
+               "Sales process map"),
+              ("Design", "Week 2", "Pipeline stages, lead rules, automations and reports agreed on paper before anything is built. Nothing is configured until you approve it.",
+               "CRM implementation plan with your stages"),
+              ("Configure", "Weeks 3&ndash;4", "Sales teams, assignment rules, email templates and dashboards set up on a test Odoo database.",
+               "Walkthrough of the test database"),
+              ("Migrate &amp; connect", "Weeks 4&ndash;5", "CRM data migration of leads and customers from spreadsheets or your old system; website forms, email and WhatsApp connected.",
+               "Data check of imported records"),
+              ("Train", "Week 6", "Salespeople and managers learn on their own pipeline, not a demo.",
+               "Every user logs a test deal"),
+              ("Go live &amp; hypercare", "Weeks 6&ndash;8", "Switch-over to Odoo ERP, daily check-ins, and rules refined as the team settles in.",
+               "Hypercare report after two weeks")]
     steps = "".join('<li><button type="button" class="crm-pr-st%s" data-pr="%d" aria-pressed="%s"><span class="mono">%02d</span><b>%s</b><small>%s</small></button></li>'
-                    % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, n, w) for i, (n, w, d, so, you) in enumerate(phases))
+                    % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, n, w) for i, (n, w, d, get) in enumerate(phases))
     out += sec(head("OUR PROCESS", "What Does the Unisas Odoo CRM Implementation Process Look Like?",
-                    "Six phases, each ending with something you sign off. Pick a phase to see what happens in it and how your Odoo CRM pipeline looks at that point. "
-                    "A typical rollout takes six to eight weeks; integrations and data decide the rest.", "is-center")
+                    "Six phases, each ending with something you sign off. Pick a phase to see what happens in it. Our approach follows the steps most rollouts skip or rush, "
+                    "and a typical rollout takes six to eight weeks; integrations and data volume decide the rest.", "is-center")
                + '<div class="crm-pr" data-prbox><ol class="crm-pr-sts">%s</ol><div class="crm-pr-g"><div class="crm-pr-bd ox-solo" data-prboard aria-hidden="true"></div>'
                  '<div class="crm-pr-c" data-prcard aria-live="polite"></div></div></div>' % steps
                + '<script type="application/json" id="crm-phases">%s</script>' % json.dumps(phases), "crm-sec--proc")
@@ -238,7 +243,7 @@ def build(g):
              % (thead, tbody))
     out += sec('<div class="crm-results">%s<div class="crm-report" aria-label="Example Odoo CRM pipeline analysis">%s<div class="crm-kpis">%s</div></div></div>'
                % (head("RESULTS YOU CAN TRACK", "What Business Results Can You Track With Odoo CRM?",
-                       "Reports use what was actually quoted, won and billed, and update as deals move."), pivot, tiles),
+                       "Reports use what was actually quoted, won and billed. A successful customer relationship management implementation in Odoo shows its value here: managers stop chasing status updates."), pivot, tiles),
                "crm-sec--results")
 
     # 11 ---- businesses: industry tabs
@@ -267,8 +272,8 @@ def build(g):
 
     # 12 ---- why Unisas: icon cards
     why = [(IC["funnel"], "Built around your sales process", "We map how your team actually sells before configuring anything, so the CRM fits the way you work on day one."),
-           (IC["grad"], "Certified Odoo specialists", "Functional consultants and developers who implement Odoo every day, including CRM, Sales and Invoicing together."),
-           (IC["people"], "Support after go-live", "We stay on after launch to refine stages, rules and reports as your sales team grows.")]
+           (IC["grad"], "Certified Odoo specialists", "Functional Odoo consultants and developers who implement Odoo every day, including CRM, Sales and Invoicing together."),
+           (IC["people"], "Support after go-live", "We stay on after launch, refining stages, rules and reports as your sales team grows.")]
     # each card opens with a small Odoo-style badge that shows what the card promises
     badges = ['<span class="ox-sbar is-mini"><span class="ox-sb is-done">New</span><span class="ox-sb is-done">Qualified</span><span class="ox-sb is-cur">Won</span></span>',
               '<span class="crm-why-apps">%s</span>' % "".join('<span><i style="--c:%s"></i>%s</span>' % a for a in
@@ -276,8 +281,8 @@ def build(g):
               '<span class="crm-why-live"><i></i>Hypercare &middot; Active</span>']
     items = "".join('<li><span class="crm-why-top ox-solo" aria-hidden="true">%s</span><h3>%s</h3><p>%s</p></li>'
                     % (badges[i], t, x) for i, (ic, t, x) in enumerate(why))
-    out += sec('<div class="crm-why-head">%s<p class="crm-sub">One team that understands both sales processes and Odoo, from the first workshop to long after go-live.</p></div><ol class="crm-why">%s</ol>'
-               % (head("WHY UNISAS", "Why Businesses Choose Unisas for Odoo CRM"), items), "crm-sec--why")
+    out += sec('<div class="crm-why-head">%s<p class="crm-sub">Plenty of firms can install Odoo; fewer understand why sales teams abandon a CRM. As an Odoo implementation partner, we bring sales process expertise from the first workshop to long after go-live. We measure success by adoption, not launch day: the right setup is the one your reps still use next year.</p></div><ol class="crm-why">%s</ol>'
+               % (head("WHY UNISAS", "Why Businesses Choose Unisas for the Best CRM System Implementation in Odoo"), items), "crm-sec--why")
 
     out += SCRIPT + ox.JS
     return out
@@ -340,7 +345,7 @@ SCRIPT = '''<script>
       if(L>=5)foot.push('Won this week &#8377; 9,80,000');
       return head+'<div class="crm-pr-cols">'+cols+'</div>'+(foot.length?'<p class="crm-pr-chips">'+foot.map(function(f){return '<span>'+f+'</span>';}).join('')+'</p>':'<p class="crm-pr-chips is-note">Stages drafted from your workshops. Nothing is built yet.</p>');}
     function draw(i){var p=PH[i];bd.innerHTML=board(i);
-      cd.innerHTML='<p class="crm-eyebrow mono">PHASE '+(i+1)+' OF 6 &middot; '+p[1]+'</p><h3>'+p[0]+'</h3><p>'+p[2]+'</p><dl><div><dt>You sign off</dt><dd>'+p[3]+'</dd></div><div><dt>Your team&rsquo;s time</dt><dd>'+p[4]+'</dd></div></dl>'+
+      cd.innerHTML='<p class="crm-eyebrow mono">PHASE '+(i+1)+' OF 6 &middot; '+p[1]+'</p><h3>'+p[0]+'</h3><p>'+p[2]+'</p><dl><div><dt>You get</dt><dd>'+p[3]+'</dd></div></dl>'+
         '<div class="crm-pr-nav"><button type="button" class="btn btn-ghost" data-prgo="-1"'+(i?'':' disabled')+'>&larr; Previous</button><button type="button" class="btn btn-ghost" data-prgo="1"'+(i<5?'':' disabled')+'>Next phase &rarr;</button></div>';}
     var cur=0;function go(i){cur=i;pb.forEach(function(b,j){b.classList.toggle('is-on',j===i);b.classList.toggle('is-done',j<i);b.setAttribute('aria-pressed',j===i);});draw(i);}
     pb.forEach(function(b){b.addEventListener('click',function(){go(+b.getAttribute('data-pr'));});});
@@ -353,3 +358,14 @@ SCRIPT = '''<script>
 
 CTA = ("Let's Map Your Sales Process to Odoo CRM",
        "Tell us how your team sells today. We&rsquo;ll show your pipeline in Odoo CRM and recommend the right setup.")
+
+FAQ = [("How long does a CRM implementation take?",
+        "Most customer relationship management implementation projects in Odoo take six to eight weeks from discovery to go-live. Teams with clean data and standard channels can move faster, while custom integrations or large legacy imports add a week or two."),
+       ("What are the stages of CRM implementation?",
+        "Our Odoo rollout runs six: discover, design, configure, migrate and connect, train, then go live with hypercare. Each stage ends with a deliverable you approve, so scope, cost and timeline stay visible and under your control throughout the project."),
+       ("What are the best practices for CRM implementation?",
+        "Map your real sales process first, agree stages and rules before building, clean data before importing, and train people on their own pipeline. Above all, keep a named owner on your side who drives adoption."),
+       ("Why do CRM projects fail, and how does Unisas prevent it?",
+        "Most fail on adoption, not software. Unisas designs the pipeline with your sales team, trains each role on live deals, and stays through hypercare, so your rollout ends with daily use, not shelfware."),
+       ("How much does Odoo CRM implementation cost?",
+        "Odoo CRM pricing depends on users, integrations and data volume. After a free discovery call, we send a fixed-scope proposal with a clear timeline and price, so your project has no surprise invoices midway through.")]

@@ -17,7 +17,7 @@ import io
 import os
 import re
 
-from company_pages import COMPANY, COMPANY_MOCKS, contact_cards
+from company_pages import COMPANY, COMPANY_MOCKS, CONTACT_DETAILS, contact_cards
 from service_pages import SERVICES, SERVICE_MOCKS
 import crm_page
 import sales_page
@@ -210,8 +210,37 @@ def s_flow(d, alt):
     return section(head(d["title"], d["eyebrow"], sub=d.get("sub", "")) + '<ol class="mp-flow">%s</ol>' % nodes, alt)
 
 
+def s_story(d, alt):
+    paras = "".join("<p>%s</p>" % x for x in d["items"])
+    body = ('<div class="mp-split">%s<div class="mp-story"><p class="mp-story-lead">%s</p>%s</div></div>'
+            % ('<div class="mp-sticky">' + head(d["title"], d["eyebrow"], center=False, sub=d.get("sub", "")) + "</div>", d["lead"], paras))
+    return section(body, alt)
+
+
+def s_mission(d, alt):
+    cards = "".join('<div class="mp-mv%s"><p class="mp-tag mono">%s</p><p class="mp-mv-text">%s</p></div>' % (" is-dark" if i == 0 else "", t, x)
+                    for i, (t, x) in enumerate(d["items"]))
+    return section(head(d["title"], d["eyebrow"], sub=d.get("sub", "")) + '<div class="mp-mv-grid">%s</div>' % cards, alt)
+
+
+def s_industries(d, alt):
+    cards = "".join('<div class="mp-ind"><h3>%s</h3><p>%s</p><ul>%s</ul></div>' % (t, x, "".join("<li class=\"mono\">%s</li>" % m for m in mods))
+                    for t, x, mods in d["items"])
+    note = '<p class="mp-ind-note">%s</p>' % d["note"] if d.get("note") else ""
+    return section(head(d["title"], d["eyebrow"], sub=d.get("sub", "")) + '<div class="mp-ind-grid">%s</div>%s' % (cards, note), alt)
+
+
+def s_talk(d, alt):
+    c = CONTACT_DETAILS
+    body = ('<div class="mp-talk"><h2 class="section-title">%s</h2><p class="section-sub">%s</p><div class="cta-row">'
+            '<a class="btn btn-primary btn-red" href="tel:%s">Call %s</a><a class="btn btn-ghost" href="mailto:%s">Email %s</a></div></div>'
+            % (d["title"], d["sub"], c["phone_href"], c["phone"], c["email"], c["email"]))
+    return section(body, alt)
+
+
 SECTIONS = dict(features=s_features, steps_h=s_steps_h, steps_v=s_steps_v, zigzag=s_zigzag, bento=s_bento,
-                compare=s_compare, checklist=s_checklist, stats=s_stats, accordion=s_accordion, hub=s_hub, flow=s_flow)
+                compare=s_compare, checklist=s_checklist, stats=s_stats, accordion=s_accordion, hub=s_hub, flow=s_flow,
+                story=s_story, mission=s_mission, industries=s_industries, talk=s_talk)
 
 
 def is_service(page):
@@ -228,19 +257,46 @@ def page_icon(page):
     return SERVICE_ICONS[page["svc"]] if is_service(page) else TILE_ICONS[page["icon"]]
 
 
-def contact_form():
-    """The homepage form section, trimmed for the contact page: no checklist or
-    next-steps list, and the contact details (if filled in) beside the form."""
-    f = re.sub(r'\s*<ul class="final-cta-list">.*?</ul>', "", final_cta, flags=re.S)
-    f = re.sub(r'\s*<p class="svc-incl-label"[^>]*>What happens next</p>\s*<ol class="final-cta-steps">.*?</ol>', "", f, flags=re.S)
-    f = re.sub(r'<h2 class="section-title">.*?</h2>', '<h2 class="section-title">Tell us about your project</h2>', f, count=1, flags=re.S)
-    f = re.sub(r'<p class="section-sub">.*?</p>', '<p class="section-sub">A few lines on your current systems, the teams involved and your timeline help us prepare for the first call.</p>', f, count=1, flags=re.S)
-    cards = contact_cards()
-    if cards:
-        items = "".join('<div><dt class="mono">%s</dt><dd>%s</dd></div>' % (label.upper(), value) for label, value in cards)
-        # insert at the end of the copy column, just before the form card
-        f, n = re.subn(r'(\n\s*</div>\s*<div class="lead-form-card">)', lambda m: '\n        <dl class="contact-list">%s</dl>%s' % (items, m.group(1)), f, count=1)
-        assert n, "final-cta markup changed; update contact_form()"
+def contact_form(page):
+    """The homepage form section, rebuilt for the contact page: contact details and
+    next steps on the left, the contact form (page["contact"]) on the right."""
+    c = page["contact"]
+    details = "".join('<div><dt class="mono">%s</dt><dd>%s</dd></div>' % (label.upper(), value) for label, value in contact_cards())
+    steps = "".join("<li><span><strong>%s</strong> %s</span></li>" % st for st in c["steps"])
+    copy = ('<div class="final-cta-copy"><p class="eyebrow mono">%s</p><h2 class="section-title">%s</h2>'
+            '<p class="contact-company">%s</p><dl class="contact-list">%s</dl>'
+            '<p class="svc-incl-label" style="color:rgba(232,236,243,0.55);margin:40px 0 0;">What happens next</p>'
+            '<ol class="final-cta-steps">%s</ol></div>' % (c["eyebrow"], c["title"], CONTACT_DETAILS["company"], details, steps))
+
+    def opts(items, placeholder):
+        # items are labels, or (value, label) pairs
+        pairs = [x if isinstance(x, tuple) else (x, x) for x in items]
+        return ('<option value="" disabled selected>%s</option>' % placeholder
+                + "".join('<option value="%s">%s</option>' % pv for pv in pairs))
+
+    opt = ' <span class="opt">(optional)</span>'
+    form = ('<form class="lead-form" id="lead-form"><p class="card-title">%s</p><p>%s</p>'
+            '<div class="lead-form-row">'
+            '<label>Full name<input type="text" name="name" required placeholder="Your name" autocomplete="name"></label>'
+            '<label>Company name<input type="text" name="company" required placeholder="Company name" autocomplete="organization"></label></div>'
+            '<div class="lead-form-row">'
+            '<label>Business email<input type="email" name="email" required placeholder="you@company.com" autocomplete="email"></label>'
+            '<label>Phone number<input type="tel" name="phone" required placeholder="+91 98765 43210" autocomplete="tel"></label></div>'
+            '<div class="lead-form-row">'
+            '<label>Industry<select name="industry" required>%s</select></label>'
+            '<label><span>Company size%s</span><select name="companysize">%s</select></label></div>'
+            '<label>I\'m interested in<select name="service" id="lead-service" required>%s</select></label>'
+            '<label><span>Tell us about your requirement%s</span><textarea name="message" rows="3" placeholder="Current systems, teams involved, timeline…"></textarea></label>'
+            '<button type="submit" class="btn btn-primary">%s %s</button>'
+            '<p class="lead-form-note">Response within one business day</p></form>'
+            % (c["form_title"], c["form_intro"], opts(c["industries"], "Select industry"), opt,
+               opts(c["sizes"], "Select size"), opts(c["interests"], "Select an option"), opt, c["button"], ARROW))
+    f = re.sub(r'<div class="final-cta-copy">.*?</div>', lambda m: copy, final_cta, count=1, flags=re.S)
+    f, n = re.subn(r'<form class="lead-form" id="lead-form">.*?</form>', lambda m: form, f, count=1, flags=re.S)
+    assert n, "final-cta markup changed; update contact_form()"
+    f = re.sub(r'(<div class="lead-success"[^>]*>.*?<p class="card-title">).*?(</p>\s*<p>).*?(</p>)',
+               lambda m: m.group(1) + "Thank you, we've got your message." + m.group(2)
+               + "A member of our team will respond within one business day." + m.group(3), f, count=1, flags=re.S)
     return f
 
 
@@ -280,7 +336,7 @@ def hero(page):
         return ('<section class="mp-hero mp-hero--simple"><div class="mp-hero-copy">%s<p class="eyebrow mono">%s</p><h1 class="mp-h1">%s</h1><p class="mp-lead">%s</p></div></section>'
                 % (crumb, h["eyebrow"], h["title"], h["lead"]))
     service, company = is_service(page), is_company(page)
-    icon = '<span class="mp-hero-ic%s">%s</span>' % (" is-line" if service or company else "", page_icon(page))
+    icon = "" if h.get("plain") else ('<span class="mp-hero-ic%s">%s</span>' % (" is-line" if service or company else "", page_icon(page)))
     if company:
         parent = ""
     elif service:
@@ -296,7 +352,8 @@ def hero(page):
     points = "".join("<li>%s%s</li>" % (CHECK, p) for p in h["points"])
     copy = ('<div class="mp-hero-copy">%s%s<p class="eyebrow mono">%s</p><h1 class="mp-h1">%s</h1><p class="mp-lead">%s</p>'
             '<ul class="mp-hero-points">%s</ul>%s</div>' % (crumb, icon, h["eyebrow"], h["title"], h["lead"], points, ctas))
-    visual = '<div class="mp-hero-visual">%s</div>' % MOCKS[page["slug"]]
+    # a plain hero is text only: no icon tile and no mock visual
+    visual = "" if h.get("plain") else '<div class="mp-hero-visual">%s</div>' % MOCKS[page["slug"]]
     return '<section class="mp-hero mp-hero--%s">%s%s</section>' % (h["style"], copy, visual)
 
 
@@ -406,10 +463,11 @@ PAGES = [
          title="Odoo CRM Implementation for Smarter Sales | Unisas",
          meta="Odoo CRM implementation by Unisas: lead capture, pipeline stages, sales automation, integrations and reporting, designed around your sales process.",
          hero=dict(style="split", eyebrow="ODOO CRM IMPLEMENTATION", title="CRM Implementation for Smarter Sales, Powered by Odoo",
-                   lead="We set up Odoo CRM around how your team sells, so every lead lands in one pipeline and forecasts come from real deals.",
-                   points=["Lead capture from web, email & WhatsApp", "Pipeline stages that match your process", "Forecasts managers can trust"],
+                   lead="Unisas, an Odoo partner, delivers CRM implementation built around how your team sells, so every lead reaches one pipeline and forecasts reflect real deals.",
+                   points=["Leads from web, email & WhatsApp", "Stages that match your process", "Forecasts you can trust"],
                    cta="Discuss Odoo CRM", cta2="How we set it up", cta2_href="setup"),
-         sections=[], build=crm_page.build, hero_fn=crm_page.hero, cta=crm_page.CTA, css=("odoo-ui.css", "crm.css")),
+         sections=[], build=crm_page.build, hero_fn=crm_page.hero, cta=crm_page.CTA, css=("odoo-ui.css", "crm.css"),
+         faq=crm_page.FAQ, faq_title="Frequently Asked Questions About Odoo CRM Rollouts"),
 
     dict(slug="odoo-sales", icon=2, name="Sales", short="Quotes, orders, subscriptions",
          title="Sales Implementation Services Customized with Odoo | Unisas",
@@ -427,13 +485,15 @@ PAGES = [
          title="Purchase Order Software for Smarter Procurement with Odoo | Unisas",
          meta="Odoo Purchase implementation by Unisas: RFQs, vendor alternatives, approval limits, reordering, three-way matching with receipts and bills, and supplier data migration.",
          hero=dict(style="split", eyebrow="ODOO PURCHASE", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
-         sections=[], build=purchase_page.build, hero_fn=purchase_page.hero, cta=purchase_page.CTA, css=("odoo-ui.css", "purchase.css")),
+         sections=[], build=purchase_page.build, hero_fn=purchase_page.hero, cta=purchase_page.CTA, css=("odoo-ui.css", "purchase.css"),
+         faq=purchase_page.FAQ, faq_title="Frequently Asked Questions"),
 
     dict(slug="odoo-project", icon=5, name="Project", short="Tasks, Gantt, timesheets",
          title="Project Management Software for Teams That Deliver, Built on Odoo | Unisas",
          meta="Odoo Project implementation by Unisas: project management software with tasks, milestones, dependencies, Gantt planning, timesheets and billing, set up around your delivery process.",
          hero=dict(style="split", eyebrow="ODOO PROJECT", title="", lead="", points=[], cta="", cta2="", cta2_href=""),
-         sections=[], build=project_page.build, hero_fn=project_page.hero, cta=project_page.CTA, css=("odoo-ui.css", "project.css")),
+         sections=[], build=project_page.build, hero_fn=project_page.hero, cta=project_page.CTA, css=("odoo-ui.css", "project.css"),
+         faq=project_page.FAQ, faq_title="Frequently Asked Questions About Odoo Project Management"),
 
     dict(slug="odoo-manufacturing", icon=6, name="Manufacturing", short="BoM, work orders, quality",
          title="Manufacturing ERP Software for End-to-End Production Management with Odoo | Unisas",
@@ -518,7 +578,7 @@ for page in ALL_PAGES:
     if ONLY and page["slug"] not in ONLY:
         continue
     # the contact page puts the form straight under the hero
-    out = contact_form() if page.get("form_first") else ""
+    out = contact_form(page) if page.get("form_first") else ""
     for kind, data in page["sections"]:
         html = SECTIONS[kind](data, data.get("alt", False))
         if data.get("extra"):

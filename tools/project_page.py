@@ -119,7 +119,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Tasks, milestones &amp; dependencies", "Timesheets that become invoices", "Live status on every project"])
     copy = ('<div class="pj-hero-copy">%s<p class="pj-eyebrow mono">ODOO PROJECT IMPLEMENTATION</p>'
             '<h1 class="pj-h1">Project Management Software <span>That Plans, Tracks and Bills Your Work</span></h1>'
-            '<p class="pj-lead">Unisas sets up Odoo Project around how your team delivers, so projects, tasks, deadlines and billable hours sit in one system linked to sales and accounts.</p><ul class="pj-hero-points">%s</ul>'
+            '<p class="pj-lead">Unisas configures Odoo as the project management tool your team actually uses, linking tasks, deadlines and billable hours to sales and accounts.</p><ul class="pj-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Project %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the project demo</a></div></div>' % (crumb, points, g["ARROW"]))
     # portfolio timeline: Oct 1 to Dec 31 (92 days), today Oct 14 (day 13)
@@ -149,20 +149,21 @@ def build(g):
 
     # 1 ---- the problem: the spreadsheet tracker
     signs = ["Plans live in a spreadsheet that is out of date by Tuesday", "Nobody knows which task is holding up the next one",
-             "Status meetings exist only to find out where things stand", "Hours are logged on paper, or not at all",
+             "Status meetings exist only to find out where things stand", "Hours are logged on paper, in a chat, or not at all",
              "Invoices go out late because nobody knows what can be billed"]
     rows = [("Electrical cabling", "Rahul", "WIP??", "12-Oct", "ask Rahul", "is-bad"), ("False ceiling", "contractor", "Not started", "", "waiting on cabling?", ""),
             ("Black chairs", "Karthik", "Done", "09-Oct", "client wants changes", "is-bad"), ("Energy certificate", "Meera", "In progress", "07-Oct", "", "is-late"),
             ("Layout approval", "Anita", "DONE", "06-Oct", "pls confirm with client", ""), ("Hours - Oct", "everyone", "", "", "see WhatsApp", "is-bad")]
     sheet = "".join('<tr class="%s"><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (c, i + 2, a, b, s, d, n) for i, (a, b, s, d, n, c) in enumerate(rows))
-    out += sec('<div class="pj-ready"><div>%s<ul class="pj-signs">%s</ul><p class="pj-note">Each gap is small. Together they mean slipped deadlines, unbilled hours '
+    out += sec('<div class="pj-ready"><div>%s<ul class="pj-signs">%s</ul><p class="pj-note">Each gap looks small on its own. Together they mean slipped deadlines, unbilled hours '
                'and clients who hear about a delay last.</p></div>'
                '<div class="pj-xl" aria-label="Example project tracker spreadsheet"><div class="pj-xl-bar"><span class="pj-xl-ic">X</span><b>Project_Tracker_FINAL_v7 (2).xlsx</b><span class="pj-xl-warn">Read-only: Meera is editing</span></div>'
                '<div class="pj-xl-fx"><span>F4</span><i>fx</i><span>=IF(D4="","ask Rahul",D4)</span></div><div class="ox-scroll"><table class="pj-xl-t"><thead><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>'
                '<tr class="pj-xl-h"><td>1</td><td>Task</td><td>Owner</td><td>Status</td><td>Due</td><td>Notes</td></tr></thead><tbody>%s</tbody></table></div>'
                '<div class="pj-xl-tabs"><span class="is-on">Oct plan</span><span>Oct plan (old)</span><span>Hours</span><span>Sheet3</span></div></div></div>'
-               % (head("THE COST OF MANAGING PROJECTS BY HAND", "Is Your Project Delivery Process Difficult to Plan, Track or Bill?",
-                       "Most teams run projects on spreadsheets, chat groups and memory. It works for two projects. At ten, it looks like this."),
+               % (head("THE COST OF MANAGING PROJECTS BY HAND", "Is Your Project Delivery Process Difficult to Plan, Track or Bill Without a Project Management System?",
+                       "Most teams still run delivery on spreadsheets, WhatsApp groups and memory. That holds for two or three jobs. Around ten, the cracks show. "
+                       "Without proper project tracking software, every status question becomes a phone call and every invoice becomes a guess."),
                   "".join('<li>%s%s</li>' % (CROSS, s) for s in signs), sheet), "pj-sec--ready")
 
     # 2 ---- one workflow: the project explorer
@@ -171,12 +172,12 @@ def build(g):
     views = [("kanban", "Kanban", V_KANBAN), ("list", "List", V_LIST)]
     switch = "".join('<button type="button" class="ox-vbtn%s" data-pe-view="%s" aria-label="%s view" title="%s" aria-pressed="%s">%s</button>'
                      % (" is-on" if k == "kanban" else "", k, n, n, "true" if k == "kanban" else "false", svg) for k, n, svg in views)
-    feats = [("Projects", "Every client job or internal initiative, with its manager, dates, status and favourites."),
-             ("Tasks &amp; stages", "Stages you define, with tasks dragged from New to Done as work moves."),
-             ("Task states", "In Progress, Changes Requested, Approved or Waiting, so the board shows what needs attention."),
+    feats = [("Projects", "Every client job or internal initiative, with its manager, dates and status."),
+             ("Tasks &amp; stages", "Stages that mirror how work really moves, with tasks dragged from New to Done on a Kanban board. It is task management software that follows your process, not a generic one."),
+             ("Task states", "In Progress, Changes Requested, Approved or Waiting, so the board shows what needs attention before anyone asks."),
              ("Time on every task", "Allocated against spent hours, logged straight into the task's Timesheets tab.")]
-    out += sec(head("ONE WORKFLOW", "How Can Odoo Bring Projects, Tasks and Teams Into One Workflow?",
-                    "This is the Odoo Project app as your team will use it. Open <b>Office Fit-out: Chennai HQ</b>, drag a task to another stage, "
+    out += sec(head("ONE WORKFLOW", "How Can Odoo Project Management Bring Projects, Tasks and Teams Into One Workflow?",
+                    "This is the Project app as your team will use it. Open <b>Office Fit-out: Chennai HQ</b>, drag a task to another stage, "
                     "change its state, or open it and log time.", "is-center")
                + '<div class="ox pj-ox pj-pe" data-pe><div class="ox-nav"><span class="ox-app">%s<b>Project</b></span><span class="pj-menus" role="group" aria-label="Project menu">%s</span>'
                  '<span class="ox-menu">Reporting</span><span class="ox-nav-r"><span class="ox-company">Your Company</span><span class="ox-av" style="--c:#4C9F70">M</span></span></div>'
@@ -188,10 +189,10 @@ def build(g):
                + '<ul class="pj-feats">%s</ul>' % "".join('<li><b>%s</b><span>%s</span></li>' % f for f in feats), "pj-sec--explore", "explore")
 
     # 3 ---- configure around your delivery process: project settings
-    impl = [("Map how you deliver", "Phases, hand-offs, approvals and who bills what, taken from how your team works today."),
-            ("Turn it into Odoo settings", "Stages, milestones, dependencies, visibility and billing set per project or template."),
-            ("Build project templates", "Repeat work starts from a template with its stages, tasks and milestones already in place."),
-            ("Prove it on a live project", "Your managers run a current project through the setup before go-live.")]
+    impl = [("Map how you deliver", "Phases, hand-offs, approvals and who bills what, captured in workshops with the people doing the work today."),
+            ("Turn it into Odoo settings", "Stages, milestones, dependencies, visibility and billing rules, set per project or per template using standard configuration."),
+            ("Build project templates", "Repeat work starts from a ready structure with its stages, tasks and milestones already in place, so a new job is set up in minutes."),
+            ("Prove it on a live project", "Your managers run a current project through the setup before go-live, so problems surface early.")]
 
     def toggle(key, name, desc, on):
         return ('<label class="pj-set"><input type="checkbox" data-set="%s"%s><span class="pj-chk" aria-hidden="true">%s</span><span><b>%s</b><small>%s</small></span></label>'
@@ -212,33 +213,35 @@ def build(g):
                '<div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Projects</a><span>Office Fit-out: Chennai HQ</span></span></div></div>'
                '<div class="pj-set-tabs"><span>Description</span><span class="is-on">Settings</span></div><div class="pj-set-body">%s</div></div>'
                '<div class="pj-effect ox-solo"><p class="pj-effect-h">What your team and client will see</p><ul data-set-out aria-live="polite"></ul></div></div></div>'
-               % (head("CONFIGURED AROUND YOUR DELIVERY", "How Does Unisas Configure Odoo Project Around Your Delivery Process?",
-                       "We start from how your projects really run, then set Odoo's own project settings to match. Change a setting on the right to see what it does."),
+               % (head("CONFIGURED AROUND YOUR DELIVERY", "How Does Unisas Configure Odoo Project and Project Templates Around Your Delivery Process?",
+                       "We start from how your projects really run, then set Odoo's own settings to match. Change a setting on the right to see what it does."),
                   steps(impl), odoo_nav(app_icon), sets), "pj-sec--cfg")
 
     # 4 ---- milestones and dependencies
-    out += sec(head("TASKS, MILESTONES &amp; DEPENDENCIES", "What Can You Manage With Odoo Projects, Tasks, Milestones and Dependencies?",
-                    "Tasks wait for the work they depend on, and milestones are reached when their tasks are done. Mark the next task as done and watch the chain move.", "is-center")
+    out += sec(head("TASKS, MILESTONES &amp; DEPENDENCIES", "What Can You Manage With Odoo Task Management: Projects, Tasks, Milestones and Dependencies?",
+                    "A task stays blocked until the work before it is finished, and a milestone is reached only when its tasks are done. Mark the next task as done and watch the chain move. "
+                    "For managers, milestone tracking stops being a weekly spreadsheet exercise.", "is-center")
                + '<div class="pj-dep" data-dep><div class="ox pj-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Office Fit-out: Chennai HQ</a><span>Tasks by dependency</span></span></div>'
                  '<span></span><button type="button" class="ox-sbtn pj-dep-reset" data-dep-reset>Reset</button></div><ol class="pj-chain" data-dep-chain aria-live="polite"></ol></div>'
                  '<div class="pj-dep-side"><div class="ox pj-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb">Milestones</span></div></div>'
                  '<div class="ox-scroll"><table class="ox-table pj-ms-t"><thead><tr><th>Name</th><th>Deadline</th><th class="ox-num">Tasks</th><th>Reached</th></tr></thead><tbody data-dep-ms></tbody></table></div></div>'
                  '<ul class="pj-mini">'
-                 '<li><b>Sub-tasks</b><span>Split a task into smaller ones with their own assignee and deadline. <i>Furniture vendor coordination &middot; 0/3</i></span></li>'
-                 '<li><b>Recurring tasks</b><span>Monthly maintenance or GST filings are created on schedule. <i>Repeat every 1 month</i></span></li>'
-                 '<li><b>Activities</b><span>Calls and to-dos on a task, with reminders when they fall due.</span></li></ul></div></div>', "pj-sec--dep")
+                 '<li><b>Sub-tasks</b><span>Split a task into smaller ones, each with its own assignee and deadline. <i>Furniture vendor coordination &middot; 0/3</i></span></li>'
+                 '<li><b>Recurring tasks</b><span>Monthly maintenance, GST filings and client reports are created on schedule, so routine work never relies on memory. <i>Repeat every 1 month</i></span></li>'
+                 '<li><b>Activities</b><span>Calls and to-dos sit on the task they belong to, with reminders when they fall due.</span></li></ul></div></div>', "pj-sec--dep")
 
     # 5 ---- timesheets, sales and accounting (plain: no Odoo screens under this heading)
     chain = [("#EE8A3C", "Sales order", "S00482 confirmed", "120 hours of fit-out design sold at &#8377; 2,500 an hour. The project and its 11 tasks are created from a template."),
-             ("#1F9E80", "Timesheets", "64 hours logged", "The team logs time on tasks from web or mobile. Each hour counts as delivered on the sales order."),
-             ("#8E4F83", "Invoice", "40 hours invoiced", "The invoice is drafted from the logged hours, and billed hours are locked so nobody edits them."),
-             ("#264E86", "Profitability", "50% margin", "Revenue, labour cost and purchases for the project update as work is logged and billed.")]
+             ("#1F9E80", "Timesheets", "64 hours logged", "The team logs time on tasks from web, mobile or the built-in timer. Each hour counts as delivered on the sales order."),
+             ("#8E4F83", "Invoice", "40 hours invoiced", "The invoice is drafted from logged hours, and billed hours are locked. Project invoicing stops being a month-end scramble."),
+             ("#264E86", "Profitability", "50% margin", "Revenue, labour cost and purchases update as work is logged, so you see margin while the job runs.")]
     prof = [("Timesheets (120 h sold)", inr(160000), inr(60000), inr(100000)), ("Materials", inr(348000), inr(0), inr(348000)),
             ("<b>Revenue</b>", "<b>" + inr(508000) + "</b>", "<b>" + inr(60000) + "</b>", "<b>" + inr(448000) + "</b>"),
             ("Labour (64 h)", "&minus;" + inr(70400), "", ""), ("Purchases", "&minus;" + inr(185000), "", ""),
             ("<b>Margin</b>", '<b style="color:var(--success)">' + inr(252600) + "</b>", "", "<b>50%</b>")]
-    out += sec(head("CONNECTED TO SALES &amp; ACCOUNTING", "How Does Unisas Connect Project Management With Timesheets, Sales and Accounting?",
-                    "A confirmed sales order creates the project. Hours logged on tasks become billable, the invoice is drafted from them, and the project's profitability updates as you go.", "is-center")
+    out += sec(head("CONNECTED TO SALES &amp; ACCOUNTING", "How Does Unisas Connect Project Management With Odoo Timesheets, Sales and Accounting?",
+                    "A confirmed sales order creates the project, hours logged on tasks become billable, the invoice is drafted from them, and profitability updates as you go. "
+                    "Here Odoo earns its place as true project management and billing software.", "is-center")
                + '<ol class="pl-grid is-line" style="--cols:4">%s</ol>'
                  '<div class="pl-card" style="max-width:820px;margin:20px auto 0"><p class="pl-k">Office Fit-out: Chennai HQ &middot; profitability</p><div class="pl-scroll"><table class="pl-table">'
                  '<thead><tr><th></th><th class="is-c">Expected</th><th class="is-c">To invoice</th><th class="is-c">Invoiced</th></tr></thead><tbody>%s</tbody></table></div></div>'
@@ -246,8 +249,8 @@ def build(g):
                     "".join('<tr><th>%s</th><td class="is-c">%s</td><td class="is-c">%s</td><td class="is-c">%s</td></tr>' % r for r in prof)), "pj-sec--bill")
 
     # 6 ---- planning: Gantt + project update
-    out += sec(head("PLANNING &amp; PROGRESS", "Can Odoo Help You Plan Resources, Deadlines and Project Progress?",
-                    "The Gantt view plans tasks against people and dates. When a task slips, the tasks that depend on it move with it, and the project's status tells you whether the deadline is still safe. "
+    out += sec(head("PLANNING &amp; PROGRESS", "Can Odoo Planning Help You Plan Resources, Deadlines and Project Progress?",
+                    "The Gantt view plans tasks against people and dates. When one task slips, everything that depends on it moves too, and the project's status tells you whether the deadline is still safe. "
                     "Try delaying the cabling, then add an electrician.", "is-center")
                + '<div class="pj-plan" data-plan><div class="pj-plan-ctl"><button type="button" class="ox-sbtn" data-plan-do="delay" aria-pressed="false">Delay cabling by 4 days</button>'
                  '<button type="button" class="ox-sbtn" data-plan-do="crew" aria-pressed="false">Add a second electrician</button><button type="button" class="ox-sbtn" data-plan-do="reset">Reset</button></div>'
@@ -259,49 +262,45 @@ def build(g):
                  '<p class="pj-upd-st" data-plan-st></p><div class="pj-upd-prog"><span>Progress</span><i><b data-plan-bar></b></i><em data-plan-pct></em></div>'
                  '<dl class="pj-upd-dl"><div><dt>Handover</dt><dd data-plan-end></dd></div><div><dt>Deadline</dt><dd>Nov 6</dd></div><div><dt>Rahul\'s load</dt><dd data-plan-load></dd></div></dl>'
                  '<p class="pj-upd-txt" data-plan-txt></p></aside></div></div>'
+                 '<p class="pj-sec-note">Odoo also compares each person&rsquo;s allocated hours with their available time, so overloaded people are visible before they burn out. '
+                 'Teams shopping for separate gantt chart software usually find they no longer need it.</p>'
                % (odoo_nav(app_icon), V_KANBAN, V_LIST, V_GANTT), "pj-sec--plan")
 
     # 7 ---- data, roles, customization
-    roles = [("pm", "Project Manager", "Project: Administrator", "All projects, the Gantt plan and profitability",
-              ["Create projects from templates", "Set stages, milestones and deadlines", "Post project updates", "See margins per project"], ["Validate invoices (Accounts does)"]),
-             ("tm", "Team Member", "Project: User", "My Tasks, sorted by deadline",
-              ["Move their tasks between stages", "Log time from web or mobile", "Comment and @mention colleagues"], ["See other teams' private projects", "See rates or margins"]),
-             ("cl", "Client", "Portal user, project shared with Edit", "The client portal: their project only",
-              ["See task progress and documents", "Approve work or request changes", "Comment on a task by email or portal"], ["See internal notes or hours cost", "See other clients"]),
-             ("ac", "Accounts", "Invoicing: Billing", "Sales orders ready to invoice",
-              ["Invoice timesheets and milestones", "Check delivered against invoiced hours"], ["Edit tasks or plans"])]
-    reqs = [("Stages and milestones per project type", "cfg"), ("Clients approve work in the portal", "cfg"), ("Project templates for repeat jobs", "cfg"),
-            ("Extra fields: site address, PO number, region", "studio"), ("Your own task report and client status PDF", "studio"),
-            ("Stage gate: no handover until the checklist is complete", "custom"), ("Sync tasks with a client's Jira", "custom")]
+    roles = [("Project Manager", "Project: Administrator", "Sees every project, the Gantt plan and margins. Creates projects from templates and posts updates."),
+             ("Team Member", "Project: User", "Lands on My Tasks. Moves tasks and logs time, but never sees rates or margins."),
+             ("Client", "Portal user", "Sees only their project. Approves work or requests changes, without internal notes or costs."),
+             ("Accounts", "Invoicing: Billing", "Invoices timesheets and milestones, but cannot edit tasks or plans.")]
+    reqs = [("Stages and milestones per project type", "cfg"), ("Clients approve work in the portal", "cfg"), ("Templates for repeat jobs", "cfg"),
+            ("Extra fields and client status PDFs", "studio"), ("No handover until the checklist is complete", "custom"), ("Sync tasks with a client's Jira", "custom")]
     lab = {"cfg": "Configuration", "studio": "Studio", "custom": "Customization"}
-    out += sec(head("DATA, ROLES &amp; CUSTOMIZATION", "How Does Unisas Handle Project Data, Roles and Workflow Customization?",
+    out += sec(head("DATA, ROLES &amp; CUSTOMIZATION", "How Does Unisas Handle Project Data, Roles and Odoo Customization?",
                     "Each person sees what their role needs and nothing more. We configure first, use Odoo Studio for light changes, and write code only when the process truly needs it.", "is-center")
-               + '<ul class="pl-grid is-side" style="--cols:4">%s</ul><div class="pl-card" style="margin-top:20px"><p class="pl-k">Typical requests and how we meet them</p><div class="pl-scroll"><table class="pl-table"><tbody>%s</tbody></table></div></div>'
-               % ("".join('<li><b>%s</b><em>%s</em><p>Lands on: %s</p><ul class="pl-ticks" style="margin-top:8px">%s</ul><ul class="pl-ticks is-x">%s</ul></li>'
-                          % (r[1], r[2], r[3], "".join("<li>%s</li>" % x for x in r[4]), "".join("<li>%s</li>" % x for x in r[5])) for r in roles),
+               + '<ul class="pl-grid is-side" style="--cols:4">%s</ul><div class="pl-card" style="margin-top:20px"><p class="pl-k">Typical requests and how we meet them</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Request</th><th style="text-align:right">How we deliver it</th></tr></thead><tbody>%s</tbody></table></div></div>'
+               % ("".join('<li><b>%s</b><em>%s</em><p>%s</p></li>' % r for r in roles),
                   "".join('<tr><th>%s</th><td style="text-align:right"><span class="pl-chip%s">%s</span></td></tr>' % (t, {"cfg": " is-ok", "studio": "", "custom": " is-gold"}[k], lab[k]) for t, k in reqs)), "pj-sec--roles")
 
     # 8 ---- connected apps
-    apps = [("Timesheets", "#1F9E80", "Hours logged on tasks from web, mobile or a running timer, approved by managers.", "Rahul logs 3:30 on cabling; it shows on the task, the SO and the margin."),
-            ("Planning", "#E4402E", "Shifts and roles planned across projects, so nobody is booked twice.", "Vijay is planned Oct 12-16 on Chennai HQ, 8 hours a day."),
-            ("Sales", "#EE8A3C", "A confirmed order creates the project and its tasks from a template.", "S00482 confirmed: project and 11 tasks created."),
-            ("Accounting", "#8E4F83", "Invoices from timesheets or milestones, and real costs per project.", "INV/2026/0412 drafted for 40 hours at &#8377; 2,500."),
-            ("Purchase", "#264E86", "Materials bought for a project are costed to it.", "PO for 24 chairs charged to Chennai HQ."),
-            ("Expenses", "#C98600", "Travel and site expenses re-invoiced to the client at cost.", "Site visit taxi, &#8377; 640, added to the next invoice."),
-            ("Helpdesk", "#5AA7E8", "Support tickets after handover, with time billed on the AMC.", "Ticket #212: AC not cooling, under the retainer."),
-            ("Field Service", "#B5567E", "On-site jobs with worksheets, signatures and route planning.", "Installation report signed on the technician's phone."),
-            ("Documents", "#3E7CB1", "Drawings, approvals and site photos filed per project.", "Layout_v3.pdf shared with the client to sign."),
-            ("Spreadsheet", "#10AE51", "Live dashboards built on project data, no exports.", "Utilisation by person for October."),
-            ("Sign", "#714B67", "Scope and handover documents signed electronically.", "Handover certificate signed by Shree Distributors."),
-            ("Discuss", "#017E84", "Chat and mentions on every task, in one place with email.", "@Karthik: chairs arrive Thursday?")]
+    apps = [("Timesheets", "#1F9E80", "Hours by task, billed or costed.", "Rahul logs 3:30 on cabling; it shows on the task, the SO and the margin."),
+            ("Planning", "#E4402E", "People assigned by role and date.", "Vijay is planned Oct 12-16 on Chennai HQ, 8 hours a day."),
+            ("Sales", "#EE8A3C", "Orders that create projects and tasks.", "S00482 confirmed: project and 11 tasks created."),
+            ("Accounting", "#8E4F83", "Invoices and job costs, posted automatically.", "INV/2026/0412 drafted for 40 hours at &#8377; 2,500."),
+            ("Purchase", "#264E86", "Materials and subcontractors costed to the job.", "PO for 24 chairs charged to Chennai HQ."),
+            ("Expenses", "#C98600", "Site spend recorded and re-invoiced.", "Site visit taxi, &#8377; 640, added to the next invoice."),
+            ("Helpdesk", "#5AA7E8", "Support tickets turned into tasks.", "Ticket #212: AC not cooling, under the retainer."),
+            ("Field Service", "#B5567E", "On-site jobs with worksheets and signatures.", "Installation report signed on the technician's phone."),
+            ("Documents", "#3E7CB1", "Drawings and photos filed per task, with project document management built in.", "Layout_v3.pdf shared with the client to sign."),
+            ("Spreadsheet", "#10AE51", "Live reports on real data.", "Utilisation by person for October."),
+            ("Sign", "#714B67", "Quotes and handover certificates signed online.", "Handover certificate signed by Shree Distributors."),
+            ("Discuss", "#017E84", "Chat tied to the task, not lost in WhatsApp.", "@Karthik: chairs arrive Thursday?")]
     abtn = "".join('<button type="button" class="pj-app%s" data-app="%d" aria-pressed="%s" style="--c:%s"><i>%s</i>%s</button>'
                    % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", c, n[0], n) for i, (n, c, x, e) in enumerate(apps))
     out += sec('<div class="pj-apps-wrap"><div>%s<div class="pj-apps" role="group" aria-label="Odoo apps">%s</div></div>'
                '<div class="pj-app-card ox-solo" aria-live="polite" data-app-card><span class="pj-app-core">%s<b>Project</b></span><span class="pj-app-link"></span>'
                '<span class="pj-app-to" data-app-to></span><p data-app-what></p><p class="pj-app-ex" data-app-ex></p></div></div>'
                '<script type="application/json" id="pj-apps">%s</script>'
-               % (head("CONNECTED APPS", "Which Odoo Applications Can Be Connected to Your Project Workflow?",
-                       "Odoo Project shares one database with the rest of Odoo, so there is nothing to sync. Pick an app to see what it adds to a project."),
+               % (head("CONNECTED APPS", "Which Odoo Applications Can Be Connected to Your Project Management Platform?",
+                       "Every app here shares one database with the rest of Odoo, so there is nothing to sync. Pick an app to see what it adds to a project."),
                   abtn, app_icon, json.dumps(apps)), "pj-sec--apps")
 
     # 9 ---- migration, testing, training
@@ -321,10 +320,10 @@ def build(g):
                       for t, on in items)
     mig = [("Extract", "Open projects, tasks, hours and contacts from Excel, Asana, Trello, MS Project or Jira."),
            ("Map &amp; clean", "Statuses mapped to stages, owners to users, closed work archived."),
-           ("Trial import", "A test load your managers check against the old tool."),
-           ("Train by role", "Managers, team, accounts and clients each learn only their screens.")]
-    out += sec(head("MIGRATION, TESTING &amp; TRAINING", "How Does Unisas Manage Data Migration, Testing and User Training?",
-                    "Your live projects come across with their tasks, owners, dates and logged hours. Each role then tests its own scenarios before go-live. Pick where your projects live today.", "is-center")
+           ("Trial import", "A test load your managers check against the old tool, line by line."),
+           ("Train by role", "Managers, team, accounts and clients each learn only their own screens, using real projects.")]
+    out += sec(head("MIGRATION, TESTING &amp; TRAINING", "How Does Unisas Manage Data Migration, Testing and Project Management Training?",
+                    "Live work comes across with its tasks, owners, dates and hours. Each role then tests its own scenarios before go-live. Pick where your projects live today.", "is-center")
                + '<div class="pj-mig">%s<div class="pl-card"><p class="pl-k">Where your projects live today</p><ul class="pl-chips" style="margin-bottom:14px">%s</ul>'
                  '<p class="pl-muted" style="margin:0 0 8px;font-size:0.86rem">Example mapping from an Excel tracker</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Your column</th><th></th><th>Becomes</th></tr></thead><tbody>%s</tbody></table></div>'
                  '<p style="margin:12px 0 0"><span class="pl-chip is-ok">&#10003; 312 tasks, 6 stages and 14 users matched in the trial import</span></p></div>'
@@ -333,8 +332,8 @@ def build(g):
                  '' % (steps(mig), "".join('<li class="pl-chip">%s</li>' % k for k in sources), "".join('<tr><th>%s</th><td class="is-c">&rarr;</td><td>%s</td></tr>' % (a, b) for a, b in sources["Excel"]), ul), "pj-sec--mig")
 
     # 10 ---- what's included: the implementation as an Odoo project
-    scope = [("First Phase: Discover &amp; design", ["Workshops on how you deliver and bill", "Stages, milestones and project templates designed", "Roles, visibility and portal access agreed"]),
-             ("Second Phase: Configure &amp; connect", ["Odoo Project, Timesheets and Planning configured", "Sales order to project and invoicing set up", "Open projects, tasks and hours migrated"]),
+    scope = [("First Phase: Discover &amp; design", ["Workshops on how you deliver and bill", "Stages, milestones and templates designed", "Roles, visibility and portal access agreed"]),
+             ("Second Phase: Configure &amp; connect", ["Project, Timesheets and Planning configured", "Sales order to project and invoicing set up", "Open projects, tasks and hours migrated"]),
              ("Final Phase: Test, train &amp; go live", ["User testing with each role", "Training for managers, team, accounts and clients", "Go-live and hypercare through the first billing cycle"])]
     body = ""
     for title, items in scope:
@@ -346,45 +345,52 @@ def build(g):
                '<div><dt>Pricing</dt><dd>Fixed scope, agreed up front</dd></div><div><dt>Typical length</dt><dd>4 to 8 weeks</dd></div></dl>'
                '<div class="ox-ftabs"><span class="is-on">Milestones &amp; tasks</span><span>Settings</span></div><ul class="pj-sc-list">%s</ul></div></div></div>'
                % (head("WHAT'S INCLUDED", "What Does an Odoo Project Implementation With Unisas Include?",
-                       "Our standard scope, written the way we run it: as an Odoo project with three milestones.", "is-center"), bubble("on_track"), body), "pj-sec--scope")
+                       "Our standard scope: three milestones, a fixed price agreed up front and four to eight weeks to go-live. As an Odoo implementation partner, we stay accountable from the first workshop "
+                       "to the first billing cycle. Need project management consulting services too? We add PMO reviews to the same plan.", "is-center"), bubble("on_track"), body), "pj-sec--scope")
 
     # 11 ---- business processes
     procs = [("agency", "Client projects &amp; agencies", ["Brief", "Design", "Client Review", "Revisions", "Delivered"], "Fixed price by milestone",
-              ["Clients approve work in the portal", "Change requests tracked as tasks", "Retainer hours billed monthly"], ["Project", "Timesheets", "Sales", "Sign"]),
+              "Creative teams live on approvals and retainers, and this setup works as agency project management software without an add-on.",
+              ["Portal approvals and change requests as tasks", "Retainer hours billed monthly"], ["Project", "Timesheets", "Sales", "Sign"]),
              ("fitout", "Construction &amp; fit-out", ["Survey", "Design Sign-off", "Procurement", "Site Work", "Snag List", "Handover"], "Milestone payments (advance, stage, retention)",
-              ["Material POs costed to the job", "Site photos and drawings per task", "Dependencies between trades"], ["Project", "Purchase", "Documents", "Field Service"]),
+              "Contractors, interior firms and architects get construction project management software that ties drawings, purchases and site work to each job.",
+              ["Material POs costed to the job", "Dependencies between trades", "Milestone billing with retention"], ["Project", "Purchase", "Documents", "Field Service"]),
              ("it", "IT &amp; software services", ["Backlog", "Sprint", "In Review", "QA", "Released"], "Time &amp; materials from timesheets",
-              ["Sprints as milestones", "Bugs and requests from Helpdesk", "Hours per developer per client"], ["Project", "Timesheets", "Helpdesk", "Knowledge"]),
+              "Software houses run Odoo as IT project management software, with sprints, tickets and developer hours in one view.",
+              ["Sprints as milestones", "Time &amp; materials billing from timesheets"], ["Project", "Timesheets", "Helpdesk", "Knowledge"]),
              ("consult", "Consulting, audit &amp; compliance", ["Engagement Letter", "Fieldwork", "Review", "Report", "Closed"], "Fixed fee or monthly retainer",
-              ["Recurring tasks for GST and ROC filings", "Partner review before release", "Budget against actual hours"], ["Project", "Timesheets", "Documents", "Sign"]),
+              "CA firms follow each engagement from letter to closure, with partner review built in.",
+              ["Recurring tasks for GST and ROC filings", "Budget against actual hours"], ["Project", "Timesheets", "Documents", "Sign"]),
              ("eng", "Engineering &amp; installation", ["Design", "Fabrication", "Dispatch", "Installation", "Commissioning"], "Milestones linked to delivery",
-              ["Manufacturing orders linked to the project", "Installation with on-site worksheets", "AMC after commissioning"], ["Project", "Manufacturing", "Inventory", "Field Service"]),
+              "Manufacturers who install what they build link production and commissioning to the customer's job.",
+              ["Manufacturing orders linked to the project", "AMC after commissioning"], ["Project", "Manufacturing", "Inventory", "Field Service"]),
              ("internal", "Internal &amp; marketing projects", ["To Do", "Doing", "Blocked", "Done"], "Not billed; cost tracked",
-              ["Campaign and event plans with deadlines", "Department budgets against hours", "Shared knowledge base"], ["Project", "Marketing", "Knowledge", "Spreadsheet"])]
+              "Marketing, HR and operations teams plan initiatives against deadlines and budgets.",
+              ["Department budgets against hours", "Cost tracked, not billed"], ["Project", "Marketing", "Knowledge", "Spreadsheet"])]
     tabs = "".join('<button type="button" role="tab" class="pj-tab" id="pj-tab-%s" aria-controls="pj-panel-%s" aria-selected="%s"%s>%s</button>'
                    % (k, k, "true" if i == 0 else "false", "" if i == 0 else ' tabindex="-1"', n) for i, (k, n, *_r) in enumerate(procs))
     panels = "".join('<div class="pj-panel" role="tabpanel" id="pj-panel-%s" aria-labelledby="pj-tab-%s"%s><div class="pj-pstages ox-solo">%s</div>'
-                     '<div class="pj-panel-body"><div><p class="pj-eyebrow mono">HOW IT RUNS IN ODOO</p><h3>%s</h3><ul>%s</ul></div>'
+                     '<div class="pj-panel-body"><div><p class="pj-eyebrow mono">HOW IT RUNS IN ODOO</p><h3>%s</h3><p class="pj-panel-desc">%s</p><ul>%s</ul></div>'
                      '<div class="pj-panel-meta"><p><small>Billing</small><b>%s</b></p><p><small>Apps</small><span class="pj-mods">%s</span></p></div></div></div>'
-                     % (k, k, "" if i == 0 else " hidden", "".join('<span><b>%s</b><i></i></span>' % s for s in st), n,
+                     % (k, k, "" if i == 0 else " hidden", "".join('<span><b>%s</b><i></i></span>' % s for s in st), n, desc,
                         "".join("<li>%s%s</li>" % (TICK, p) for p in pts), bill, "".join("<span>%s</span>" % m for m in mods))
-                     for i, (k, n, st, bill, pts, mods) in enumerate(procs))
-    out += sec(head("PROCESSES IT SUPPORTS", "What Business Processes Can Odoo Project Support?",
+                     for i, (k, n, st, bill, desc, pts, mods) in enumerate(procs))
+    out += sec(head("PROCESSES IT SUPPORTS", "What Business Processes Can Odoo Project Management Software Support?",
                     "Any work that has steps, people and deadlines. Each process gets its own stages and billing. Pick one to see the stages we usually set up.")
                + '<div class="pj-ind"><div class="pj-tabs" role="tablist" aria-label="Business processes">%s</div><div class="pj-panels">%s</div></div>'
                  '<p class="pj-more">Run something else? <a href="#get-demo">Tell us how your projects move</a> and we&rsquo;ll map it to Odoo.</p>' % (tabs, panels),
                "pj-sec--ind")
 
     # 12 ---- discovery to go-live
-    phases = [("Discover", "Week 1", ["Workshops with managers, team leads and accounts", "Current projects, tools and billing reviewed", "Pain points ranked by cost"], "Process map and scope", "Signed scope and plan"),
-              ("Design", "Week 2", ["Stages, milestones and templates per project type", "Roles, visibility and portal access", "Billing rules: fixed, milestone or timesheets"], "Solution design document", "Design sign-off"),
-              ("Configure", "Weeks 3-4", ["Project, Timesheets and Planning set up on a test copy", "Sales order to project to invoice flow", "Reports and dashboards"], "Working test database", "Demo on your own projects"),
-              ("Migrate", "Weeks 4-5", ["Open projects, tasks and hours imported", "Customers and contacts de-duplicated", "Trial load checked by managers"], "Migrated test data", "Data sign-off"),
-              ("Test &amp; Train", "Weeks 5-6", ["User testing by every role", "Role-based training with short guides", "Fixes and final adjustments"], "UAT checklist complete", "Go-live approval"),
-              ("Go live &amp; Hypercare", "Weeks 6-8", ["Switch-over on a weekend", "Consultants on call for the first weeks", "First invoices from timesheets checked together"], "Live system", "Handover")]
+    phases = [("Discover", "Week 1", ["Workshops with managers, team leads and accounts", "Current projects, tools and billing reviewed", "Pain points ranked by cost"], "Process map and scope", "Process map and fit-gap report"),
+              ("Design", "Week 2", ["Stages, milestones and templates per project type", "Roles, visibility and portal access", "Billing rules: fixed, milestone or timesheets"], "Solution design document", "Solution design"),
+              ("Configure", "Weeks 3-4", ["Project, Timesheets and Planning set up on a test copy", "Sales order to project to invoice flow", "Reports and dashboards"], "Working test database", "System walkthrough"),
+              ("Migrate", "Weeks 4-5", ["Open projects, tasks and hours imported", "Customers and contacts de-duplicated", "Trial load checked by managers"], "Migrated test data", "Trial import"),
+              ("Test &amp; Train", "Weeks 5-6", ["User testing by every role", "Role-based training with short guides", "Fixes and final adjustments"], "UAT checklist complete", "UAT"),
+              ("Go live &amp; Hypercare", "Weeks 6-8", ["Switch-over on a weekend", "Consultants on call for the first weeks", "First invoices from timesheets checked together"], "Live system", "Handover to support")]
     pbar = "".join('<button type="button" class="ox-sb%s" data-ph="%d" aria-pressed="%s">%s</button>' % (" is-cur" if i == 0 else "", i, "true" if i == 0 else "false", p[0]) for i, p in enumerate(phases))
-    out += sec(head("FROM DISCOVERY TO GO-LIVE", "How Does an Odoo Project Implementation Move From Discovery to Go-Live?",
-                    "Six phases, each ending with something you sign off. We run it in Odoo Project too, so you can follow progress in the portal. Step through the phases.", "is-center")
+    out += sec(head("FROM DISCOVERY TO GO-LIVE", "How Does an Odoo Implementation Move From Discovery to Go-Live?",
+                    "Six phases, each ending with something you sign off, tracked in Odoo so you follow progress in the portal.", "is-center")
                + '<div class="pj-phase" data-phase><div class="pj-ph-bar"><span class="ox-sbar pj-ph-sbar" role="group" aria-label="Phases">%s</span></div>'
                  '<div class="pj-ph-card" aria-live="polite"><div class="pj-ph-l"><p class="pj-ph-when mono" data-ph-when></p><h3 data-ph-name></h3><ul data-ph-do></ul></div>'
                  '<div class="pj-ph-r"><p><small>Deliverable</small><b data-ph-del></b></p><p><small>You sign off</small><b data-ph-sign></b></p>'
@@ -401,7 +407,7 @@ def build(g):
                '<div class="pj-q ox-solo" data-quiz><p class="pj-q-h"><b>Project readiness check</b><small>6 questions, 30 seconds</small></p><ol>%s</ol>'
                '<div class="pj-q-res" data-quiz-res aria-live="polite"><span class="pj-q-score" data-quiz-score>0 / 6</span><p data-quiz-txt>Answer the questions to see where you stand.</p></div></div></div>'
                % (head("READINESS CHECK", "Is Your Business Ready to Build a Project Workflow With Odoo?",
-                       "Sound familiar? Your projects have outgrown spreadsheets and chat groups. We&rsquo;ll show a live one in Odoo."),
+                       "Your projects may have outgrown spreadsheets and chat groups. Answer six quick questions to find out."),
                   g["ARROW"], qitems), "pj-sec--quiz")
 
     data = {"P": PROJECTS, "T": TASKS, "U": PEOPLE, "TS": {str(k): v for k, v in TIMESHEETS.items()}, "S": {k: list(v) for k, v in STATUS.items()}}
@@ -633,12 +639,27 @@ JS = r'''<script>
       press([].slice.call(qz.querySelectorAll('[data-q="'+k+'"]')),b);
       var n=Object.keys(ans).length,y=Object.keys(ans).reduce(function(s,x){return s+ans[x];},0),txt;
       qz.querySelector('[data-quiz-score]').textContent=y+' / 6';
-      txt=n<6?'Keep going: '+(6-n)+' question'+(6-n===1?'':'s')+' left.':y>=4?'<b>You are ready.</b> Your projects have outgrown spreadsheets. Odoo Project with timesheets and billing will pay back quickly.':
-        y>=2?'<b>Nearly there.</b> Start with projects, stages and timesheets, then add planning and billing as you grow.':'<b>Start simple.</b> Odoo Project can grow with you. A short call will show what is worth setting up now.';
+      txt=n<6?'Keep going: '+(6-n)+' question'+(6-n===1?'':'s')+' left.':y>=5?'You need a full project workflow, and payback starts with your first billing cycle.':
+        y>=3?'You would gain quickly from structured project scheduling and timesheets.':'A lighter setup may be enough for now.';
       qz.querySelector('[data-quiz-txt]').innerHTML=txt;qz.classList.toggle('is-done',n===6);});}
 })();
 </script>
 '''
 
 CTA = ("Let's Build Your Project Workflow in Odoo",
-       "Tell us how you plan, deliver and bill projects. We&rsquo;ll show one of your live projects in Odoo Project.")
+       "Tell us how you plan, deliver and bill projects. We&rsquo;ll show one of your live jobs in Odoo.")
+
+FAQ = [("How long does it take to set up project management in Odoo?",
+        "Most rollouts take four to eight weeks from the first workshop to go-live. Unisas fixes the scope up front, and hypercare runs through your first billing cycle, so problems surface while your team is still learning the project management software."),
+       ("How much does it cost to run projects on Odoo?",
+        "Project management software cost depends on Odoo licences per user plus implementation scope. We quote a fixed price after discovery, so you know the total before work starts. Teams on standard configuration usually pay the least."),
+       ("Can Odoo replace tools like Asana, Trello or Jira?",
+        "For most delivery teams, yes. Odoo covers tasks, Kanban boards, Gantt planning and timesheets, then adds the billing and accounting that standalone tools lack. We migrate open projects, owners, dates and hours from your current project management tool."),
+       ("Is Odoo suitable for small teams?",
+        "Yes. Teams of five to fifty use it as project management software for small business because they pay only for the apps they need. Start with Project and Timesheets, then add Sales, Planning or Field Service later."),
+       ("Can clients see project progress without seeing internal costs?",
+        "Yes. Clients log into the portal and see only their own project, including task progress, documents and approvals. Internal notes, hourly costs and margins stay hidden, while managers keep a live project management dashboard of every job."),
+       ("Does Odoo handle timesheets and billing for client work?",
+        "It does. Hours are logged against tasks from web, mobile or a timer, and each Odoo timesheet entry flows straight into a draft invoice. Billed hours lock automatically, so delivered and invoiced time always match without manual reconciliation."),
+       ("Will we need custom development?",
+        "Rarely. Most Odoo Project requirements are met through standard settings such as stages, milestones, templates, portal access and billing rules. We use Odoo Studio for extra fields or reports, and write code only for needs like Jira sync.")]

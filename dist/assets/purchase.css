@@ -543,3 +543,4 @@ button.pu-dc:focus-visible{outline:2px solid var(--ox-teal);outline-offset:1px;}
 @media (min-width:1024px){.pu-ready,.pu-cfg{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}.pu-ready .pu-title,.pu-cfg .pu-title,.pu-int .pu-title,.pu-golive .pu-title{font-size:clamp(1.4rem,1.9vw,1.7rem);}}
 .pu-auto{align-items:stretch;}.pu-auto>*{align-self:stretch;}
 /* fit:end */
+.pu-pa-note{max-width:820px;margin:28px auto 0;text-align:center;color:var(--text-muted);line-height:1.7;}

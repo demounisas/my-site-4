@@ -55,7 +55,7 @@ def hero(g):
     points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["Quotes in minutes", "Signed &amp; paid online", "Invoices from what you deliver"])
     copy = ('<div class="sl-hero-copy">%s<p class="sl-eyebrow mono">ODOO SALES IMPLEMENTATION</p>'
             '<h1 class="sl-h1">Sales Implementation Services <span>Customized with Odoo</span></h1>'
-            '<p class="sl-lead">We implement Odoo Sales so a quotation becomes an order, a delivery and an invoice in one connected flow, with no re-typing.</p><ul class="sl-hero-points">%s</ul>'
+            '<p class="sl-lead">Unisas sets up Odoo as your sales automation software, so every quotation flows into an order, a delivery and an invoice without re-typing.</p><ul class="sl-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Sales %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the quote-to-cash demo</a></div></div>' % (crumb, points, g["ARROW"]))
     lines = [("Ergo task chair", "Mesh back, 4D armrests", 24, 8450), ("Height-adjustable desk", "Dual motor, 160 x 80 cm", 12, 32900),
@@ -93,19 +93,21 @@ def build(g):
             ("Rahul (Sales)", "#8E4F83", "10:48", "Customer wants the signed copy again. Does anyone have the final PDF?"),
             ("Anita (Manager)", "#C98600", "11:05", "Can someone send me this month's confirmed orders? Need it before the review.")]
     feed = "".join('<li><p>&ldquo;%s&rdquo;</p><small>%s &middot; %s</small></li>' % (x, n, t) for n, c, t, x in msgs)
-    signs = ["Prices and discounts live in old emails and spreadsheets", "Orders are confirmed without checking stock",
-             "Accounts re-types orders into invoices", "Nobody can find the latest signed quote", "Reports are built by hand every month"]
-    out += sec('<div class="sl-ready"><div>%s<ul class="sl-signs">%s</ul><p class="sl-note">If two or more sound familiar, your sales process is ready for one connected system.</p></div>'
+    signs = ["Prices and discounts are buried in old emails and spreadsheets", "Orders are confirmed before anyone checks stock",
+             "Accounts re-types every order into an invoice", "Nobody can find the latest signed quote", "Monthly reports are rebuilt by hand"]
+    out += sec('<div class="sl-ready"><div>%s<ul class="sl-signs">%s</ul><p class="sl-note">If two or more sound familiar, your team has outgrown spreadsheets. The fix is one system that holds the quote, the order and the invoice in one record, so every department works from the same numbers.</p></div>'
                '<div class="pl-card"><p class="pl-k">Heard in one morning</p><ul class="pl-quotes">%s</ul></div></div>'
-               % (head("READINESS CHECK", "Is Your Sales Process Ready for a More Connected System?",
-                       "Most teams don't notice the cost of disconnected sales until it shows up in messages like these."),
+               % (head("READINESS CHECK", "Is Your Sales Process Ready for Connected Sales Tracking Software?",
+                       "Most growing teams don't see the cost of scattered selling until a customer is waiting and nobody has the answer. "
+                       "Prices sit in inboxes, stock is checked after the promise, and the same order is typed three times before the money arrives."),
                   "".join('<li>%s%s</li>' % (CROSS, s) for s in signs), feed), "sl-sec--ready")
 
     # 2 ---- how we implement: steps + Odoo Sales settings
-    steps = [("Map your quote-to-cash", "We sit with sales, warehouse and accounts to map how you quote, approve, deliver and invoice today."),
-             ("Switch on what you need", "We enable only the Odoo Sales features your process uses: pricelists, signatures, templates, delivery rules."),
-             ("Connect the other teams", "Orders reserve stock in Inventory and invoices flow to Accounting, set to your invoicing policy."),
-             ("Train and go live", "Your team practises on its own products and customers before the switch-over.")]
+    steps = [("Map your quote-to-cash", "We sit with sales, warehouse and accounts to map how you quote, approve, deliver and invoice today, including discount limits, credit terms and GST rules."),
+             ("Switch on what you need", "We enable only the features your team will use: pricelists, quotation templates, online signatures and delivery rules. "
+              "Selling configurable products? The product configurator turns Odoo into CPQ software your reps learn in a day."),
+             ("Connect the other teams", "Confirmed orders reserve stock in Inventory, and invoices reach Accounting under the invoicing policy you choose, either on ordered or on delivered quantities."),
+             ("Train and go live", "Your people practise on their own products, prices and customers before switch-over day, so nobody meets the system for the first time on a live order.")]
     st = "".join('<li><span class="sl-step-n mono">%02d</span><div><h3>%s</h3><p>%s</p></div></li>' % (i + 1, t, x) for i, (t, x) in enumerate(steps))
     settings = [("Quotations &amp; Orders", [("Quotation Templates", "Reuse standard offers with products, terms and optional items", True),
                                               ("Online Signature", "Customers sign the quotation online to confirm", True),
@@ -122,46 +124,47 @@ def build(g):
     out += sec('<div class="sl-impl"><div>%s<ol class="sl-steps">%s</ol></div><div class="ox ox-settings">%s'
                '<div class="ox-cp"><div class="ox-cp-l"><span class="ox-new">Save</span><span class="ox-sbtn">Discard</span><span class="ox-crumb">Settings</span></div></div>'
                '<div class="sl-set-body">%s</div></div></div>'
-               % (head("HOW WE IMPLEMENT", "How Can Unisas Implement Odoo Around Your Sales Process?",
-                       "We don't hand you a blank system. We map your process first, then configure Odoo's own settings to match it."),
+               % (head("HOW WE IMPLEMENT", "How Can Unisas, an Odoo Implementation Partner, Fit Odoo Around Your Sales Process?",
+                       "You won't get a blank system and a login. Instead, we study how you sell first, then configure Odoo's standard settings to match. "
+                       "Custom code comes last, and only where a real gap exists."),
                   st, odoo_nav(sales_icon, "Sales", ["Orders", "Products", "Reporting", "Configuration"]), blocks), "sl-sec--impl")
 
     # 3 ---- what Odoo Sales does: interactive quote-to-cash explorer
-    feats = [("Quotations", "Branded quotes from templates, with optional products and validity dates."),
-             ("Online sign &amp; pay", "Customers accept and pay from a secure link, and the order confirms itself."),
-             ("Pricelists &amp; discounts", "The right price for every customer, applied automatically."),
-             ("Sales analysis", "Revenue by product, customer and salesperson, live from confirmed orders.")]
-    out += sec(head("WHAT ODOO SALES DOES", "What Can Odoo Sales Do for Your Business?",
-                    "Odoo Sales takes you from quotation to confirmed order to invoice in one place. Try it: open a quotation, change a quantity, send it, "
-                    "preview what the customer sees, and confirm the order.", "is-center")
+    feats = [("Quotations", "Build branded quotes from an Odoo quotation template, with optional products, product variants and validity dates. It behaves like a quotation generator your whole team shares."),
+             ("Online sign &amp; pay", "Built-in electronic signature software lets customers accept with a click, then pay a deposit or the full amount from a secure link. The order confirms itself."),
+             ("Pricelists &amp; discounts", "Dealer tiers, seasonal offers and customer-specific rates apply automatically. Pricelist software and discount rules work together, so the right price reaches every quote."),
+             ("Sales analysis", "Revenue by product, customer and salesperson, live from confirmed orders. Sales reporting stops being a month-end chore.")]
+    out += sec(head("WHAT ODOO SALES DOES", "What Can Odoo Sales Management Software Do for Your Business?",
+                    "Think of it as one workspace for the whole deal. Odoo Sales takes a quotation through to a confirmed order and an invoice without leaving the screen, "
+                    "because stock, billing and payments share one database. Try the live preview: open a quotation, change a quantity, send it, see what the customer sees, then confirm.", "is-center")
                + explorer(sales_icon)
                + '<ul class="sl-feats">%s</ul>' % "".join('<li><b>%s</b><span>%s</span></li>' % f for f in feats), "sl-sec--explore", "explore")
 
     # 4 ---- connected documents: SO -> delivery -> invoice -> payment
     docs = [("sales", "#EE8A3C", "Sales", "S00482", "Sales Order", ["Bluebay Retail Pvt Ltd", "3 products &middot; " + inr(605080)], ["Quotation", "Sent", "Sales Order"],
-             "Confirmed when the customer signs. Stock is reserved straight away."),
+             "Confirmed the moment the customer signs. Stock is reserved straight away, so the warehouse never ships something already promised elsewhere."),
             ("inv", "#5DC1AA", "Inventory", "WH/OUT/00031", "Delivery", ["Chennai warehouse", "37 units &middot; 3 lines"], ["Waiting", "Ready", "Done"],
-             "Created automatically from the order, picked and shipped by the warehouse."),
+             "Created automatically from the order. The warehouse picks, packs and ships through carrier integrations, and sales sees the status in real time."),
             ("acc", "#8E4F83", "Accounting", "INV/2026/00042", "Customer Invoice", ["GST 18% &middot; e-Invoice ready", "Due in 30 days"], ["Draft", "Posted", "Paid"],
-             "Raised from what was delivered, with the right taxes, then posted."),
+             "Raised from delivered quantities with the correct GST and e-Invoice details, then posted. It's sales invoicing software built into the order, not bolted on."),
             ("pay", "#1E9E4F", "Payments", "PAY/00117", "Payment", ["UPI &middot; Bank reconciled", inr(605080)], ["Draft", "In Payment", "Paid"],
-             "Matched to the invoice when it lands in the bank. The order shows as fully paid.")]
+             "Matched to the invoice when the UPI or bank transfer lands. The order shows as fully paid for everyone.")]
     cards = ""
     for k, c, app, num, kind, facts, stages, txt in docs:
         sb = "".join('<span class="ox-sb" data-i="%d">%s</span>' % (i, s) for i, s in enumerate(stages))
         cards += ('<li class="sl-doc" style="--c:%s" data-doc="%s"><div class="sl-doc-card ox-solo"><p class="sl-doc-app"><i></i>%s</p><h3>%s</h3><small>%s</small>'
                   '<ul>%s</ul><span class="ox-sbar is-mini">%s</span><span class="sl-doc-stamp">Done</span></div><p class="sl-doc-txt">%s</p></li>'
                   % (c, k, app, num, kind, "".join("<li>%s</li>" % f for f in facts), sb, txt))
-    out += sec(head("ONE CONNECTED FLOW", "How Does Odoo Connect Your Sales, Inventory and Accounting?",
-                    "Every step creates the next document for you. Press play to follow one order from signature to payment.", "is-center")
+    out += sec(head("ONE CONNECTED FLOW", "How Does Odoo Connect Sales Order Processing, Inventory and Accounting?",
+                    "Each step creates the next document for you. Press play to follow one order from signature to bank reconciliation, with no hand-offs over email.", "is-center")
                + '<div class="sl-chain"><button type="button" class="sl-play" data-chain-play>%s<span>Play the flow</span></button><ol class="sl-docs">%s</ol></div>'
                % (ic('<path d="M7 5l12 7-12 7z"/>', 16, 2), cards), "sl-sec--chain")
 
     # 6 ---- customisation: branded quotation PDF with callouts
     pins = [("Your branding", "Logo, colours, fonts and layout on every quotation, order and invoice."),
-            ("Custom fields", "Customer PO number, GSTIN, project code or any field your team needs."),
-            ("Approval rules", "Discounts above your limit wait for a manager before the quote can be sent."),
-            ("Product details", "Images, specs and optional add-ons so customers can upsell themselves."),
+            ("Custom fields", "Customer PO number, GSTIN, project code or any field your team relies on."),
+            ("Approval rules", "Discounts above your limit wait for a manager before the quote can go out."),
+            ("Product details", "Images, specs, product variants and optional add-ons, so customers can upsell themselves."),
             ("Pay by UPI", "A payment QR and your bank details printed on the document.")]
     pin_list = "".join('<li data-pin="%d" tabindex="0"><span class="sl-pin">%d</span><div><b>%s</b><span>%s</span></div></li>' % (i + 1, i + 1, t, x) for i, (t, x) in enumerate(pins))
     pdf = ('<div class="sl-pdf" aria-hidden="true">'
@@ -176,8 +179,9 @@ def build(g):
            '<span class="sl-pin is-row" data-pin="4">4</span>'
            '<div class="sl-pdf-foot"><span class="sl-pdf-qr"></span><span><b>Scan to pay by UPI</b><br>HDFC Bank &middot; A/c 50200012345678</span><span class="sl-pin" data-pin="5">5</span></div></div>')
     out += sec('<div class="sl-custom">%s<div class="sl-custom-grid"><ol class="sl-pins">%s</ol>%s</div></div>'
-               % (head("CUSTOMISATION", "How Can Unisas Customize Odoo Sales for Your Business?",
-                       "We tailor documents, fields and rules with upgrade-safe changes, so Odoo works the way your customers and accountants expect. Hover a point to find it on the quotation.", "is-center"),
+               % (head("CUSTOMISATION", "How Can Unisas Handle Odoo Customization for Your Sales Team?",
+                       "Every business has details standard software misses. We tailor documents, fields and rules with upgrade-safe changes, so your quotes look the way customers expect "
+                       "and your invoices satisfy your accountant. Hover over a point to see it on the quotation.", "is-center"),
                   pin_list, pdf), "sl-sec--custom")
 
     # 7 ---- what's included: a quotation from Unisas (customer portal look)
@@ -186,10 +190,10 @@ def build(g):
                                              ("Quotation templates &amp; documents", "Branded quotation, order and invoice layouts"),
                                              ("Approval &amp; discount rules", "Limits per salesperson or team")]),
              ("Data &amp; integrations", [("Customer &amp; product import", "From Excel, Tally or your current system"),
-                                           ("Inventory &amp; Accounting link", "Stock reservation and invoicing policy set up"),
-                                           ("Online signature &amp; payment", "UPI / card gateway connected to the customer portal")]),
+                                           ("Inventory &amp; Accounting link", "Stock reservation and invoicing policy configured"),
+                                           ("Online signature &amp; payment", "UPI or card gateway connected to the customer portal")]),
              ("Training &amp; support", [("Role-based training", "Sales, warehouse and accounts trained on their own data"),
-                                          ("Go-live &amp; hypercare", "On-hand support through the first weeks")])]
+                                          ("Go-live &amp; hypercare", "Hands-on support through the first weeks")])]
     body = ""
     for title, items in scope:
         body += '<tr class="is-section"><td colspan="3">%s</td></tr>' % title
@@ -199,31 +203,32 @@ def build(g):
                '<div class="sl-portal-who"><span class="ox-av" style="--c:#714B67">U</span><span><b>Unisas</b><small>Your Odoo partner</small></span></div></aside>'
                '<div class="sl-portal-doc"><div class="sl-portal-head"><small>Quotation for <b>Your Company</b></small><h3>Odoo Sales Implementation</h3><small>Scope of a standard rollout</small></div>'
                '<table><thead><tr><th>Description</th><th>Qty</th><th></th></tr></thead><tbody>%s</tbody></table></div></div></div>'
-               % (head("WHAT'S INCLUDED", "What Does an Odoo Sales Implementation with Unisas Include?",
-                       "Here is our scope written the way you'll receive it: as an Odoo quotation you can review and sign online."), body), "sl-sec--scope")
+               % (head("WHAT'S INCLUDED", "What Does Unisas Include in an Odoo ERP Implementation for Sales?",
+                       "Here's our scope written the way you'll receive it: as an Odoo quotation you can review and sign online. "
+                       "The price is fixed after discovery, so the number doesn't move halfway through the project."), body), "sl-sec--scope")
 
     # 8 ---- business models: mini documents
-    models = [("B2B &amp; wholesale", "Dealer tiers, volume breaks and credit limits on every order.", "Pricelist", "Dealer tier 2 &middot; &minus;12%", "S00517 &middot; 120 units"),
-              ("B2C &amp; eCommerce", "Website orders flow in paid, ready to pick and invoice.", "Website order", "Paid via UPI", "S00521 &middot; online"),
-              ("Subscriptions", "Recurring plans that renew and invoice themselves.", "Recurring", "Monthly &middot; next invoice Nov 1", "SUB/0042 &middot; active"),
-              ("Rentals", "Rental periods, pickup and return tracked on the order.", "Rental period", "Oct 05 &rarr; Oct 12", "S00498 &middot; pickup today"),
-              ("Projects &amp; services", "Milestone or timesheet billing for service work.", "Invoicing", "Milestones 30 / 40 / 30", "S00503 &middot; 2 of 3 billed"),
-              ("Made to order", "Orders that trigger manufacturing or purchasing.", "Route", "Manufacture &middot; MO/00213", "S00509 &middot; in production")]
+    models = [("B2B &amp; wholesale", "Dealer tiers, volume breaks and credit limits on every order. For FMCG and pharma distributors, it works as distribution software that knows each customer's agreed price.", "Pricelist", "Dealer tier 2 &middot; &minus;12%", "S00517 &middot; 120 units"),
+              ("B2C &amp; eCommerce", "Website, Amazon and eBay orders arrive ready to pick and invoice, while coupons, gift cards and loyalty programs apply automatically.", "Website order", "Paid via UPI", "S00521 &middot; online"),
+              ("Subscriptions", "Paired with Odoo Subscriptions, recurring plans renew and invoice themselves on schedule, without anyone setting reminders.", "Recurring", "Monthly &middot; next invoice Nov 1", "SUB/0042 &middot; active"),
+              ("Rentals", "With the Rental app connected, pickup dates, return dates and late fees are tracked on the order itself.", "Rental period", "Oct 05 &rarr; Oct 12", "S00498 &middot; pickup today"),
+              ("Projects &amp; services", "Bill service work by milestone or timesheet. Each invoice draws from approved hours or agreed stages, not memory.", "Invoicing", "Milestones 30 / 40 / 30", "S00503 &middot; 2 of 3 billed"),
+              ("Made to order", "Confirmed orders can trigger manufacturing or purchasing automatically, so production starts the moment a customer commits.", "Route", "Manufacture &middot; MO/00213", "S00509 &middot; in production")]
     cards = "".join('<li><div class="sl-mdoc ox-solo" aria-hidden="true"><span class="sl-mdoc-fold"></span><small>%s</small><b>%s</b><span>%s</span></div><h3>%s</h3><p>%s</p></li>'
                     % (k, v, ref, t, x) for t, x, k, v, ref in models)
-    out += sec(head("BUSINESS MODELS", "Can Odoo Sales Support Different Business Models?",
-                    "Yes. The same Sales app handles very different ways of selling, and many businesses run more than one at once.", "is-center")
+    out += sec(head("BUSINESS MODELS", "Can This Sales ERP Support Different Business Models?",
+                    "Yes. From an ERP for trading business to a webshop or a service team, the same app adapts to very different ways of selling.", "is-center")
                + '<ul class="sl-models">%s</ul>' % cards, "sl-sec--models")
 
     # 9 ---- benefits: before / after lanes
     before = [("Quote", "Built in Excel, emailed as PDF"), ("Approve", "Chased over WhatsApp"), ("Order", "Re-typed for the warehouse"), ("Invoice", "Re-typed again at month end")]
-    after = [("Quote", "From a template in minutes"), ("Sign &amp; pay", "Customer accepts online"), ("Deliver", "Order already in the warehouse"), ("Invoice", "Raised from what was delivered")]
+    after = [("Quote", "From a template in minutes"), ("Sign &amp; pay", "Customer signs and pays online"), ("Deliver", "Order already in the warehouse"), ("Invoice", "Raised from what was delivered")]
     lane = lambda steps, cls: '<ol class="sl-lane %s">%s</ol>' % (cls, "".join('<li><b>%s</b><span>%s</span></li>' % s for s in steps))
-    bens = [("Faster quotes", "Templates and pricelists cut quoting from hours to minutes."), ("No double entry", "One order feeds delivery and invoicing."),
-            ("Promises you can keep", "Salespeople see stock before they confirm."), ("Faster payment", "Online signature, payment links and reminders."),
-            ("Fewer billing errors", "Invoices match what was actually delivered."), ("Live numbers", "Sales analysis without month-end spreadsheets.")]
-    out += sec(head("BENEFITS", "What Business Benefits Can You Expect from Odoo Sales Implementation?",
-                    "The biggest change is the number of times the same order is handled by hand.", "is-center")
+    bens = [("Faster quotes", "Templates and pricelists cut quoting from hours to minutes."), ("No double entry", "One order feeds delivery and invoicing automatically."),
+            ("Promises you can keep", "Salespeople see live stock before they confirm."), ("Faster payment", "Online signatures, payment links and automatic reminders shorten the wait."),
+            ("Fewer billing errors", "Invoices match what actually left the warehouse."), ("Live numbers", "Sales analytics without month-end spreadsheets. Managers get a reliable base for forecasting.")]
+    out += sec(head("BENEFITS", "What Business Benefits Can You Expect from Odoo Sales Software?",
+                    "The biggest change is how often a single order passes through someone's hands. Here's the difference.", "is-center")
                + '<div class="sl-lanes"><p class="sl-lane-label mono">TODAY</p>%s<p class="sl-lane-label mono is-after">WITH ODOO SALES</p>%s</div>' % (lane(before, "is-before"), lane(after, "is-after"))
                + '<ul class="sl-bens">%s</ul>' % "".join('<li>%s<div><b>%s</b><span>%s</span></div></li>' % (TICK, t, x) for t, x in bens), "sl-sec--bens")
 
@@ -232,17 +237,18 @@ def build(g):
             ("Customisation", "Heavy custom code to copy old habits", "Standard Odoo first; upgrade-safe changes only where needed"),
             ("Other teams", "Sales goes live alone", "Inventory and Accounting connected in the same project"),
             ("Training", "One generic session", "Role-based training for sales, warehouse and accounts"),
-            ("After go-live", "Ticket queue", "Hypercare with the consultants who built it")]
+            ("After go-live", "A ticket queue", "Hypercare with the consultants who built your system")]
     trs = "".join('<tr><th scope="row">%s</th><td>%s%s</td><td>%s%s</td></tr>' % (a, CROSS, b, TICK, c) for a, b, c in rows)
-    out += sec(head("WHY UNISAS", "Why Choose Unisas for Odoo Sales Implementation?",
-                    "What changes when an implementation partner starts from your sales process instead of the software.", "is-center")
-               + '<div class="sl-compare-wrap"><table class="sl-compare"><thead><tr><th></th><th scope="col">A typical rollout</th><th scope="col"><span class="sl-us">Unisas</span></th></tr></thead><tbody>%s</tbody></table></div>' % trs,
+    out += sec(head("WHY UNISAS", "Why Choose Unisas as Your Odoo Partner in India for Sales?",
+                    "Most rollouts start from the sales management software itself. We start from the way your customers buy. "
+                    "That single difference shapes everything an implementation should deliver, and here is how it plays out.", "is-center")
+               + '<div class="sl-compare-wrap"><table class="sl-compare"><thead><tr><th></th><th scope="col">A typical rollout</th><th scope="col"><span class="sl-us">Our approach</span></th></tr></thead><tbody>%s</tbody></table></div>' % trs,
                "sl-sec--why")
 
     # 11 ---- how we start: steps + Odoo Appointments booking
-    start = [("Book a discovery call", "30 minutes with an Odoo consultant to understand how you sell today."),
-             ("Fit-GAP workshop", "We map your quote-to-cash flow against standard Odoo Sales and list any gaps."),
-             ("Fixed-scope proposal", "A clear scope, timeline and price, sent as an Odoo quotation you can sign online.")]
+    start = [("Book a discovery call", "Spend 30 minutes with an Odoo consultant who wants to understand how you sell today, not to run through a slide deck."),
+             ("Fit-GAP workshop", "We compare your quote-to-cash flow against standard Odoo and list every gap, along with the cleanest way to close each one."),
+             ("Fixed-scope proposal", "You receive a clear scope, timeline and price, sent as an Odoo quotation you can sign online.")]
     sst = "".join('<li><span class="sl-step-n mono">%02d</span><div><h3>%s</h3><p>%s</p></div></li>' % (i + 1, t, x) for i, (t, x) in enumerate(start))
     days = [("Mon", "05"), ("Tue", "06"), ("Wed", "07"), ("Thu", "08"), ("Fri", "09")]
     slots = ["10:00", "11:30", "14:00", "15:30", "17:00"]
@@ -252,19 +258,31 @@ def build(g):
                '<span><b>Odoo Sales discovery call</b><small>30 min &middot; Google Meet &middot; Unisas consultant</small></span></div>'
                '<p class="sl-book-label">October 2026</p><div class="sl-days">%s</div><p class="sl-book-label">Available times (IST)</p><div class="sl-slots">%s</div>'
                '<a href="#get-demo" class="sl-book-btn is-off" data-svc-cta="implementation" aria-disabled="true">Pick a time</a></div></div>'
-               % (head("GETTING STARTED", "How Do We Start Your Odoo Sales Implementation?", "Three simple steps, and the first one takes two minutes."), sst, dbtn, sbtn),
+               % (head("GETTING STARTED", "How Do We Start Your Sales Automation Services Project in Odoo?", "Three simple steps, and the first one takes two minutes to book."), sst, dbtn, sbtn),
                "sl-sec--start")
 
     # 12 ---- FAQ
-    faq = [("How long does an Odoo Sales implementation take?", "A focused Sales rollout typically takes 4 to 8 weeks. Connecting Inventory and Accounting, migrating data and custom documents add to that; we confirm the timeline in the fixed-scope proposal."),
-           ("Can we keep our current quotation format?", "Yes. We rebuild your quotation, order and invoice layouts in Odoo with your branding, fields and terms."),
-           ("Can customers sign and pay online?", "Yes. Customers get a secure link to review the quotation, sign it and pay a deposit or the full amount by UPI or card; the order confirms itself."),
-           ("Does Odoo Sales handle GST and e-Invoicing?", "Yes. Indian GST taxes and the e-Invoice (IRN) integration are part of Odoo's Indian localisation, and we configure them with your accountant."),
-           ("Can we import our existing customers, products and prices?", "Yes. We clean and import customers, products, variants and pricelists from Excel, Tally or your current system before go-live."),
-           ("Can Odoo Sales work with our existing CRM or eCommerce site?", "Yes. Odoo CRM and Odoo eCommerce connect natively, and other systems can be integrated through APIs or connectors.")]
+    faq = [("How long does an Odoo Sales implementation take?",
+            "A focused rollout usually takes four to eight weeks. Connecting Inventory and Accounting, migrating data and building custom documents adds time. "
+            "Unisas confirms the exact timeline in your fixed-scope proposal before any work begins."),
+           ("Can we keep our current quotation format?",
+            "Yes. We rebuild your quotation, order and invoice layouts inside Odoo with your branding, fields and terms. "
+            "Customers see familiar documents, while your team gains real quotation software with templates, optional products and validity dates."),
+           ("Can customers sign and pay online?",
+            "Yes. Customers receive a secure link to review the quote, sign it and pay a deposit or the full amount by UPI or card. "
+            "Odoo e signature confirms the order instantly, so nobody chases paperwork."),
+           ("Does Odoo Sales handle GST and e-Invoicing?",
+            "Yes. Indian GST taxes and the e-Invoice (IRN) integration are part of Odoo's Indian localisation. "
+            "We configure both with your accountant, so every invoice from your sales management software carries the correct tax details automatically."),
+           ("Can we import our existing customers, products and prices?",
+            "Yes. We clean and import customers, products, variants and pricelists from Excel, Tally or your current system before go-live. "
+            "Your team starts on familiar data inside the Odoo sales module from day one."),
+           ("Can Odoo Sales work with our existing CRM or eCommerce site?",
+            "Yes. Odoo CRM and Odoo eCommerce connect natively, sharing one customer record. "
+            "Other platforms, including marketplaces and courier services, link through APIs or connectors, which our team scopes during the Fit-GAP workshop.")]
     items = "".join('<details class="sl-faq"%s><summary>%s<span class="sl-faq-ic" aria-hidden="true"></span></summary><p>%s</p></details>' % (" open" if i == 0 else "", q, a) for i, (q, a) in enumerate(faq))
     out += sec('<div class="sl-faqs">%s<div>%s</div></div>'
-               % ('<div class="sl-faq-side">' + head("FAQ", "Frequently Asked Questions About Odoo Sales Implementation")
+               % ('<div class="sl-faq-side">' + head("FAQ", "Frequently Asked Questions About Odoo Sales Module Implementation")
                   + '<div class="sl-faq-card"><b>Still have a question?</b><span>Talk to an Odoo consultant about your sales process.</span><a href="#get-demo" class="link-arrow" data-svc-cta="implementation">Ask us %s</a></div></div>' % g["ARROW"],
                   items), "sl-sec--faq")
 
@@ -425,5 +443,5 @@ JS = '''<script>
 </script>
 ''' % json.dumps(ORDERS)
 
-CTA = ("Let's Connect Your Quote-to-Cash in Odoo",
-       "Tell us how your team quotes, delivers and invoices today. We'll show you the same flow in Odoo Sales and recommend the right setup.")
+CTA = ("Let's Connect Your Quote-to-Cash with Odoo Sales Order Management",
+       "Tell us how your team quotes, delivers and invoices today. We&rsquo;ll show you that same flow running in Odoo, then recommend the right sales management software setup for your size, industry and budget.")

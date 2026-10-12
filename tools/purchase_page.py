@@ -60,12 +60,11 @@ def steps(items):
 def hero(g):
     crumb = ('<nav class="mp-crumb mono" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span>'
              '<a href="index.html#modules">Solutions</a><span>/</span><span aria-current="page">Purchase</span></nav>')
-    points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["RFQs to vendors in minutes", "Approvals by amount", "Pay only for what arrived"])
+    points = "".join('<li>%s%s</li>' % (TICK, p) for p in ["RFQs to vendors in minutes", "Approvals by order amount", "Pay only for what arrived"])
     copy = ('<div class="pu-hero-copy">%s<p class="pu-eyebrow mono">ODOO PURCHASE IMPLEMENTATION</p>'
             '<h1 class="pu-h1">Purchase Order Software <span>for Smarter Procurement with Odoo</span></h1>'
-            '<p class="pu-lead">Unisas sets up Odoo Purchase around how your team buys, so requests, vendor quotes, approvals, receipts and bills sit on one '
-            'linked record. Nobody chases a PO over email, and you only pay for what reached your warehouse.</p><ul class="pu-hero-points">%s</ul>'
-            '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Odoo Purchase %s</a>'
+            '<p class="pu-lead">Unisas sets up Odoo as your purchase order management software, so requests, vendor quotes, approvals, receipts and bills share one linked record.</p><ul class="pu-hero-points">%s</ul>'
+            '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Discuss Your Purchase Setup %s</a>'
             '<a href="#explore" class="btn btn-ghost">Try the purchase demo</a></div></div>' % (crumb, points, g["ARROW"]))
     # one purchase, five linked documents, left to right
     DOC = ic('<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>', 18, 1.7)
@@ -143,25 +142,27 @@ def build(g):
     signs = ["POs are raised over email, WhatsApp and phone calls", "Nobody can tell which vendor quote is the latest",
              "Approvals are given verbally and can't be traced", "Stores receive goods without a PO to check against",
              "Accounts pays bills without knowing what actually arrived"]
-    out += sec('<div class="pu-ready"><div>%s<ul class="pu-signs">%s</ul><p class="pu-note">Each of these costs a little time. Together they slow production, '
-               'bury your buyers in follow-ups and leave you paying for goods you never checked.</p></div>'
+    out += sec('<div class="pu-ready"><div>%s<ul class="pu-signs">%s</ul><p class="pu-note">Each gap costs a little time. Together they stall production and leave you paying for goods nobody checked. '
+               'Construction firms feel it first, which is why procurement software for construction is often their first upgrade.</p></div>'
                '<div class="pu-inbox" aria-label="Example purchase team inbox"><div class="pu-inbox-bar"><b>Inbox</b><span class="pu-inbox-n">23 unread</span><span class="pu-inbox-q">purchase OR quote OR PO</span></div>'
                '<ul>%s</ul></div></div>'
-               % (head("THE COST OF MANUAL PURCHASING", "Is Your Purchasing Process Creating Unnecessary Delays and Manual Work?",
-                       "In most growing firms, purchasing runs on email and memory. It works until volume grows, then looks like this."),
+               % (head("THE COST OF MANUAL PURCHASING", "Is Your Purchase Order Process Creating Unnecessary Delays and Manual Work?",
+                       "In most growing firms, buying runs on email, WhatsApp and memory. Past fifty POs a month, no spreadsheet can tell you which order is approved, received or billed. "
+                       "Without proper purchase order software, it looks like this:"),
                   "".join('<li>%s%s</li>' % (CROSS, s) for s in signs), inbox), "pu-sec--ready")
 
     # 2 ---- simplify: one document, every stage
-    stages = [("rfq", "Request", "RFQ created", "The buyer, or a reordering rule, creates the RFQ. Vendor, price and lead time are filled in from the vendor pricelist.", "Prices copied from old quotes"),
-              ("sent", "Send", "Emailed to vendor", "One click emails the RFQ from your template. The vendor's reply comes back into the RFQ's chatter.", "Separate emails in personal inboxes"),
-              ("po", "Confirm", "Purchase order", "Once confirmed, the RFQ becomes a PO, and Inventory creates the expected receipt with its arrival date.", "Stores told by phone what to expect"),
-              ("rec", "Receive", "Goods received", "Stores validate the receipt against the PO. Partial deliveries create a backorder on their own.", "Challans checked against memory"),
-              ("bill", "Bill", "Bill matched", "The vendor bill is created from the PO and limited to the quantity actually received.", "Bills keyed in and checked by hand"),
-              ("paid", "Pay", "Paid &amp; reconciled", "The payment is registered and matched to the bank statement. The PO shows as fully billed and paid.", "Payment status asked over email")]
+    stages = [("rfq", "Request", "RFQ created", "A buyer or a reordering rule creates the RFQ, with vendor, price and lead time filled in.", "Prices copied from old quotes"),
+              ("sent", "Send", "Emailed to vendor", "The request for quotation goes to several vendors in one click.", "Separate emails in personal inboxes"),
+              ("po", "Confirm", "Purchase order", "The best offer becomes a confirmed purchase order, locked against later edits.", "Stores told by phone what to expect"),
+              ("rec", "Receive", "Goods received", "Stores check incoming goods against the PO, including partial deliveries.", "Challans checked against memory"),
+              ("bill", "Bill", "Bill matched", "The vendor bill is matched to ordered and received quantities before posting.", "Bills keyed in and checked by hand"),
+              ("paid", "Pay", "Paid &amp; reconciled", "Payment goes out through your bank and is reconciled with the statement.", "Payment status asked over email")]
     tabs = "".join('<button type="button" class="pu-stg%s" data-stg="%d" aria-pressed="%s"><span class="mono">%02d</span><b>%s</b><small>%s</small></button>'
                    % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", i + 1, s[1], s[2]) for i, s in enumerate(stages))
-    out += sec(head("ONE CONNECTED WORKFLOW", "How Can Odoo Simplify Your Purchasing and Procurement Workflow?",
-                    "In Odoo the whole purchase stays on one record, from the first request to the paid bill. Step through a single order to see what Odoo does at each stage.", "is-center")
+    out += sec(head("ONE CONNECTED WORKFLOW", "How Can Odoo Simplify Your Purchasing and Purchase Order Workflow?",
+                    "One record carries the whole purchase, from first request to paid bill. Each step creates the next document and links back to the order, so buyers, stores and accounts share the same facts. "
+                    "That is what separates procure to pay software from a PO template. Step through one order to see each stage.", "is-center")
                + '<div class="pu-flow" data-flow><div class="pu-stgs" role="group" aria-label="Purchase stages">%s</div>'
                  '<div class="pu-flow-main"><div class="pu-flow-doc ox-solo" data-flow-doc aria-live="polite"></div>'
                  '<div class="pu-flow-txt"><p data-flow-txt></p><p class="pu-flow-was"><span>Without Odoo</span><b data-flow-was></b></p></div></div></div>' % tabs
@@ -170,7 +171,7 @@ def build(g):
     # 3 ---- configure around your process: Purchase Settings
     impl = [("Map your purchase policy", "Who can buy what, up to which amount, from which vendors, and who signs off."),
             ("Set Odoo's own controls", "Approval limits, bill control and order locking set in standard Purchase Settings."),
-            ("Load vendors &amp; prices", "Vendor pricelists, lead times and minimum quantities, so RFQs fill themselves."),
+            ("Load vendors &amp; prices", "Vendor price lists, lead times and minimum quantities, so RFQs fill themselves."),
             ("Prove it with real orders", "Your buyers run real RFQs through the setup before go-live.")]
 
     def toggle(key, name, desc, on, extra=""):
@@ -191,23 +192,24 @@ def build(g):
                '<div class="ox-cp"><div class="ox-cp-l"><span class="ox-new">Save</span><span class="ox-sbtn">Discard</span><span class="ox-crumb">Settings</span></div></div>'
                '<div class="pu-set-body">%s</div></div>'
                '<div class="pu-effect ox-solo"><p class="pu-effect-h">What your team will see</p><ul data-set-out aria-live="polite"></ul></div></div></div>'
-               % (head("CONFIGURED FOR YOUR POLICY", "How Does Unisas Configure Odoo Purchase Around Your Business Process?",
-                       "We write your purchase policy into Odoo&rsquo;s settings. Change one on the right and see who it affects."),
+               % (head("CONFIGURED FOR YOUR POLICY", "How Does Unisas Configure the Odoo Purchase Module Around Your Business Process?",
+                       "Your purchase policy usually lives in a manager&rsquo;s head or a PDF nobody opens. We write it into Odoo&rsquo;s standard settings so every order follows it, "
+                       "with approval limits and bill control tuned to your amounts. Change a setting on the right and see who it affects."),
                   steps(impl), odoo_nav(app_icon), sets), "pu-sec--cfg")
 
     # 4 ---- what can Odoo manage: the purchase explorer
-    feats = [("Requests for quotation", "RFQs that fill vendor, price and lead time for you, and can be sent in one click."),
-             ("Vendor alternatives", "Ask several vendors, compare them line by line and keep the best offer."),
-             ("Vendors &amp; pricelists", "Prices by quantity break, lead times and validity dates for every vendor."),
+    feats = [("Requests for quotation", "RFQs that fill vendor, price and lead time for you, and go out in one click."),
+             ("Vendor alternatives", "Ask several vendors, run a line-by-line quotation comparison and keep the best offer on record."),
+             ("Vendors &amp; pricelists", "Prices by quantity break, lead times and validity dates, plus on-time history for vendor evaluation."),
              ("Purchase orders", "Confirmed orders with receipt and billing status always in view.")]
     menu = "".join('<button type="button" class="pu-menu%s" data-px-menu="%s" aria-pressed="%s">%s</button>' % (" is-on" if k == "rfq" else "", k, "true" if k == "rfq" else "false", n)
                    for k, n in [("rfq", "Requests for Quotation"), ("po", "Purchase Orders"), ("vendors", "Vendors"), ("prices", "Vendor Pricelists")])
     views = [("list", "List", V_LIST), ("kanban", "Kanban", V_KANBAN)]
     switch = "".join('<button type="button" class="ox-vbtn%s" data-px-view="%s" aria-label="%s view" title="%s" aria-pressed="%s">%s</button>'
                      % (" is-on" if k == "list" else "", k, n, n, "true" if k == "list" else "false", svg) for k, n, svg in views)
-    out += sec(head("WHAT ODOO PURCHASE MANAGES", "What Can Odoo Manage Across Vendors, RFQs and Purchase Orders?",
-                    "This is the Purchase app as your buyers will use it. Open <b>P00044</b> and compare the vendor alternatives, send an RFQ, or confirm "
-                    "<b>P00042</b> to see the approval limit at work.", "is-center")
+    out += sec(head("WHAT ODOO PURCHASE MANAGES", "What Can Odoo Purchase Order Software Manage Across Vendors, RFQs and Purchase Orders?",
+                    "This is the Purchase app as your buyers will use it. Open <b>P00044</b> to compare vendor alternatives, send an RFQ, or confirm "
+                    "<b>P00042</b> to see the approval limit at work. It replaces standalone vendor management software and approved-supplier spreadsheets with one standard app.", "is-center")
                + '<div class="ox pu-ox pu-px" data-px><div class="ox-nav"><span class="ox-app">%s<b>Purchase</b></span><span class="pu-menus" role="group" aria-label="Purchase menu">%s</span>'
                  '<span class="ox-nav-r"><span class="ox-company">Your Company</span><span class="ox-av" style="--c:#3E7CB1">A</span></span></div>'
                  '<div class="ox-cp"><div class="ox-cp-l"><button type="button" class="ox-new" data-px-new>New</button><span class="ox-crumb" data-px-crumb>Requests for Quotation</span></div>'
@@ -218,27 +220,27 @@ def build(g):
                + '<ul class="pu-feats">%s</ul>' % "".join('<li><b>%s</b><span>%s</span></li>' % f for f in feats), "pu-sec--explore", "explore")
 
     # 5 ---- automation: approval route + automation rules
-    rules = [("Reordering rule: Steel chair frame", "Forecast below 30 units", "RFQ P00047 created at 02:00 for 80 units", True),
-             ("Receipt reminder to vendor", "2 days before Expected Arrival", "Deccan Motors reminded about P00043, due Oct 06", True),
-             ("Late receipt follow-up", "Expected Arrival passed", "Activity scheduled for Arjun on P00040", True),
-             ("Blanket order call-off", "Weekly, Monday 08:00", "1,000 cartons released from BO/2026/0012", True),
-             ("Update vendor price on confirm", "Purchase order confirmed", "Pricelist updated: Kovai Chemicals, &#8377; 640/L", False)]
+    rules = [("Reordering rule", "Forecast drops below 30 units, and an RFQ is created overnight."),
+             ("Receipt reminder", "Vendors are reminded two days before expected arrival."),
+             ("Late receipt follow-up", "An activity lands with the buyer once arrival is overdue."),
+             ("Blanket order call-off", "Weekly releases against a blanket purchase order, Monday at 08:00."),
+             ("Vendor price update", "The pricelist refreshes when an order is confirmed.")]
     limits = [("Up to " + inr(100000, False), ["Buyer", "Sent to vendor"], "Small orders go straight out."),
               (inr(100000, False) + " to " + inr(LIMIT * 2, False), ["Buyer", "Purchase Manager", "Sent to vendor"], "One approval, from desk or phone."),
               ("Above " + inr(LIMIT * 2, False), ["Buyer", "Purchase Manager", "Finance Director", "Sent to vendor"], "Two approvals before the vendor sees it.")]
     lrows = "".join('<li><b>%s</b><ol class="pl-flow">%s</ol><p>%s</p></li>'
                     % (a, "".join('<li><span class="pl-chip%s">%s</span></li>' % (" is-ok" if k == len(r) - 1 else "", x) for k, x in enumerate(r)), n) for a, r, n in limits)
     out += sec(head("AUTOMATION", "How Can Unisas Automate Purchase Approvals, Reordering and Procurement Workflows?",
-                    "Approvals follow your limits, reorders raise themselves and vendors get reminded without anyone sending an email. Here is a typical setup we agree with you.", "is-center")
+                    "Approvals follow your limits, reorders raise themselves and vendors get reminded before a delivery slips. That is where automation pays back fastest. Here is a typical setup we agree with you.", "is-center")
                + '<div class="pu-auto"><div class="pl-card"><p class="pl-k">Approval route by order value</p><ul class="pl-steps pu-lim">%s</ul></div>'
                  '<div class="pl-card"><p class="pl-k">What runs on its own</p><ul class="pl-steps">%s</ul></div></div>'
-                 % (lrows, "".join('<li><span class="pl-n">%d</span><b>%s</b><p><b>When:</b> %s. <span class="pl-muted">Example: %s</span></p></li>' % (k + 1, n, w, l) for k, (n, w, l, on) in enumerate(rules))),
+                 % (lrows, "".join('<li><span class="pl-n">%d</span><b>%s</b><p>%s</p></li>' % (k + 1, n, x) for k, (n, x) in enumerate(rules))),
                "pu-sec--auto")
 
     # 6 ---- connected: three-way match
     out += sec(head("CONNECTED APPS", "How Can Odoo Connect Purchasing With Inventory, Sales and Accounting?",
-                    "A purchase order is linked to the sale that triggered it, the receipt that brings the goods in and the bill that pays for them. "
-                    "Receive the goods and create the bill to see the three-way match.", "is-center")
+                    "A purchase order in Odoo links to the sale that triggered it, the receipt that brings goods in and the bill that pays for them. "
+                    "With bill control on received quantities, three way matching runs on its own: no vendor gets paid for 100 units when stores counted 60. Receive the goods and create the bill to see it.", "is-center")
                + '<div class="pu-match" data-tw><div class="ox pu-ox"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Purchase Orders</a><span>P00038</span></span></div>'
                  '<span></span><span class="ox-sbar is-mini pu-tw-sb"><span class="ox-sb">RFQ</span><span class="ox-sb">RFQ Sent</span><span class="ox-sb is-cur">Purchase Order</span></span></div>'
                  '<div class="pu-tw-btns"><button type="button" class="ox-pbtn" data-tw-do="rec1">Receive 60 units</button><button type="button" class="ox-sbtn" data-tw-do="rec2" disabled>Receive remaining 40</button>'
@@ -250,9 +252,9 @@ def build(g):
                  '<div class="ox-scroll"><table class="pu-lines"><thead><tr><th>Product</th><th class="ox-num">Quantity</th><th class="ox-num">Received</th><th class="ox-num">Billed</th><th class="ox-num">Unit Price</th><th class="ox-num">Amount</th></tr></thead>'
                  '<tbody data-tw-lines></tbody></table></div></div></div>'
                  '<ol class="pu-tw-apps" aria-live="polite">'
-                 '<li data-tw-app="sales" style="--c:#EE8A3C"><b>Sales</b><span data-tw-txt>S00482 for 100 chairs triggered this PO (make to order). The salesperson sees the expected date.</span></li>'
-                 '<li data-tw-app="inv" style="--c:#1F8A78"><b>Inventory</b><span data-tw-txt>Receipt WH/IN/00012 is waiting for 100 frames and 100 cylinders.</span></li>'
-                 '<li data-tw-app="acc" style="--c:#8E4F83"><b>Accounting</b><span data-tw-txt>Nothing to bill yet. Bill control is set to received quantities.</span></li></ol></div>',
+                 '<li data-tw-app="sales" style="--c:#EE8A3C"><b>Sales</b><span data-tw-txt>S00482 for 100 chairs triggered this PO through make-to-order. The salesperson sees the expected date.</span></li>'
+                 '<li data-tw-app="inv" style="--c:#1F8A78"><b>Inventory</b><span data-tw-txt>Receipt WH/IN/00012 waits for 100 frames and 100 cylinders.</span></li>'
+                 '<li data-tw-app="acc" style="--c:#8E4F83"><b>Accounting</b><span data-tw-txt>Nothing to bill yet, because bill control follows received quantities.</span></li></ol></div>',
                "pu-sec--match")
 
     # 7 ---- integrations: bill digitisation + systems
@@ -271,7 +273,7 @@ def build(g):
                '<span></span><span class="pu-ocr-st" data-ocr-st>Waiting for email</span></div><dl class="pu-ocr-dl">%s</dl>'
                '<p class="pu-ocr-res" data-ocr-res role="status" aria-live="polite"></p></div></div></div>'
                % (head("INTEGRATIONS", "How Does Unisas Integrate Odoo Purchase With Your Existing Systems?",
-                       "Odoo connects to your accounts, GST portal, banks and vendors. Here, an emailed bill becomes a draft matched to its PO."),
+                       "Odoo connects to your accounts, the GST portal, banks and vendors. Here, an emailed bill becomes a draft already matched to its PO."),
                   nodes, MAIL, frows), "pu-sec--int")
 
     # 8 ---- configure vs customize
@@ -286,12 +288,13 @@ def build(g):
     lab = {"cfg": "Configuration", "studio": "Studio", "custom": "Customization"}
     ritems = "".join('<li><button type="button" class="pu-req%s" data-req="%d" aria-pressed="%s"><span>%s</span><i class="pu-tag pu-tag--%s">%s</i></button></li>'
                      % (" is-on" if i == 0 else "", i, "true" if i == 0 else "false", r[0], r[1], lab[r[1]]) for i, r in enumerate(reqs))
-    out += sec(head("CONFIGURE OR CUSTOMIZE", "When Should Odoo Purchase Be Configured and When Does It Need Customization?",
-                    "Most purchase requirements are already in standard Odoo. We configure first, use Studio for light changes, and write code only when the business truly needs it.", "is-center")
+    out += sec(head("CONFIGURE OR CUSTOMIZE", "When Should Odoo Be Configured and When Does It Need Odoo Customization?",
+                    "Most purchase requirements are already in standard Odoo. We configure first, use Studio for light changes, and write code only when the business truly needs it, "
+                    "because configured features survive upgrades.", "is-center")
                + '<div class="pu-cvc" data-cvc><ul class="pu-reqs">%s</ul><div class="pu-verdict ox-solo" aria-live="polite"><p class="pu-v-kind" data-v-kind></p><h3 data-v-req></h3><p data-v-how></p>'
                  '<dl><div><dt>Done with</dt><dd data-v-with></dd></div><div><dt>Typical effort</dt><dd data-v-eff></dd></div><div><dt>Survives upgrades</dt><dd>Yes</dd></div></dl>'
                  '<div class="pu-v-meter"><span style="--w:62"><b>62%%</b>Configuration</span><span style="--w:18"><b>18%%</b>Studio</span><span style="--w:20"><b>20%%</b>Custom</span></div>'
-                 '<small class="pu-v-foot">Typical split of purchase requirements across our projects</small></div></div>' % ritems
+                 '<small class="pu-v-foot">Typical split across our projects: 62%% configuration, 18%% Studio, 20%% custom.</small></div></div>' % ritems
                + '<script type="application/json" id="pu-reqs">%s</script>' % json.dumps([[r[0], lab[r[1]], r[1], r[2], r[3], r[4]] for r in reqs]), "pu-sec--cvc")
 
     # 9 ---- data migration: Merge Contacts + what moves
@@ -307,7 +310,8 @@ def build(g):
            ("Trial import", "A test load into a copy of your database, checked by your buyers."),
            ("Reconcile &amp; sign off", "Open POs and payables tallied to your books before cut-over.")]
     out += sec(head("DATA MIGRATION", "How Does Unisas Handle Supplier and Purchase Data Migration?",
-                    "Duplicate vendors and old prices spoil RFQs from the first day. We clean and de-duplicate them before anything goes into Odoo, then reconcile what is still open.", "is-center")
+                    "Duplicate vendors and old prices spoil RFQs from day one. One supplier stored three ways splits its history and hides supplier performance. "
+                    "We clean and de-duplicate before anything goes into Odoo, then reconcile what is still open.", "is-center")
                + '<div class="pu-mig">%s<div class="pl-card"><p class="pl-k">One vendor, three records</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Name</th><th>GSTIN</th><th class="is-c">Documents</th></tr></thead><tbody>%s</tbody></table></div>'
                  '<p style="margin:12px 0 0"><span class="pl-chip is-ok">&#10003; Merged into SRI LAKSHMI METALS PVT LTD &middot; 175 documents, one GSTIN</span></p></div>'
                  '<div class="pl-card"><p class="pl-k">What moves across</p><ul class="pl-steps">%s</ul></div></div>'
@@ -318,7 +322,7 @@ def build(g):
                         ("Purchase settings &amp; approvals", "Approval limits, order locking, bill control"),
                         ("Vendors, pricelists &amp; reordering", "Quantity breaks, lead times, min/max rules")]),
              ("Data &amp; integration", [("Supplier data migration", "Cleaned vendors, open POs and unpaid bills"),
-                                         ("Inventory &amp; Accounting link", "Receipts, three-way match and payables")]),
+                                         ("Inventory &amp; Accounting link", "Receipts, matching and payables")]),
              ("People &amp; go-live", [("UAT, training &amp; hypercare", "Buyers, approvers, stores and accounts, through the first month-end")])]
     body = ""
     for title, items in scope:
@@ -333,7 +337,8 @@ def build(g):
                '<div class="ox-ftabs"><span class="is-on">Products</span><span>Other Information</span></div>'
                '<div class="ox-scroll"><table class="pu-scope-t"><thead><tr><th>Product</th><th class="ox-num">Quantity</th><th>Price</th><th></th></tr></thead><tbody>%s</tbody></table></div></div></div></div>'
                % (head("WHAT'S INCLUDED", "What Does an Odoo Purchase Implementation With Unisas Include?",
-                       "Our standard scope, written as an Odoo RFQ. Press <b>Confirm Order</b> to ask for one priced for your business.", "is-center"), body), "pu-sec--scope")
+                       "Our standard scope is written as an Odoo RFQ, at a fixed price agreed after discovery. As an Odoo implementation partner for manufacturers and distributors across India, "
+                       "we keep every deliverable visible. Press <b>Confirm Order</b> to get one priced for your business.", "is-center"), body), "pu-sec--scope")
 
     # 11 ---- testing, training, go-live
     uat = [("Buyers", [("RFQ to three vendors, choose the best alternative", True), ("Confirm a PO from a reordering rule", True), ("Update a vendor price and lead time", False)]),
@@ -347,22 +352,24 @@ def build(g):
         for t, on in items:
             ul += '<li><label class="pu-uat-i"><input type="checkbox" data-uat%s><span class="pu-chk" aria-hidden="true">%s</span><span>%s</span></label></li>' % (" checked" if on else "", TICK, t)
             n += 1
-    golive = [("Test with your own data", "Every scenario is tested on your vendors, items and real orders from last month, not demo data."),
-              ("Train by role", "Buyers, approvers, stores and accounts each learn only the screens they will use, with short guides in your terms."),
+    golive = [("Test with your own data", "Every scenario runs on your vendors, items and last month's real orders, not demo data."),
+              ("Train by role", "Each role learns only the screens it will use, with short guides in your terms."),
               ("Cut over cleanly", "Open POs, pending receipts and unpaid bills move across on a weekend, reconciled before Monday."),
               ("Stay with you", "Our consultants handle questions on the floor through the first month-end close.")]
     out += sec('<div class="pu-golive"><div>%s%s</div><div class="pu-uat ox-solo" data-uatbox><div class="pu-uat-h"><span><small>User acceptance testing</small><b>Go-live readiness</b></span>'
                '<span class="pu-uat-pct" data-uat-pct></span></div><div class="pu-uat-bar"><i data-uat-bar></i></div><ul>%s</ul>'
                '<p class="pu-uat-res" data-uat-res aria-live="polite"></p></div></div>'
                % (head("TESTING, TRAINING &amp; GO-LIVE", "How Does Unisas Prepare Your Team for Testing, Training and Go-Live?",
-                       "Go-live is planned like a project, with a checklist each role signs off. Tick the remaining tests to see when the purchase team is ready."),
+                       "Go-live is planned like a project, with a checklist each role signs off. New software fails when people drift back to email, so we train on real work. "
+                       "Tick the remaining tests to see when your team is ready."),
                   steps(golive), ul), "pu-sec--golive")
 
     # 12 ---- visibility: Purchase Analysis
     kpis = [("Spend this quarter", inr(7068600, False), "Across 6 vendors"), ("On-time delivery", "89%", "Vendor average, last 90 days"),
             ("Days to receive", "8", "From confirmation to receipt"), ("Price saved", inr(312400, False), "From RFQ alternatives")]
-    out += sec(head("PROCUREMENT VISIBILITY", "How Can a Connected Odoo Purchase Process Improve Procurement Visibility?",
-                    "When every PO, receipt and bill is in one place, the reports build themselves. This is Odoo's Purchase Analysis. Change the measure to compare vendors.", "is-center")
+    out += sec(head("PROCUREMENT VISIBILITY", "How Can a Connected Purchase Process Improve Procurement Analytics and Visibility?",
+                    "When every PO, receipt and bill sits in one place, reports build themselves. Odoo's Purchase Analysis is the procurement dashboard your purchase head opens on Monday, "
+                    "not a month-end spreadsheet. Switch measures to compare vendors.", "is-center")
                + '<ul class="pu-kpis">%s</ul>' % "".join('<li><small>%s</small><b>%s</b><span>%s</span></li>' % k for k in kpis)
                + '<div class="ox pu-ox" data-pa>%s<div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb">Purchase Analysis</span></div>'
                  '<span class="ox-search">%s<span class="ox-facet">%sOrder Date: Q3 2026</span><span class="ox-facet">%sVendor</span></span><span></span></div>'
@@ -371,7 +378,10 @@ def build(g):
                  '<p class="ox-legend"><i></i><span data-pa-leg>Untaxed Total</span></p></div>'
                  % (odoo_nav(app_icon, ["Orders", "Products", "Reporting", "Configuration"]), SEARCH, FUNNEL, FUNNEL,
                     "".join('<button type="button" class="%s" data-pa-m="%d" aria-pressed="%s">%s</button>' % ("is-on" if i == 0 else "", i, "true" if i == 0 else "false", m)
-                            for i, m in enumerate(["Untaxed Total", "On-Time Rate", "Days to Receive", "Qty Ordered"]))), "pu-sec--pa")
+                            for i, m in enumerate(["Untaxed Total", "On-Time Rate", "Days to Receive", "Qty Ordered"])))
+               + '<p class="pu-pa-note">Each industry reads this data its own way. In a construction ERP, it shows material cost by site. Overruns surface before the bill arrives. '
+                 'Food ERP users watch approved suppliers and shelf-life lead times. Batch-tested inputs get the same scrutiny in pharma. '
+                 'Teams on an ERP for retail use it to plan seasonal buying.</p>', "pu-sec--pa")
 
     # 13 ---- are you ready? self-check
     qs = ["Do you raise more than 50 purchase orders a month?", "Do purchases need approval above a certain amount?",
@@ -382,8 +392,8 @@ def build(g):
     out += sec('<div class="pu-quiz"><div>%s<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Book a procurement review %s</a></div></div>'
                '<div class="pu-q ox-solo" data-quiz><p class="pu-q-h"><b>Procurement readiness check</b><small>6 questions, 30 seconds</small></p><ol>%s</ol>'
                '<div class="pu-q-res" data-quiz-res aria-live="polite"><span class="pu-q-score" data-quiz-score>0 / 6</span><p data-quiz-txt>Answer the questions to see where you stand.</p></div></div></div>'
-               % (head("READINESS CHECK", "Is Your Procurement Process Ready for Odoo Purchase?",
-                       "Mostly yes? Your purchasing has outgrown email and spreadsheets. We&rsquo;ll show the same flow in Odoo."),
+               % (head("READINESS CHECK", "Is Your Procurement Process Ready for Odoo Purchase Order Software?",
+                       "Mostly yes? Your purchasing has outgrown email and spreadsheets, whether you run a small trading desk or a multi-plant group. We&rsquo;ll show the same flow in Odoo."),
                   g["ARROW"], qitems), "pu-sec--quiz")
 
     return out + JS.replace("__ORDERS__", json.dumps(ORDERS)).replace("__VENDORS__", json.dumps(VENDORS)).replace("__PRICES__", json.dumps(PRICELIST)).replace("__LIMIT__", str(LIMIT))
@@ -561,7 +571,7 @@ JS = r'''<script>
       if(k==='rec1'){t.rec=60;say('inv','WH/IN/00012 validated: 60 + 60 received. Backorder <b>WH/IN/00013</b> created for the other 40.');say('sales','60 chairs can now be built. S00482 shows a partial availability date.');say('acc','Stock valued at '+inr(60*2540,false)+'. A bill can now be raised for 60 units.');}
       if(k==='rec2'){t.rec=100;say('inv','Backorder WH/IN/00013 validated. All 100 sets received.');say('sales','S00482 is ready to build and deliver in full.');say('acc',t.bill?'40 more units are ready to bill.':'100 units are ready to bill.');}
       if(k==='bill'){var n=t.rec-t.bill;if(t.bill)t.split=true;t.bill=t.rec;say('acc','Bill <b>BILL/2026/10/00'+(t.split?'08':'07')+'</b> for '+n+' units, '+inr(n*2540*1.18)+' incl. GST. It matches the PO and the receipt.');}
-      if(k==='reset'){t={rec:0,bill:0};say('sales','S00482 for 100 chairs triggered this PO (make to order). The salesperson sees the expected date.');say('inv','Receipt WH/IN/00012 is waiting for 100 frames and 100 cylinders.');say('acc','Nothing to bill yet. Bill control is set to received quantities.');}
+      if(k==='reset'){t={rec:0,bill:0};say('sales','S00482 for 100 chairs triggered this PO through make-to-order. The salesperson sees the expected date.');say('inv','Receipt WH/IN/00012 waits for 100 frames and 100 cylinders.');say('acc','Nothing to bill yet, because bill control follows received quantities.');}
       tdraw();});
     tdraw();}
 
@@ -615,4 +625,15 @@ JS = r'''<script>
 '''
 
 CTA = ("Let's Connect Your Procure-to-Pay in Odoo",
-       "Tell us how you request, approve, receive and pay for purchases. We&rsquo;ll show the same flow in Odoo Purchase.")
+       "Tell us how you request, approve, receive and pay for purchases. We&rsquo;ll show the same flow in Odoo, with your own vendors and items.")
+
+FAQ = [("What does purchase order software actually do?",
+        "It creates, approves, sends and tracks every PO from request to payment. In Odoo, each order links to its RFQ, goods receipt and bill, so nothing gets retyped or lost in email threads."),
+       ("How long does an Odoo implementation take for purchasing?",
+        "Most purchase-focused projects go live in four to eight weeks, depending on vendor count, approval levels and data quality. We fix the timeline after discovery, so you know your go-live date before any work starts."),
+       ("How does the RFQ process work in Odoo?",
+        "A buyer or reordering rule creates the RFQ, sends it to one or more vendors and compares replies line by line. The best offer then converts into a confirmed purchase order with a single click."),
+       ("Can Odoo match bills to the goods received?",
+        "Yes. With bill control set to received quantities, every bill is checked against the PO and the receipt. Accounts can post only what stores actually counted, so short deliveries never get paid in full."),
+       ("Is Odoo good purchase order software for small business?",
+        "Yes. The same app serves a ten-person trader and a five-hundred-person manufacturer. Smaller teams usually start with RFQs, approvals and vendor pricelists, then switch on inventory and accounting as order volume grows.")]
