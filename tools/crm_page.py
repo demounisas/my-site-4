@@ -155,7 +155,7 @@ def build(g):
             % (stars(2), icon('<circle cx="9" cy="8" r="3"/><path d="M3 19c.6-3 3-5 6-5s5.4 2 6 5"/>', 14), stars(3),
                icon('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>', 14)))
     tiles = [("is-big", IC["funnel"], "Opportunities &amp; Pipeline", "Drag deals through your Odoo CRM pipeline on a Kanban board, with value, probability and expected close date on every card.", mini),
-             ("", IC["inbox"], "Leads &amp; Enquiries", "Capture, de-duplicate and qualify enquiries before they reach the pipeline.", ""),
+             ("", IC["inbox"], "Leads &amp; Enquiries", "Capture, merge duplicates and qualify enquiries before they reach the pipeline.", ""),
              ("is-dark", IC["bell"], "Activities &amp; Follow-ups", "Calls, meetings and to-dos on each deal, with reminders when they're due.", ""),
              ("", IC["people"], "Customers &amp; Contacts", "Companies, contacts and the full history of calls, emails and deals.", ""),
              ("", IC["doc"], "Quotations", "Turn an opportunity into a branded Odoo quotation in one click.", ""),
@@ -368,4 +368,4 @@ FAQ = [("How long does a CRM implementation take?",
        ("Why do CRM projects fail, and how does Unisas prevent it?",
         "Most fail on adoption, not software. Unisas designs the pipeline with your sales team, trains each role on live deals, and stays through hypercare, so your rollout ends with daily use, not shelfware."),
        ("How much does Odoo CRM implementation cost?",
-        "Odoo CRM pricing depends on users, integrations and data volume. After a free discovery call, we send a fixed-scope proposal with a clear timeline and price, so your project has no surprise invoices midway through.")]
+        "Odoo CRM pricing depends on users, integrations, customisation and data volume. After a free discovery call, we send a fixed-scope proposal with a clear timeline and price, so your project has no surprise invoices midway through.")]

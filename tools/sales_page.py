@@ -105,7 +105,7 @@ def build(g):
     # 2 ---- how we implement: steps + Odoo Sales settings
     steps = [("Map your quote-to-cash", "We sit with sales, warehouse and accounts to map how you quote, approve, deliver and invoice today, including discount limits, credit terms and GST rules."),
              ("Switch on what you need", "We enable only the features your team will use: pricelists, quotation templates, online signatures and delivery rules. "
-              "Selling configurable products? The product configurator turns Odoo into CPQ software your reps learn in a day."),
+              "Selling configurable products? The product configurator turns Odoo into CPQ (Configure, Price, Quote) software your reps learn in a day."),
              ("Connect the other teams", "Confirmed orders reserve stock in Inventory, and invoices reach Accounting under the invoicing policy you choose, either on ordered or on delivered quantities."),
              ("Train and go live", "Your people practise on their own products, prices and customers before switch-over day, so nobody meets the system for the first time on a live order.")]
     st = "".join('<li><span class="sl-step-n mono">%02d</span><div><h3>%s</h3><p>%s</p></div></li>' % (i + 1, t, x) for i, (t, x) in enumerate(steps))

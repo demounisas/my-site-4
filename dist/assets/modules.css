@@ -425,17 +425,11 @@
 .contact-list dd{line-height:1.55;}
 
 /* industries we serve (Contact) */
-.mp-ind-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
-.mp-ind{display:flex;flex-direction:column;padding:24px;border-radius:14px;background:var(--surface);border:1px solid var(--border);transition:border-color .2s ease;}
-.mp-ind:hover{border-color:rgba(201,162,39,0.55);}
-.mp-ind h3{margin:0 0 8px;font-size:1.04rem;}
-.mp-ind p{margin:0 0 18px;color:var(--text-muted);font-size:0.92rem;line-height:1.6;}
-.mp-ind ul{list-style:none;margin:auto 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
-.mp-ind li{font-size:0.7rem;padding:4px 9px;border-radius:999px;background:var(--navy-tint);color:var(--navy-800);}
+.mp-ind-pills{list-style:none;margin:0 auto;padding:0;max-width:980px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+.mp-ind-pills li{padding:10px 20px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:0.98rem;font-weight:600;transition:border-color .2s ease;}
+.mp-ind-pills li:hover{border-color:rgba(201,162,39,0.55);}
 .mp-ind-note{margin:32px auto 0;max-width:640px;text-align:center;color:var(--text-muted);line-height:1.6;}
 .mp-ind-note a{color:var(--text);font-weight:600;text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;}
-@media (max-width:1000px){.mp-ind-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media (max-width:600px){.mp-ind-grid{grid-template-columns:minmax(0,1fr);}}
 
 /* prefer to talk now (Contact) */
 .mp-talk{max-width:720px;margin:0 auto;text-align:center;}
@@ -536,3 +530,52 @@
 @media (max-width:600px){.pl-grid{grid-template-columns:minmax(0,1fr);}.pl-steps>li{grid-template-columns:36px minmax(0,1fr);}.pl-steps em{grid-row:auto;grid-column:2;justify-self:start;}}
 .pl-grid p b,.pl-steps p b{font-size:inherit;color:var(--text);}
 .pl-grid li li b{font-size:inherit;}
+
+/* ---------- About page: simple layout (split heading/copy, light grids, closing banner) ---------- */
+.ab-split{display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.6fr);gap:clamp(28px,5vw,72px);align-items:start;}
+.ab-h2{margin:0;font-size:clamp(1.6rem,2.6vw,2.2rem);font-weight:700;line-height:1.2;letter-spacing:-0.01em;color:var(--text);}
+.ab-h2::after{content:"";display:block;width:40px;height:3px;margin-top:16px;border-radius:2px;background:var(--gold);}
+.ab-h2.is-center{text-align:center;margin-bottom:clamp(28px,4vw,44px);}
+.ab-h2.is-center::after{margin-left:auto;margin-right:auto;}
+.ab-lead{margin:20px 0 0;color:var(--text-muted);font-size:1rem;line-height:1.7;}
+.ab-copy p{margin:0 0 16px;color:var(--text-muted);font-size:1.05rem;line-height:1.75;}
+.ab-copy>p:first-child{color:var(--text);font-size:1.15rem;}
+.ab-list{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px;}
+.ab-list li{display:flex;gap:12px;padding:16px 0;border-top:1px solid var(--border);}
+.ab-list.is-ticks{margin-top:0;}
+.ab-list li>svg{flex:none;margin-top:2px;}
+.ab-list h3,.ab-cols h3{margin:0 0 4px;font-size:1rem;font-weight:600;color:var(--text);}
+.ab-list p,.ab-cols p{margin:0;color:var(--text-muted);font-size:0.95rem;line-height:1.6;}
+.ab-list p::first-letter,.ab-cols p::first-letter{text-transform:uppercase;}
+.ab-duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,32px);}
+.ab-duo-cell{padding:clamp(24px,3vw,36px);background:var(--surface);border:1px solid var(--border);border-radius:14px;text-align:center;}
+.ab-duo-cell h2::after{margin-left:auto;margin-right:auto;}
+.ab-duo-cell h2{margin:0 0 14px;font-size:clamp(1.4rem,2.2vw,1.8rem);font-weight:700;color:var(--text);}
+.ab-duo-cell h2::after{content:"";display:block;width:40px;height:3px;margin-top:14px;border-radius:2px;background:var(--gold);}
+.ab-duo-cell p{margin:0;color:var(--text-muted);font-size:1.05rem;line-height:1.75;}
+.ab-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;}
+.ab-cols>div{padding-top:18px;border-top:2px solid var(--navy-800);}
+.ab-cta{padding:clamp(56px,8vw,96px) 0;background:var(--navy-900);text-align:center;}
+.ab-cta h2{margin:0 0 12px;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:700;color:#F4F6FA;}
+.ab-cta p{margin:0 auto 28px;max-width:56ch;color:rgba(232,236,243,0.75);font-size:1.05rem;line-height:1.7;}
+@media (min-width:901px){.ab-split.is-sticky{align-self:stretch;align-items:stretch;}.ab-split.is-sticky>div:first-child{position:relative;}.ab-split.is-sticky .ab-h2{position:sticky;top:110px;}}
+.ab-center{max-width:720px;margin:0 auto clamp(28px,4vw,44px);text-align:center;}
+.ab-center .ab-h2.is-center{margin-bottom:0;}
+.ab-center .ab-lead{margin:20px auto 0;font-size:1.05rem;}
+.ab-center+.ab-list{max-width:960px;margin:0 auto;column-gap:48px;}
+@media (max-width:900px){.ab-split,.ab-duo{grid-template-columns:minmax(0,1fr);}.ab-cols{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (max-width:560px){.ab-list,.ab-center+.ab-list,.ab-cols{grid-template-columns:minmax(0,1fr);}}
+
+/* ---------- Contact: page heading inside the dark form section ---------- */
+/* the shared form section sets a large inline top padding; tighten it when the page heading sits inside */
+.final-cta>.container:has(>.contact-intro){padding-top:clamp(28px,3vw,40px) !important;}
+.contact-intro{position:relative;z-index:1;max-width:900px;margin:0 auto clamp(40px,6vw,72px);text-align:center;}
+.contact-intro .mp-crumb{justify-content:center;color:rgba(232,236,243,0.55);}
+.contact-intro .mp-crumb a{color:rgba(232,236,243,0.55);}
+.contact-intro .mp-crumb [aria-current]{color:#F4F6FA;}
+.contact-intro .eyebrow{justify-content:center;color:var(--gold);}
+.contact-intro .mp-h1{margin:0 0 16px;color:#F4F6FA;}
+.contact-intro .mp-lead{margin:0 auto;max-width:880px;color:rgba(232,236,243,0.72);}
+
+/* About / Contact: the top area is shorter than the mega menus, so .page must not clip them vertically */
+.mp-page--short{overflow:visible;overflow-x:clip;}

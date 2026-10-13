@@ -209,13 +209,13 @@ def build(g):
                + toggle("bill", "Billable", "Invoice your time and material to customers", True)),
               ("Visibility", vis)]
     sets = "".join('<div class="pj-set-group"><h4>%s</h4><div class="pj-set-grid">%s</div></div>' % b for b in blocks)
-    out += sec('<div class="pj-cfg"><div>%s%s</div><div><div class="ox pj-ox pj-settings" data-settings>%s'
+    out += sec('%s<div class="pj-cfg"><div>%s</div><div><div class="ox pj-ox pj-settings" data-settings>%s'
                '<div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Projects</a><span>Office Fit-out: Chennai HQ</span></span></div></div>'
                '<div class="pj-set-tabs"><span>Description</span><span class="is-on">Settings</span></div><div class="pj-set-body">%s</div></div>'
                '<div class="pj-effect ox-solo"><p class="pj-effect-h">What your team and client will see</p><ul data-set-out aria-live="polite"></ul></div></div></div>'
                % (head("CONFIGURED AROUND YOUR DELIVERY", "How Does Unisas Configure Odoo Project and Project Templates Around Your Delivery Process?",
-                       "We start from how your projects really run, then set Odoo's own settings to match. Change a setting on the right to see what it does."),
-                  steps(impl), odoo_nav(app_icon), sets), "pj-sec--cfg")
+                       "We start from how your projects really run, then set Odoo's own settings to match. Change a setting on the right to see what it does.", "is-center"),
+                  steps(impl).replace('class="pj-steps"', 'class="pj-steps pj-steps--scroll" data-step-scroll', 1) + STEP_SCROLL_JS, odoo_nav(app_icon), sets), "pj-sec--cfg")
 
     # 4 ---- milestones and dependencies
     out += sec(head("TASKS, MILESTONES &amp; DEPENDENCIES", "What Can You Manage With Odoo Task Management: Projects, Tasks, Milestones and Dependencies?",
@@ -412,6 +412,10 @@ def build(g):
 
     data = {"P": PROJECTS, "T": TASKS, "U": PEOPLE, "TS": {str(k): v for k, v in TIMESHEETS.items()}, "S": {k: list(v) for k, v in STATUS.items()}}
     return out + JS.replace("__DATA__", json.dumps(data))
+
+
+# steps stay pinned beside the settings mockup; the timeline fills and each step lights as the reader scrolls (configure section only)
+STEP_SCROLL_JS = ("<script>(function(){var ol=document.querySelector('[data-step-scroll]');if(!ol)return;var li=[].slice.call(ol.children),n=li.length,box=ol.closest('.pj-cfg')||ol,wide=matchMedia('(min-width:1001px)'),t=0;ol.classList.add('is-armed');function upd(){t=0;var c=li.map(function(l){return l.querySelector('.pj-step-n').getBoundingClientRect();}),len=c[n-1].top-c[0].top;ol.style.setProperty('--len',len+'px');var m=innerHeight*0.55,r=(wide.matches?box:ol).getBoundingClientRect(),raw=wide.matches?(m-r.top)/Math.max(1,r.height-innerHeight*0.45):(m-c[0].top-18)/Math.max(1,len),p=Math.max(0,Math.min(1,raw));ol.style.setProperty('--p',p);li.forEach(function(l,i){l.classList.toggle('is-active',raw>=0&&p>=i/(n-1)-0.001);});}addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd);},{passive:true});addEventListener('resize',upd);upd();})();</script>")
 
 
 JS = r'''<script>

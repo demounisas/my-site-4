@@ -51,6 +51,13 @@ input:focus-visible+.pj-chk{outline:2px solid var(--ox-teal,#017E84);outline-off
 .pj-step-n{display:inline-flex;align-items:center;justify-content:center;flex:none;width:36px;height:36px;border-radius:50%;background:#fff;border:2px solid var(--pj-g);color:var(--pj-g);font-size:0.78rem;font-weight:700;z-index:1;}
 .pj-steps h3{margin:6px 0 4px;font-size:1.04rem;}
 .pj-steps p{margin:0;color:var(--text-muted);font-size:0.94rem;line-height:1.55;}
+.pj-steps--scroll::before{top:18px;bottom:auto;height:var(--len,calc(100% - 36px));}
+.pj-steps--scroll::after{content:"";position:absolute;left:17px;top:18px;width:2px;height:calc(var(--len,0px) * var(--p,0));background:linear-gradient(var(--pj-g),var(--pj-plum));transition:height .15s linear;}
+.pj-steps--scroll.is-armed li>div{opacity:0.45;transition:opacity .3s;}
+.pj-steps--scroll.is-armed li.is-active>div{opacity:1;}
+.pj-steps--scroll .pj-step-n{transition:background .3s,color .3s,box-shadow .3s;}
+.pj-steps--scroll li.is-active .pj-step-n{background:var(--pj-g);color:#fff;box-shadow:0 0 0 5px var(--pj-gt);}
+@media (prefers-reduced-motion:reduce){.pj-steps--scroll::after,.pj-steps--scroll li>div,.pj-steps--scroll .pj-step-n{transition:none;}}
 .pj-lines{width:100%;border-collapse:collapse;font-size:13px;}
 .pj-lines th{padding:8px 6px;text-align:left;font-weight:600;border-bottom:1px solid var(--ox-border);white-space:nowrap;}
 .pj-lines td{padding:8px 6px;border-bottom:1px solid #EEF0F2;vertical-align:middle;}
@@ -218,6 +225,10 @@ span.pj-fav{cursor:default;}
 /* 3 settings */
 .pj-cfg{display:grid;grid-template-columns:minmax(0,0.75fr) minmax(0,1.25fr);gap:clamp(32px,5vw,64px);align-items:start;}
 .pj-settings .ox-nav{gap:16px;}
+.pj-settings{container-type:inline-size;}
+.pj-settings .ox-menu,.pj-settings .ox-company{white-space:nowrap;}
+@container (max-width:640px){.pj-settings .ox-company{display:none;}}
+@media (min-width:1001px){.pj-cfg>div:first-child{position:sticky;top:110px;}}
 .pj-settings .ox-cp{grid-template-columns:minmax(0,1fr);}
 .pj-set-tabs{display:flex;margin:0 16px;border-bottom:1px solid var(--ox-border);}
 .pj-set-tabs span{padding:8px 16px;font-size:14px;}

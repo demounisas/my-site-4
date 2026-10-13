@@ -277,7 +277,7 @@ def build(g):
                   nodes, MAIL, frows), "pu-sec--int")
 
     # 8 ---- configure vs customize
-    reqs = [("Approve POs above &#8377; 5 lakh", "cfg", "Purchase Settings: Purchase Order Approval with a minimum amount.", "Setting", "A day"),
+    reqs = [("Reorder automatically when stock runs low", "cfg", "Standard Odoo, no code: reordering rules with a minimum and maximum quantity per product. When stock drops below the minimum, Odoo drafts an RFQ to the preferred vendor for the quantity needed to reach the maximum.", "Setting", "1 to 2 days"),
             ("Pay only for what was received", "cfg", "Bill Control set to received quantities, with 3-way matching.", "Setting", "A day"),
             ("Vendor prices with quantity breaks", "cfg", "Vendor pricelists on each product, with minimum quantity and validity.", "Data load", "Part of migration"),
             ("Ask three vendors and pick the best", "cfg", "Purchase Agreements: call for tenders and RFQ alternatives.", "Setting", "A day"),

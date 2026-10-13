@@ -224,21 +224,48 @@ def s_mission(d, alt):
 
 
 def s_industries(d, alt):
-    cards = "".join('<div class="mp-ind"><h3>%s</h3><p>%s</p><ul>%s</ul></div>' % (t, x, "".join("<li class=\"mono\">%s</li>" % m for m in mods))
-                    for t, x, mods in d["items"])
+    pills = "".join("<li>%s</li>" % t for t in d["items"])
     note = '<p class="mp-ind-note">%s</p>' % d["note"] if d.get("note") else ""
-    return section(head(d["title"], d["eyebrow"], sub=d.get("sub", "")) + '<div class="mp-ind-grid">%s</div>%s' % (cards, note), alt)
+    return section(head(d["title"], d["eyebrow"], sub=d.get("sub", "")) + '<ul class="mp-ind-pills">%s</ul>%s' % (pills, note), alt)
 
 
 def s_talk(d, alt):
     c = CONTACT_DETAILS
     body = ('<div class="mp-talk"><h2 class="section-title">%s</h2><p class="section-sub">%s</p><div class="cta-row">'
-            '<a class="btn btn-primary btn-red" href="tel:%s">Call %s</a><a class="btn btn-ghost" href="mailto:%s">Email %s</a></div></div>'
+            '<a class="btn btn-primary btn-red" href="tel:%s">Call %s</a><a class="btn btn-ghost" href="mailto:%s">Email : %s</a></div></div>'
             % (d["title"], d["sub"], c["phone_href"], c["phone"], c["email"], c["email"]))
     return section(body, alt)
 
 
-SECTIONS = dict(features=s_features, steps_h=s_steps_h, steps_v=s_steps_v, zigzag=s_zigzag, bento=s_bento,
+def s_plain(d, alt):
+    """Simple About-page blocks. layout: split (heading left, copy right), duo (two text blocks side by side),
+    cols (heading over a row of short items) or cta (closing banner). Items are shown exactly as written."""
+    lay = d.get("layout", "split")
+    if lay == "duo":
+        cells = "".join('<div class="ab-duo-cell"><h2>%s</h2><p>%s</p></div>' % c for c in d["items"])
+        return section('<div class="ab-duo">%s</div>' % cells, alt)
+    if lay == "cta":
+        return ('<section class="ab-cta"><div class="container"><h2>%s</h2><p>%s</p>'
+                '<a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="unsure">%s %s</a></div></section>\n' % (d["title"], d["text"], d["cta"], ARROW))
+    if lay == "cols":
+        cells = "".join('<div><h3>%s</h3><p>%s</p></div>' % c for c in d["items"])
+        return section('<h2 class="ab-h2 is-center">%s</h2><div class="ab-cols">%s</div>' % (d["title"], cells), alt)
+    paras = "".join('<p>%s</p>' % x for x in d.get("paras", []))
+    lst = ""
+    if d.get("list"):
+        tick = d.get("ticks")
+        lst = '<ul class="ab-list%s">%s</ul>' % (" is-ticks" if tick else "", "".join(
+            '<li>%s<div><h3>%s</h3><p>%s</p></div></li>' % (CHECK if tick else "", t, x) for t, x in d["list"]))
+    lead = '<p class="ab-lead">%s</p>' % d["lead"] if d.get("lead") else ""
+    if d.get("center"):
+        # centred: heading and lead on top, the list in a grid below
+        return section('<div class="ab-center"><h2 class="ab-h2 is-center">%s</h2>%s</div>%s' % (d["title"], lead, lst), alt)
+    # sticky: the heading travels down beside the copy as the reader scrolls, stopping level with its last line
+    return section('<div class="ab-split%s"><div><h2 class="ab-h2">%s</h2>%s</div><div class="ab-copy">%s%s</div></div>'
+                   % (" is-sticky" if d.get("sticky") else "", d["title"], lead, paras, lst), alt)
+
+
+SECTIONS = dict(plain=s_plain, features=s_features, steps_h=s_steps_h, steps_v=s_steps_v, zigzag=s_zigzag, bento=s_bento,
                 compare=s_compare, checklist=s_checklist, stats=s_stats, accordion=s_accordion, hub=s_hub, flow=s_flow,
                 story=s_story, mission=s_mission, industries=s_industries, talk=s_talk)
 
@@ -297,6 +324,14 @@ def contact_form(page):
     f = re.sub(r'(<div class="lead-success"[^>]*>.*?<p class="card-title">).*?(</p>\s*<p>).*?(</p>)',
                lambda m: m.group(1) + "Thank you, we've got your message." + m.group(2)
                + "A member of our team will respond within one business day." + m.group(3), f, count=1, flags=re.S)
+    if page.get("hero_in_form"):
+        # the page heading sits at the top of the dark form section instead of in its own hero
+        h = page["hero"]
+        intro = ('<div class="contact-intro"><nav class="mp-crumb mono" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span>'
+                 '<span aria-current="page">%s</span></nav><p class="eyebrow mono">%s</p><h1 class="mp-h1">%s</h1><p class="mp-lead">%s</p></div>'
+                 % (page["name"], h["eyebrow"], h["title"], h["lead"]))
+        f, n = re.subn(r'<div class="final-cta-grid"', lambda m: intro + m.group(0), f, count=1)
+        assert n, "final-cta markup changed; update contact_form()"
     return f
 
 
@@ -329,12 +364,14 @@ def faq_block(page, alt):
 def hero(page):
     if page.get("hero_fn"):
         return page["hero_fn"](globals())
+    if page.get("hero_in_form"):
+        return ""
     h = page["hero"]
     if h["style"] == "simple":
         # heading only: no icon, points, buttons or visual
         crumb = '<nav class="mp-crumb mono" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span aria-current="page">%s</span></nav>' % page["name"]
         return ('<section class="mp-hero mp-hero--simple"><div class="mp-hero-copy">%s<p class="eyebrow mono">%s</p><h1 class="mp-h1">%s</h1><p class="mp-lead">%s</p></div></section>'
-                % (crumb, h["eyebrow"], h["title"], h["lead"]))
+                % (crumb, h["eyebrow"], h["title"], h["lead"])).replace('<p class="eyebrow mono"></p>', '')
     service, company = is_service(page), is_company(page)
     icon = "" if h.get("plain") else ('<span class="mp-hero-ic%s">%s</span>' % (" is-line" if service or company else "", page_icon(page)))
     if company:
@@ -602,12 +639,15 @@ for page in ALL_PAGES:
     html = TEMPLATE.format(
         title=page.get("title") or "Odoo %s Implementation | Unisas" % page["name"], meta=page["meta"], fonts=fonts,
         header=page_header, hero=hero(page), sections=out,
-        final_cta="" if page.get("form_first") else page_cta(page), footer=footer,
+        final_cta="" if page.get("form_first") or page.get("no_final_cta") else page_cta(page), footer=footer,
         modal=modal, floats=floats,
         script=script + ('\n<script src="assets/odoo-motion.js" defer></script>' if "odoo-ui.css" in page.get("css", ()) else ""),
         extra_css="".join('\n<link rel="stylesheet" href="assets/%s">' % c for c in page.get("css", ())))
     # service pages are not linked yet: service links only set the URL hash
     html = SERVICE_LINK.sub(r'href="#/\1"', html)
+    if is_company(page):
+        # short top area: let the Solutions / Services menus drop below it instead of being clipped
+        html = html.replace('<div class="page mp-page">', '<div class="page mp-page mp-page--short">', 1)
     with io.open(os.path.join(DIST, page["slug"] + ".html"), "w", encoding="utf-8", newline="") as f:
         f.write(html)
     print("wrote", page["slug"] + ".html", len(html) // 1024, "KB")
