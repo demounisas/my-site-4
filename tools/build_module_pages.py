@@ -265,7 +265,19 @@ def s_plain(d, alt):
                    % (" is-sticky" if d.get("sticky") else "", d["title"], lead, paras, lst), alt)
 
 
-SECTIONS = dict(plain=s_plain, features=s_features, steps_h=s_steps_h, steps_v=s_steps_v, zigzag=s_zigzag, bento=s_bento,
+def s_thanks(d, alt):
+    """Thank-you page: what happens next, how to reach us now, and the way back into the site."""
+    c = CONTACT_DETAILS
+    steps = "".join('<li><span class="ty-n mono">%02d</span><div><h3>%s</h3><p>%s</p></div></li>' % (i + 1, t, x) for i, (t, x) in enumerate(d["steps"]))
+    links = "".join('<a class="btn %s" href="%s">%s%s</a>' % ("btn-primary btn-red" if i == 0 else "btn-ghost", href, label, (" " + ARROW) if i == 0 else "")
+                    for i, (label, href) in enumerate(d["links"]))
+    body = ('<div class="ty"><h2 class="ty-h">What happens next</h2><ol class="ty-steps">%s</ol>'
+            '<p class="ty-reach">Need us sooner? Call <a href="tel:%s">%s</a> or email <a href="mailto:%s">%s</a>.</p>'
+            '<div class="cta-row ty-links">%s</div></div>' % (steps, c["phone_href"], c["phone"], c["email"], c["email"], links))
+    return section(body, alt)
+
+
+SECTIONS = dict(thanks=s_thanks, plain=s_plain, features=s_features, steps_h=s_steps_h, steps_v=s_steps_v, zigzag=s_zigzag, bento=s_bento,
                 compare=s_compare, checklist=s_checklist, stats=s_stats, accordion=s_accordion, hub=s_hub, flow=s_flow,
                 story=s_story, mission=s_mission, industries=s_industries, talk=s_talk)
 
@@ -371,7 +383,7 @@ def hero(page):
         # heading only: no icon, points, buttons or visual
         crumb = '<nav class="mp-crumb mono" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span aria-current="page">%s</span></nav>' % page["name"]
         return ('<section class="mp-hero mp-hero--simple"><div class="mp-hero-copy">%s<p class="eyebrow mono">%s</p><h1 class="mp-h1">%s</h1><p class="mp-lead">%s</p></div></section>'
-                % (crumb, h["eyebrow"], h["title"], h["lead"])).replace('<p class="eyebrow mono"></p>', '')
+                % (crumb, h["eyebrow"], h["title"], h["lead"])).replace('<p class="eyebrow mono"></p>', '' if page["slug"] != "thank-you" else '<p class="eyebrow mono"></p>')
     service, company = is_service(page), is_company(page)
     icon = "" if h.get("plain") else ('<span class="mp-hero-ic%s">%s</span>' % (" is-line" if service or company else "", page_icon(page)))
     if company:
@@ -639,7 +651,9 @@ for page in ALL_PAGES:
     html = TEMPLATE.format(
         title=page.get("title") or "Odoo %s Implementation | Unisas" % page["name"], meta=page["meta"], fonts=fonts,
         header=page_header, hero=hero(page), sections=out,
-        final_cta="" if page.get("form_first") or page.get("no_final_cta") else page_cta(page), footer=footer,
+        final_cta="" if page.get("form_first") else
+        # no_final_cta: the form section stays in the page but hidden, because the consultation pop-up is built from it
+        ("<div hidden>%s</div>" % page_cta(page)) if page.get("no_final_cta") else page_cta(page), footer=footer,
         modal=modal, floats=floats,
         script=script + ('\n<script src="assets/odoo-motion.js" defer></script>' if "odoo-ui.css" in page.get("css", ()) else ""),
         extra_css="".join('\n<link rel="stylesheet" href="assets/%s">' % c for c in page.get("css", ())))
@@ -648,6 +662,15 @@ for page in ALL_PAGES:
     if is_company(page):
         # short top area: let the Solutions / Services menus drop below it instead of being clipped
         html = html.replace('<div class="page mp-page">', '<div class="page mp-page mp-page--short">', 1)
+    if page.get("noindex"):
+        html = html.replace('<meta name="description"', '<meta name="robots" content="noindex">\n<meta name="description"', 1)
+    if page["slug"] == "thank-you":
+        html = html.replace('<section class="mp-hero mp-hero--simple">', '<section class="mp-hero mp-hero--simple ty-hero">', 1).replace(
+            '<p class="eyebrow mono"></p>', '<span class="ty-tick" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none">'
+            '<path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>', 1)
+    if page.get("form_first") or page.get("no_nav_cta"):
+        # the form is already on this page (or was just sent), so the header needs no consultation button
+        html = html.replace('<a href="#get-demo" class="nav-cta">Get a Consultation</a>', '', 1)
     with io.open(os.path.join(DIST, page["slug"] + ".html"), "w", encoding="utf-8", newline="") as f:
         f.write(html)
     print("wrote", page["slug"] + ".html", len(html) // 1024, "KB")

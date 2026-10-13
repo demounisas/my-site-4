@@ -185,8 +185,7 @@ def build(g):
     core = g["TILE_ICONS"][1]
     out += sec('<div class="crm-integ">%s<div class="crm-orbit" style="--n:%d"><div class="crm-o-core"><span class="crm-o-logo">%s</span><strong>Odoo CRM</strong><small class="mono">TWO-WAY SYNC</small></div><ul>%s</ul></div></div>'
                % (head("INTEGRATIONS", "How Can Odoo CRM Connect With Your Existing Business Systems?",
-                       "Every enquiry, email, chat and call from each channel is logged against the right deal. Where no connector exists, our developers build a custom Odoo CRM integration through the API."
-                       ' <a class="crm-inline-link" href="odoo-integration.html">See our integration service &rarr;</a>'),
+                       "Every enquiry, email, chat and call from each channel is logged against the right deal. Where no connector exists, our developers build a custom Odoo CRM integration through the API."),
                   len(nodes), core, orbit), "crm-sec--integ")
 
     # 8 ---- what's included: one package card

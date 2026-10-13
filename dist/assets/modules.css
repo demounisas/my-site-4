@@ -579,3 +579,19 @@
 
 /* About / Contact: the top area is shorter than the mega menus, so .page must not clip them vertically */
 .mp-page--short{overflow:visible;overflow-x:clip;}
+
+/* ---------- Thank-you page ---------- */
+.ty-tick{display:inline-flex;align-items:center;justify-content:center;width:68px;height:68px;margin:6px auto 22px;border-radius:50%;background:var(--success-tint);color:var(--success);box-shadow:0 0 0 8px rgba(30,123,52,0.06);}
+.ty-hero .mp-h1{max-width:18ch;margin-left:auto;margin-right:auto;}
+.ty{max-width:760px;margin:0 auto;}
+.ty-h{margin:0 0 18px;font-size:clamp(1.3rem,2vw,1.6rem);font-weight:700;color:var(--text);text-align:center;}
+.ty-steps{list-style:none;margin:0;padding:0;border:1px solid var(--border);border-radius:14px;background:var(--surface);}
+.ty-steps li{display:flex;gap:16px;padding:18px 22px;}
+.ty-steps li+li{border-top:1px solid var(--border);}
+.ty-n{flex:none;color:var(--gold);font-weight:700;font-size:0.9rem;padding-top:2px;}
+.ty-steps h3{margin:0 0 4px;font-size:1rem;font-weight:600;color:var(--text);}
+.ty-steps p{margin:0;color:var(--text-muted);font-size:0.95rem;line-height:1.6;}
+.ty-reach{margin:26px 0 0;text-align:center;color:var(--text-muted);}
+.ty-reach a{color:var(--text);font-weight:600;text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;}
+.ty-links{justify-content:center;margin-top:24px;}
+.section:has(>.container>.ty){padding-top:clamp(8px,1.5vw,20px);}

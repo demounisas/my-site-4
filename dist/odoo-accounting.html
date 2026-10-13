@@ -604,10 +604,8 @@
     if(!form || !success) return;
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      form.style.display = 'none';
-      success.classList.add('is-visible');
-      success.setAttribute('tabindex', '-1');
-      success.focus({ preventScroll: true });
+      // no form backend yet: confirm on the thank-you page
+      window.location.href = 'thank-you.html';
     });
   })();
 
@@ -843,10 +841,8 @@
 
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      form.style.display = 'none';
-      success.classList.add('is-visible');
-      success.setAttribute('tabindex', '-1');
-      success.focus({ preventScroll: true });
+      // no form backend yet: confirm on the thank-you page
+      window.location.href = 'thank-you.html';
     });
 
     document.addEventListener('click', function(e){

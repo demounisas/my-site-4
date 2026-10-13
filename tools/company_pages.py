@@ -117,4 +117,19 @@ COMPANY = [
              ("talk", dict(alt=True, title="Prefer to Talk Now?",
                            sub="Call us or send us an email. We're happy to answer questions before you commit to anything.")),
          ]),
+
+    # shown after a form is sent; not linked from the menu and kept out of search results
+    dict(slug="thank-you", nav="Thank you", name="Thank You", short="Message received", icon_svg=ICON_CONTACT, noindex=True, no_nav_cta=True,
+         title="Thank You | Unisas",
+         meta="Thank you for contacting Unisas ITBusiness Solutions. A member of our team will respond within one business day.",
+         hero=dict(style="simple", eyebrow="", title="Thank you, we've got your message.",
+                   lead="A member of our team will respond within one business day."),
+         no_final_cta=True,
+         sections=[
+             ("thanks", dict(
+                 steps=[("We review your requirement.", "Our team studies what you've shared before reaching out."),
+                        ("Discovery call.", "A short conversation to understand your processes, challenges and goals."),
+                        ("Tailored proposal.", "A clear recommendation with scope, timeline and cost, with no generic packages.")],
+                 links=[("Back to Home", "index.html"), ("Explore Solutions", "index.html#modules")])),
+         ]),
 ]
