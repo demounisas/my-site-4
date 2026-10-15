@@ -13,7 +13,7 @@ CONTACT_DETAILS = dict(
     email="avinash@unisasitbiz.com",
     phone="044-46042744",
     phone_href="+914446042744",
-    whatsapp="",  # digits with country code, e.g. "919876543210"
+    whatsapp="",  # digits with country code, e.g. "91XXXXXXXXXX"
     address="7/61, First Floor, Mookambika Complex,<br>New no.7, Old no.4, Sir Desika Road,<br>Mylapore, Chennai - 600004",
     hours="Monday to Saturday, 9:30 AM – 6:30 PM IST",
 )

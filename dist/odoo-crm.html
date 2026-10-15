@@ -176,14 +176,14 @@
   };
   function svg(k,s){return '<svg width="'+(s||14)+'" height="'+(s||14)+'" viewBox="0 0 24 24" fill="'+(k==='star'?'currentColor':'none')+'" stroke="currentColor" stroke-width="'+(k==='star'?0:2)+'" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICON[k]+'</svg>';}
   var D=[
-    {id:1,name:'CRM rollout for 2 showrooms',cust:'Nair Textiles',email:'purchase@nairtextiles.in',phone:'+91 98450 21734',rev:480000,stage:'New',tags:['Product'],pri:1,sp:'A',act:{t:'call',s:'Discovery call',due:'today'}},
-    {id:2,name:'Annual support contract',cust:'Kaveri Foods',email:'it@kaverifoods.in',phone:'+91 99620 45810',rev:210000,stage:'New',tags:['Services'],pri:0,sp:'R',act:null},
-    {id:3,name:'ERP for 3 branches',cust:'Shree Distributors',email:'ops@shreedist.in',phone:'+91 97890 11223',rev:1200000,stage:'Qualified',tags:['Consulting'],pri:3,sp:'M',act:{t:'call',s:'Call to confirm requirements',due:'overdue'}},
-    {id:4,name:'Quote for 40 POS terminals',cust:'Bluebay Retail',email:'accounts@bluebayretail.in',phone:'+91 90030 77881',rev:640000,stage:'Qualified',tags:['Product'],pri:2,sp:'A',act:{t:'meeting',s:'Demo with store managers',due:'planned'}},
-    {id:5,name:'Warehouse barcode setup',cust:'Arun Logistics',email:'admin@arunlogistics.in',phone:'+91 94440 62109',rev:360000,stage:'Proposition',tags:['Information'],pri:2,sp:'R',act:{t:'call',s:'Follow up on proposal',due:'planned'}},
-    {id:6,name:'Clinic group onboarding',cust:'Sunrise Clinics',email:'hello@sunriseclinics.in',phone:'+91 98840 35670',rev:525000,stage:'Proposition',tags:['Consulting'],pri:3,sp:'M',act:{t:'email',s:'Send revised quotation',due:'overdue'}},
-    {id:7,name:'Export pricing module',cust:'Indus Exports',email:'trade@indusexports.in',phone:'+91 99400 18842',rev:290000,stage:'Proposition',tags:['Product','Other'],pri:0,sp:'A',act:{t:'email',s:'Share sample pricelist',due:'today'}},
-    {id:8,name:'Dealer portal',cust:'Orbit Motors',email:'sales@orbitmotors.in',phone:'+91 90940 55123',rev:980000,stage:'Won',tags:['Information','Other'],pri:2,sp:'R',act:null}
+    {id:1,name:'CRM rollout for 2 showrooms',cust:'Nair Textiles',email:'purchase@nairtextiles.example',phone:'+91 98XXX XX734',rev:480000,stage:'New',tags:['Product'],pri:1,sp:'A',act:{t:'call',s:'Discovery call',due:'today'}},
+    {id:2,name:'Annual support contract',cust:'Kaveri Foods',email:'it@kaverifoods.example',phone:'+91 99XXX XX810',rev:210000,stage:'New',tags:['Services'],pri:0,sp:'R',act:null},
+    {id:3,name:'ERP for 3 branches',cust:'Shree Distributors',email:'ops@shreedist.example',phone:'+91 97XXX XX223',rev:1200000,stage:'Qualified',tags:['Consulting'],pri:3,sp:'M',act:{t:'call',s:'Call to confirm requirements',due:'overdue'}},
+    {id:4,name:'Quote for 40 POS terminals',cust:'Bluebay Retail',email:'accounts@bluebayretail.example',phone:'+91 90XXX XX881',rev:640000,stage:'Qualified',tags:['Product'],pri:2,sp:'A',act:{t:'meeting',s:'Demo with store managers',due:'planned'}},
+    {id:5,name:'Warehouse barcode setup',cust:'Arun Logistics',email:'admin@arunlogistics.example',phone:'+91 94XXX XX109',rev:360000,stage:'Proposition',tags:['Information'],pri:2,sp:'R',act:{t:'call',s:'Follow up on proposal',due:'planned'}},
+    {id:6,name:'Clinic group onboarding',cust:'Sunrise Clinics',email:'hello@sunriseclinics.example',phone:'+91 98XXX XX670',rev:525000,stage:'Proposition',tags:['Consulting'],pri:3,sp:'M',act:{t:'email',s:'Send revised quotation',due:'overdue'}},
+    {id:7,name:'Export pricing module',cust:'Indus Exports',email:'trade@indusexports.example',phone:'+91 99XXX XX842',rev:290000,stage:'Proposition',tags:['Product','Other'],pri:0,sp:'A',act:{t:'email',s:'Share sample pricelist',due:'today'}},
+    {id:8,name:'Dealer portal',cust:'Orbit Motors',email:'sales@orbitmotors.example',phone:'+91 90XXX XX123',rev:980000,stage:'Won',tags:['Information','Other'],pri:2,sp:'R',act:null}
   ];
   D.forEach(function(o){o.log=[{who:'Unisas Bot',txt:'Lead/Opportunity created'}];});
   var DUE={overdue:{c:'red',w:'2 days overdue'},today:{c:'orange',w:'Today'},planned:{c:'green',w:'Tomorrow'}};
@@ -328,7 +328,7 @@
               <input type="text" name="name" required placeholder="Your name" autocomplete="name">
             </label>
             <label>Work email
-              <input type="email" name="email" required placeholder="you@company.com" autocomplete="email">
+              <input type="email" name="email" required placeholder="you@company.example" autocomplete="email">
             </label>
           </div>
           <div class="lead-form-row">
@@ -336,7 +336,7 @@
               <input type="text" name="company" required placeholder="Company Inc." autocomplete="organization">
             </label>
             <label><span>Phone <span class="opt">(optional)</span></span>
-              <input type="tel" name="phone" placeholder="+91 98765 43210" autocomplete="tel">
+              <input type="tel" name="phone" placeholder="+91 98XXX XX210" autocomplete="tel">
             </label>
           </div>
           <div class="lead-form-row">

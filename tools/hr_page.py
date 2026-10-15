@@ -101,7 +101,7 @@ def build(g):
     # 1 ---- scattered information: one employee, many versions
     sources = [("Employee master.xlsx", "HR laptop", "3 months ago"), ("Payroll sheet", "Accounts", "Monthly"), ("Biometric machine", "Coimbatore gate", "Daily"),
                ("Email &amp; WhatsApp", "Leave requests", "Every day"), ("Personnel file", "Cabinet in HR room", "At joining"), ("Leave register", "Notebook", "When someone remembers")]
-    conflicts = [("Mobile", [("Employee master", "+91 98400 11223"), ("WhatsApp", "+91 90030 55821")], 1, "Changed in June. Only WhatsApp knew."),
+    conflicts = [("Mobile", [("Employee master", "+91 98XXX XX223"), ("WhatsApp", "+91 90XXX XX821")], 1, "Changed in June. Only WhatsApp knew."),
                  ("Department", [("Employee master", "Marketing"), ("Payroll sheet", "Sales")], 1, "Moved to Sales last year. The master sheet never caught up."),
                  ("Manager", [("Employee master", "Arjun Mehta"), ("Email", "Kavya Nair")], 1, "Kavya approves her leave by email, so Kavya is her real manager."),
                  ("Date of joining", [("Personnel file", "04/07/2022"), ("Payroll sheet", "07/04/2022")], 0, "Same date, two formats: 4 July 2022."),
@@ -205,12 +205,12 @@ def build(g):
     # 7 ---- access and sensitive information
     roles = [("self", "Priya (herself)"), ("peer", "A colleague"), ("mgr", "Her manager"), ("officer", "HR Officer"), ("admin", "HR Administrator")]
     # field, value, who can see (r) and edit (w)
-    fields = [("Work email &amp; phone", "priya.raman@yourcompany.in", "self peer mgr officer admin", "officer admin"),
+    fields = [("Work email &amp; phone", "priya.raman@yourcompany.example", "self peer mgr officer admin", "officer admin"),
               ("Department &amp; manager", "Sales &middot; Kavya Nair", "self peer mgr officer admin", "officer admin"),
               ("Private address", "14, 3rd Cross St, Adyar, Chennai", "self officer admin", "self officer admin"),
-              ("Emergency contact", "Raman K &middot; +91 94441 20387", "self mgr officer admin", "self officer admin"),
+              ("Emergency contact", "Raman K &middot; +91 94XXX XX387", "self mgr officer admin", "self officer admin"),
               ("Bank account", "HDFC Bank &middot;&middot;&middot; 4412", "self officer admin", "officer admin"),
-              ("Aadhaar &amp; PAN", "XXXX XXXX 7731 &middot; ABCPR1234K", "self officer admin", "officer admin"),
+              ("Aadhaar &amp; PAN", "XXXX XXXX 7731 &middot; AAAAA0000A", "self officer admin", "officer admin"),
               ("Salary (contract wage)", "&#8377; 42,000.00 / month", "admin", "admin"),
               ("Time off reason", "Sick: medical certificate attached", "self mgr officer admin", "officer admin"),
               ("Appraisal feedback", "Exceeds expectations; ready for a senior role", "self mgr admin", "mgr admin")]
@@ -228,12 +228,12 @@ def build(g):
                  % ("".join("<th>%s</th>" % n for k, n in roles), "".join('<tr><th>%s</th>%s</tr>' % (f[0], "".join(cell(f, k) for k, n in roles)) for f in fields)), "hr-sec--acc")
 
     # 8 ---- data migration: spreadsheet clean-up
-    sheet = [["E001", "Arjun Mehta", "Management", "", "98410 22314", "01-06-2014", "18"],
-             ["E014", "Priya Raman", "Sales", "Kavya Nair", "90030 55821", "04-07-2022", "9"],
-             ["E027", "Anitha Selvam", "Prodn", "Suresh Babu", "97899 40112", "12/03/2023", "6"],
-             ["E031", "Senthil M", "Stores", "Ravi Kumar", "94440 62109", "", "4"],
-             ["E032", "Senthil Murugan", "Stores &amp; Logistics", "Ravi Kumar", "94440 62109", "15-01-2021", "4"],
-             ["E040", "Vignesh Rao", "Accounts &amp; Admin", "Deepa K", "99620 71845", "2024-02-01", "5"]]
+    sheet = [["E001", "Arjun Mehta", "Management", "", "98XXX XX314", "01-06-2014", "18"],
+             ["E014", "Priya Raman", "Sales", "Kavya Nair", "90XXX XX821", "04-07-2022", "9"],
+             ["E027", "Anitha Selvam", "Prodn", "Suresh Babu", "97XXX XX112", "12/03/2023", "6"],
+             ["E031", "Senthil M", "Stores", "Ravi Kumar", "94XXX XX109", "", "4"],
+             ["E032", "Senthil Murugan", "Stores &amp; Logistics", "Ravi Kumar", "94XXX XX109", "15-01-2021", "4"],
+             ["E040", "Vignesh Rao", "Accounts &amp; Admin", "Deepa K", "99XXX XX845", "2024-02-01", "5"]]
     issues = [("dept", "Department &lsquo;Prodn&rsquo; does not exist", "Map to Production", [[2, 2, "Production"]]),
               ("dup", "E031 and E032 share a mobile number", "Merge into E032", [[3, -1, ""]]),
               ("mgr", "Manager &lsquo;Deepa K&rsquo; not found", "Link to Deepa Krishnan", [[5, 3, "Deepa Krishnan"]]),
@@ -402,8 +402,8 @@ JS = r'''<script>
     function emp(id){return E.filter(function(e){return e.id===id;})[0];}
     function av(e,cls){return '<span class="hr-av '+(cls||'')+'" style="--c:'+e.c+'">'+ini(e.n)+'</span>';}
     function pres(e){return e.p==='in'?'<span class="hr-pr is-in" title="Present"></span>':(e.p==='off'?'<span class="hr-pr is-off" title="On time off">&#9992;</span>':'<span class="hr-pr is-out" title="Not checked in"></span>');}
-    function mail(e){return e.n.toLowerCase().split(' ')[0]+'.'+e.n.toLowerCase().split(' ').slice(-1)[0]+'@yourcompany.in';}
-    function phone(e){return '+91 9'+(8400000000+e.id*731557).toString().slice(0,4)+' '+(10000+e.id*3917).toString().slice(0,5);}
+    function mail(e){return e.n.toLowerCase().split(' ')[0]+'.'+e.n.toLowerCase().split(' ').slice(-1)[0]+'@yourcompany.example';}
+    function phone(e){return '+91 9'+(8400000000+e.id*731557).toString().slice(0,1)+'XXX XX'+(10000+e.id*3917).toString().slice(2,5);}
     function tags(e){return e.tags.map(function(t){return '<span class="ox-tag ox-tag--'+TC[t]+'">'+t+'</span>';}).join('');}
     function list(){var t=q.value.trim().toLowerCase();return E.filter(function(e){return (!st.dept||e.d===st.dept)&&(!t||(e.n+' '+e.job+' '+DK[e.d].n).toLowerCase().indexOf(t)>-1);});}
     function side(){var c={};E.forEach(function(e){c[e.d]=(c[e.d]||0)+1;});

@@ -67,9 +67,9 @@ def hero(g):
     sign = ('<svg class="sl-px-sig" viewBox="0 0 220 70" aria-hidden="true"><path d="M8 48c10-26 24-40 30-30s-14 36-4 36 18-30 26-30-6 26 4 26 14-22 22-22-4 20 6 20 12-18 20-26'
             ' M96 50c4-10 12-18 18-14s-6 16 2 16 14-14 22-16c6-2 2 12 10 12s16-14 26-18 M150 30c20-6 44-8 62-4" fill="none" stroke="#1F3A8A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>')
     doc = ('<div class="sl-hero-doc sl-px" aria-label="Example quotation accepted online"><div class="sl-px-back" aria-hidden="true"></div><article class="sl-px-paper">'
-           '<header class="sl-px-top"><p class="sl-px-co">YOUR<b>COMPANY</b><small>12, Industrial Estate, Guindy, Chennai 600032 &middot; GSTIN 33AAACY0000A1Z5</small></p>'
+           '<header class="sl-px-top"><p class="sl-px-co">YOUR<b>COMPANY</b><small>12, Industrial Estate, Guindy, Chennai 600032 &middot; GSTIN 33AAAAA0003A1Z5</small></p>'
            '<p class="sl-px-kind"><small>Quotation</small><b>S00482</b></p></header>'
-           '<div class="sl-px-meta"><p><small>Customer</small><b>Bluebay Retail Pvt Ltd</b>4th Floor, Prestige Tower, Bengaluru 560001<br>GSTIN 29AABCB1234F1Z5</p>'
+           '<div class="sl-px-meta"><p><small>Customer</small><b>Bluebay Retail Pvt Ltd</b>4th Floor, Prestige Tower, Bengaluru 560001<br>GSTIN 29AAAAA0001A1Z5</p>'
            '<dl><div><dt>Quotation Date</dt><dd>Oct 14, 2026</dd></div><div><dt>Expiration</dt><dd>Oct 31, 2026</dd></div><div><dt>Salesperson</dt><dd>Anita Rao</dd></div></dl></div>'
            '<table class="sl-px-t"><thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Amount</th></tr></thead><tbody>%s</tbody></table>'
            '<div class="sl-px-tot"><span>Untaxed Amount</span><b>%s</b><span>GST 18%%</span><b>%s</b><span class="is-total">Total</span><b class="is-total">%s</b></div>'
@@ -168,16 +168,16 @@ def build(g):
             ("Pay by UPI", "A payment QR and your bank details printed on the document.")]
     pin_list = "".join('<li data-pin="%d" tabindex="0"><span class="sl-pin">%d</span><div><b>%s</b><span>%s</span></div></li>' % (i + 1, i + 1, t, x) for i, (t, x) in enumerate(pins))
     pdf = ('<div class="sl-pdf" aria-hidden="true">'
-           '<div class="sl-pdf-top"><span class="sl-pdf-logo">YOUR<b>LOGO</b></span><span class="sl-pdf-co">Your Company Pvt Ltd<br>GSTIN 33ABCDE1234F1Z5</span><span class="sl-pin" data-pin="1">1</span></div>'
+           '<div class="sl-pdf-top"><span class="sl-pdf-logo">YOUR<b>LOGO</b></span><span class="sl-pdf-co">Your Company Pvt Ltd<br>GSTIN 33AAAAA0005A1Z5</span><span class="sl-pin" data-pin="1">1</span></div>'
            '<h4>Quotation # S00482</h4>'
-           '<div class="sl-pdf-meta"><span><small>Quotation Date</small>01/10/2026</span><span><small>Customer PO</small>BB-PO-7781</span><span><small>Customer GSTIN</small>33AAACB4421K1ZQ</span><span class="sl-pin" data-pin="2">2</span></div>'
+           '<div class="sl-pdf-meta"><span><small>Quotation Date</small>01/10/2026</span><span><small>Customer PO</small>BB-PO-7781</span><span><small>Customer GSTIN</small>33AAAAA0002A1Z5</span><span class="sl-pin" data-pin="2">2</span></div>'
            '<div class="sl-pdf-warn"><b>Approval needed:</b> 15% discount is above your 10% limit.<span class="sl-pin" data-pin="3">3</span></div>'
            '<table><tr><th></th><th>Description</th><th>Qty</th><th>Amount</th></tr>'
            '<tr><td><i class="sl-pdf-img"></i></td><td>Ergo task chair<small>Mesh back, 4D armrests</small></td><td>24</td><td>' + inr(202800) + '</td></tr>'
            '<tr><td><i class="sl-pdf-img is-b"></i></td><td>Height-adjustable desk<small>Dual motor, 160 x 80 cm</small></td><td>12</td><td>' + inr(394800) + '</td></tr>'
            '<tr class="is-opt"><td></td><td>Optional: monitor arm<small>Add to order</small></td><td>12</td><td>' + inr(54000) + '</td></tr></table>'
            '<span class="sl-pin is-row" data-pin="4">4</span>'
-           '<div class="sl-pdf-foot"><span class="sl-pdf-qr"></span><span><b>Scan to pay by UPI</b><br>HDFC Bank &middot; A/c 50200012345678</span><span class="sl-pin" data-pin="5">5</span></div></div>')
+           '<div class="sl-pdf-foot"><span class="sl-pdf-qr"></span><span><b>Scan to pay by UPI</b><br>HDFC Bank &middot; A/c XXXX XXXX 5678</span><span class="sl-pin" data-pin="5">5</span></div></div>')
     out += sec('<div class="sl-custom">%s<div class="sl-custom-grid"><ol class="sl-pins">%s</ol>%s</div></div>'
                % (head("CUSTOMISATION", "How Can Unisas Handle Odoo Customization for Your Sales Team?",
                        "Every business has details standard software misses. We tailor documents, fields and rules with upgrade-safe changes, so your quotes look the way customers expect "

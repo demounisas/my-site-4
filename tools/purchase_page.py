@@ -262,11 +262,11 @@ def build(g):
                ("Vendor portal &amp; email", "Vendors confirm POs and send bills by email"), ("Banks", "Vendor payments and statement reconciliation"),
                ("Supplier APIs &amp; EDI", "Catalogues, prices and order confirmations"), ("Custom apps", "REST / XML-RPC for your own systems")]
     nodes = "".join('<li><b>%s</b><span>%s</span></li>' % s for s in systems)
-    fields = [("Vendor", "Shakti Fabrics"), ("GSTIN", "33AAKFS4421M1Z8"), ("Bill Reference", "SF/26-27/1182"), ("Bill Date", "01/10/2026"),
+    fields = [("Vendor", "Shakti Fabrics"), ("GSTIN", "33AAAAA0004A1Z5"), ("Bill Reference", "SF/26-27/1182"), ("Bill Date", "01/10/2026"),
               ("Purchase Order", "P00040"), ("Untaxed Amount", inr(252000)), ("GST 18%", inr(45360)), ("Total", inr(297360))]
     frows = "".join('<div data-ocr-f><dt>%s</dt><dd><span>%s</span></dd></div>' % f for f in fields)
     out += sec('<div class="pu-int"><div>%s<ul class="pu-sys">%s</ul></div><div class="pu-ocr" data-ocr>'
-               '<div class="pu-mail ox-solo"><p class="pu-mail-h">%s<span><b>accounts@shaktifabrics.in</b><small>to bills@yourcompany.odoo.com</small></span></p>'
+               '<div class="pu-mail ox-solo"><p class="pu-mail-h">%s<span><b>accounts@shaktifabrics.example</b><small>to bills@yourcompany.example</small></span></p>'
                '<p class="pu-mail-sub">Invoice SF/26-27/1182 for PO P00040</p><span class="pu-pdf">PDF<small>SF-1182.pdf</small></span>'
                '<button type="button" class="ox-pbtn" data-ocr-go>Process incoming email</button></div>'
                '<div class="ox pu-ox pu-ocr-form"><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Vendor Bills</a><span data-ocr-name>Draft</span></span></div>'
@@ -298,7 +298,7 @@ def build(g):
                + '<script type="application/json" id="pu-reqs">%s</script>' % json.dumps([[r[0], lab[r[1]], r[1], r[2], r[3], r[4]] for r in reqs]), "pu-sec--cvc")
 
     # 9 ---- data migration: Merge Contacts + what moves
-    dupes = [("Sri Lakshmi Metals", "slm.sales@gmail.com", "33ABCFS1234K1ZP", 41), ("SRI LAKSHMI METALS PVT LTD", "accounts@srilakshmimetals.in", "33ABCFS1234K1ZP", 128),
+    dupes = [("Sri Lakshmi Metals", "slm.sales@mail.example", "33AAAAA0006A1Z5", 41), ("SRI LAKSHMI METALS PVT LTD", "accounts@srilakshmimetals.example", "33AAAAA0006A1Z5", 128),
              ("Srilakshmi Metal", "", "33abcfs1234k1zp", 6)]
     drows = "".join('<tr><th>%s<br><small class="pl-muted">%s</small></th><td class="mono">%s</td><td class="is-c">%d</td></tr>' % (n, e or "No email", v, c)
                     for n, e, v, c in dupes)

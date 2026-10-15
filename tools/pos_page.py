@@ -355,7 +355,7 @@ JS = r'''<script>
 
   /* --- 2 the register --- */
   (function(){var bx=document.querySelector('[data-p2box]');if(!bx)return;var P=J('ps-prods'),C=J('ps-cats'),body=bx.querySelector('[data-p2body]'),fx=document.querySelector('[data-p2fx]'),q=bx.querySelector('[data-p2q]');
-    var CUST=[['Meena Krishnan','98410 22314',1240,true],['Arun Prakash','99620 18820',310,true],['Shree Boutique','B2B &middot; GSTIN 33AAB...',0,false]];
+    var CUST=[['Meena Krishnan','98XXX XX314',1240,true],['Arun Prakash','99XXX XX820',310,true],['Shree Boutique','B2B &middot; GSTIN 33AAB...',0,false]];
     var st={scr:'reg',cat:null,lines:[],sel:null,mode:'qty',buf:'',cust:null,pays:[],pm:null,done:[],last:null};
     function p(id){return P.filter(function(x){return x[0]===id;})[0];}
     function total(){return st.lines.reduce(function(a,l){return a+l.q*l.pr*(1-l.d/100);},0);}
@@ -381,7 +381,7 @@ JS = r'''<script>
         (st.pays.some(function(x){return x.k==='upi';})?'<p class="ps-qrline"><span class="ps-qr" aria-hidden="true"></span>QR shown on the customer display</p>':'')+
         '<div class="ps-pay-f"><span>'+(st.cust!==null?'Customer: <b>'+CUST[st.cust][0]+'</b>':'<button type="button" class="ps-link" data-do="cust">Add customer</button>')+'</span><button type="button" class="ps-val" data-do="validate"'+(rem>0.005||!st.pays.length?' disabled':'')+'>Validate</button></div></div></div></div>';}
     function rcpt(){var o=st.last;return '<div class="ps-scr ps-rc"><div class="ps-rc-ok">'+TK+'<b>Payment Successful</b><span>'+inr(o.tot)+(o.change>0.005?' &middot; change '+inr(o.change):'')+'</span><div class="ps-rc-b"><button type="button" class="ox-sbtn">Print Receipt</button><button type="button" class="ox-sbtn">Send by WhatsApp</button></div><button type="button" class="ps-val" data-do="new">New Order</button></div>'+
-      '<div class="ps-paper"><p class="ps-paper-h"><b>Vannakili Threads</b><small>T. Nagar, Chennai &middot; GSTIN 33ABCDE1234F1Z5</small></p>'+o.lines.map(function(l){return '<p><span>'+l.n+'<small>'+num(l.q,2)+' &times; '+inr(l.pr)+(l.d?' &middot; -'+l.d+'%':'')+'</small></span><b>'+inr(l.t)+'</b></p>';}).join('')+
+      '<div class="ps-paper"><p class="ps-paper-h"><b>Vannakili Threads</b><small>T. Nagar, Chennai &middot; GSTIN 33AAAAA0005A1Z5</small></p>'+o.lines.map(function(l){return '<p><span>'+l.n+'<small>'+num(l.q,2)+' &times; '+inr(l.pr)+(l.d?' &middot; -'+l.d+'%':'')+'</small></span><b>'+inr(l.t)+'</b></p>';}).join('')+
       '<p class="is-tot"><span>TOTAL</span><b>'+inr(o.tot)+'</b></p><p class="is-sm"><span>incl. GST</span><span>'+inr(o.tax)+'</span></p>'+o.pays.map(function(x){return '<p class="is-sm"><span>'+x.n+'</span><span>'+inr(x.a)+'</span></p>';}).join('')+
       '<p class="ps-paper-f">'+o.ref+' &middot; Served by Anitha'+(o.cust?'<br>'+o.cust+' &middot; +'+o.pts+' points':'')+'</p></div></div>';}
     function orders(){return '<div class="ps-scr"><div class="ps-scr-h"><b>Orders</b><span></span><span class="ps-muted">Session POS/00042</span></div>'+(st.done.length?'<table class="ox-table ps-cust-t"><thead><tr><th>Order</th><th>Customer</th><th>Payment</th><th class="ox-num">Total</th><th>Status</th></tr></thead><tbody>'+
