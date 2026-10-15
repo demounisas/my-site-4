@@ -5,7 +5,7 @@ Customer / Payment buttons, the payment and receipt screens, offline mode and or
 products with taxes and pricelists, the Closing Register dialog, employee login, IoT hardware, the
 restaurant floor plan and kitchen tickets, and Orders Analysis.
 Sample company: a Chennai ethnic-wear chain with four stores, an online shop and a café in its flagship,
-under the fictional brand "Nila Threads". Shared Odoo look: odoo-ui.css. Page styles: pos.css.
+under the fictional brand "Vannakili Threads". Shared Odoo look: odoo-ui.css. Page styles: pos.css.
 
 hero(g) and build(g) get the build script's globals.
 """
@@ -58,12 +58,12 @@ def hero(g):
             '<a href="#register" class="btn btn-ghost">Try the register</a></div></div>' % (crumb, points, g["ARROW"]))
     tiles = "".join('<span><i style="--h:%d"></i><b>%s</b><small>&#8377; %s</small></span>' % t for t in
                     [(220, "Cotton Kurta", "1,299"), (40, "Linen Kurta", "1,499"), (330, "Silk Saree", "12,500"), (20, "Silk Stole", "899"), (160, "Jhumkas", "449"), (280, "Tote Bag", "349")])
-    reg = ('<div class="ps-hx-reg"><div class="ps-hx-top"><b>Nila<span>Threads</span></b><span class="is-on">Register</span><span>Orders</span><em>' + WIFI + ' Anitha</em></div>'
+    reg = ('<div class="ps-hx-reg"><div class="ps-hx-top"><b>Vannakili<span>Threads</span></b><span class="is-on">Register</span><span>Orders</span><em>' + WIFI + ' Anitha</em></div>'
            '<div class="ps-hx-main"><div class="ps-hx-ord"><p><b>Cotton Kurta &ndash; Sky Blue</b><span>1.00 &times; &#8377; 1,299</span><em>&#8377; 1,299.00</em></p>'
            '<p><b>Silk Stole</b><span>1.00 &times; &#8377; 899</span><em>&#8377; 899.00</em></p><p><b>Kundan Jhumkas</b><span>2.00 &times; &#8377; 449</span><em>&#8377; 898.00</em></p>'
            '<div class="ps-hx-tot"><span>Total</span><b>&#8377; 3,096.00</b></div><div class="ps-hx-pay"><span>Customer</span><span class="is-pay">Payment</span></div></div>'
            '<div class="ps-hx-grid">' + tiles + '</div></div></div>')
-    paper = ('<div class="ps-hv-paper"><b>NILA THREADS</b><small>T. Nagar &middot; Chennai</small><p><span>Cotton Kurta</span><span>1,299.00</span></p>'
+    paper = ('<div class="ps-hv-paper"><b>VANNAKILI THREADS</b><small>T. Nagar &middot; Chennai</small><p><span>Cotton Kurta</span><span>1,299.00</span></p>'
              '<p><span>Silk Stole</span><span>899.00</span></p><p><span>Jhumkas x2</span><span>898.00</span></p><p class="is-tot"><span>TOTAL</span><span>&#8377;3,096.00</span></p>'
              '<p><span>UPI</span><span>PAID</span></p><i class="ps-hv-bar" aria-hidden="true"></i></div>')
     term = ('<div class="ps-hv-term"><div class="ps-hv-tscr"><span class="ps-hx-qr"></span><b>&#8377; 3,096.00</b><small>' + TICK + 'UPI &middot; Paid</small></div>'
@@ -103,7 +103,7 @@ def build(g):
         x.append('<img src="assets/pos/product-%d.jpg" alt="" loading="lazy" width="480" height="300">' % x[0])
     out += sec(head("EVERY SALE, CONNECTED", "How Can Odoo POS Connect Every Sale With Your Store Operations?",
                     ["One register, one database. When a cashier scans a product, the same record feeds inventory, accounting, CRM and your online store, with no exports and no second login.",
-                     "This is the live register for Nila Threads, a boutique in T. Nagar, Chennai. Add products, change a quantity on the numpad, pick a loyalty customer and take payment by cash, card or UPI."], "is-center")
+                     "This is the live register for Vannakili Threads, a boutique in T. Nagar, Chennai. Add products, change a quantity on the numpad, pick a loyalty customer and take payment by cash, card or UPI."], "is-center")
                + '<div class="ps-reg-w"><div class="ps-reg ox-solo" data-p2box><div class="ps-rt"><span class="ps-rt-logo">%s</span><button type="button" class="ps-rt-tab is-on" data-p2nav="register">Register</button>'
                  '<button type="button" class="ps-rt-tab" data-p2nav="orders">Orders <b data-p2n>0</b></button><label class="ps-rt-q">%s<input type="search" placeholder="Search products..." data-p2q aria-label="Search products"></label>'
                  '<span class="ps-rt-r"><span class="ps-wifi">%s</span><span class="ps-rt-emp"><span class="ox-av is-sm" style="--c:#B8325A">A</span>Anitha</span></span></div>'
@@ -147,7 +147,7 @@ def build(g):
 
     # 5 ---- products, pricing, taxes, rules
     lines = [["Linen Kurta &ndash; Ivory", 1499, 2, 12, 1], ["Silk Stole", 899, 1, 5, 0], ["Kundan Jhumkas", 449, 1, 5, 0]]
-    pls = [["Public Pricelist", 0, "Standard prices for walk-in customers"], ["Nila Members", 10, "10% off, applied when the member is selected"], ["Wholesale (10+ pcs)", 22, "22% off for boutique resellers"]]
+    pls = [["Public Pricelist", 0, "Standard prices for walk-in customers"], ["Vannakili Members", 10, "10% off, applied when the member is selected"], ["Wholesale (10+ pcs)", 22, "22% off for boutique resellers"]]
     out += sec(head("PRODUCTS, PRICES &amp; RULES", "How Does Unisas Set Up Products, Pricing, GST and Rules in Your POS Software?",
                     "Get the product master right and the counter runs itself. Each item carries its POS category, barcode, variants and GST rate, "
                     "with pricelists, promotions and discount limits layered on top.", "is-center")
@@ -317,7 +317,7 @@ FAQ = [("Does Odoo POS work without internet?",
        ("Can we run several stores with different prices?",
         "Yes. Each store gets its own register and stock location, and pricelists can vary by branch, customer group or season. Products, customers and loyalty points stay shared, so your point of sale software reports across every location together."),
        ("Can Odoo POS be used in a restaurant?",
-        "Absolutely. Restaurant mode adds floor plans, table orders, kitchen printing or a preparation display, bill splitting and tips. Many of our caf&eacute; and restaurant clients replace two separate tools with this single setup on Odoo."),
+        "Absolutely. Restaurant mode adds floor plans, table orders, kitchen printing or a preparation display, bill splitting and tips.."),
        ("How long does an Odoo POS implementation take?",
         "A single store with standard hardware usually goes live in three to four weeks. Multi-store rollouts, data migration from older billing systems and third-party integrations add time. The planner above gives a realistic first estimate.")]
 
@@ -381,7 +381,7 @@ JS = r'''<script>
         (st.pays.some(function(x){return x.k==='upi';})?'<p class="ps-qrline"><span class="ps-qr" aria-hidden="true"></span>QR shown on the customer display</p>':'')+
         '<div class="ps-pay-f"><span>'+(st.cust!==null?'Customer: <b>'+CUST[st.cust][0]+'</b>':'<button type="button" class="ps-link" data-do="cust">Add customer</button>')+'</span><button type="button" class="ps-val" data-do="validate"'+(rem>0.005||!st.pays.length?' disabled':'')+'>Validate</button></div></div></div></div>';}
     function rcpt(){var o=st.last;return '<div class="ps-scr ps-rc"><div class="ps-rc-ok">'+TK+'<b>Payment Successful</b><span>'+inr(o.tot)+(o.change>0.005?' &middot; change '+inr(o.change):'')+'</span><div class="ps-rc-b"><button type="button" class="ox-sbtn">Print Receipt</button><button type="button" class="ox-sbtn">Send by WhatsApp</button></div><button type="button" class="ps-val" data-do="new">New Order</button></div>'+
-      '<div class="ps-paper"><p class="ps-paper-h"><b>Nila Threads</b><small>T. Nagar, Chennai &middot; GSTIN 33ABCDE1234F1Z5</small></p>'+o.lines.map(function(l){return '<p><span>'+l.n+'<small>'+num(l.q,2)+' &times; '+inr(l.pr)+(l.d?' &middot; -'+l.d+'%':'')+'</small></span><b>'+inr(l.t)+'</b></p>';}).join('')+
+      '<div class="ps-paper"><p class="ps-paper-h"><b>Vannakili Threads</b><small>T. Nagar, Chennai &middot; GSTIN 33ABCDE1234F1Z5</small></p>'+o.lines.map(function(l){return '<p><span>'+l.n+'<small>'+num(l.q,2)+' &times; '+inr(l.pr)+(l.d?' &middot; -'+l.d+'%':'')+'</small></span><b>'+inr(l.t)+'</b></p>';}).join('')+
       '<p class="is-tot"><span>TOTAL</span><b>'+inr(o.tot)+'</b></p><p class="is-sm"><span>incl. GST</span><span>'+inr(o.tax)+'</span></p>'+o.pays.map(function(x){return '<p class="is-sm"><span>'+x.n+'</span><span>'+inr(x.a)+'</span></p>';}).join('')+
       '<p class="ps-paper-f">'+o.ref+' &middot; Served by Anitha'+(o.cust?'<br>'+o.cust+' &middot; +'+o.pts+' points':'')+'</p></div></div>';}
     function orders(){return '<div class="ps-scr"><div class="ps-scr-h"><b>Orders</b><span></span><span class="ps-muted">Session POS/00042</span></div>'+(st.done.length?'<table class="ox-table ps-cust-t"><thead><tr><th>Order</th><th>Customer</th><th>Payment</th><th class="ox-num">Total</th><th>Status</th></tr></thead><tbody>'+

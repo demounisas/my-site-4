@@ -7,7 +7,7 @@ domain editor, mail templates, the A/B Tests tab, mailing statistics and smart b
 Quotations, Revenues), Link Tracker, Settings, the Marketing Automation workflow with Opened /
 Not opened / Clicked triggers, and the public "manage your subscriptions" page.
 Sample company: a Madurai spice and ready-mix maker selling online, to retailers and to distributors,
-under the fictional brand "Amudha Spices". Shared Odoo look: odoo-ui.css. Page styles: email-marketing.css.
+under the fictional brand "Thenvayal Spices". Shared Odoo look: odoo-ui.css. Page styles: email-marketing.css.
 
 hero(g) and build(g) get the build script's globals.
 """
@@ -59,7 +59,7 @@ def hero(g):
             '<ul class="em-hero-points">%s</ul>'
             '<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan your email marketing %s</a>'
             '<a href="#compose" class="btn btn-ghost">Build a mailing</a></div></div>' % (crumb, points, g["ARROW"]))
-    mail = ('<div class="em-hx-mail"><div class="em-hx-top"><span class="em-hx-from"><i>A</i><span><b>Amudha Spices</b><small>to Sri Murugan Stores</small></span></span><small>Tue 07:30</small></div>'
+    mail = ('<div class="em-hx-mail"><div class="em-hx-top"><span class="em-hx-from"><i>T</i><span><b>Thenvayal Spices</b><small>to Sri Murugan Stores</small></span></span><small>Tue 07:30</small></div>'
             '<p class="em-hx-subj">Diwali gift boxes: 15% off bulk orders till 25 Oct</p>'
             '<div class="em-hx-body"><div class="em-hx-ban"><small class="mono">DIWALI 2026 &middot; FOR RETAILERS</small><strong>Gift boxes your customers will ask for</strong><span>Order for my store</span></div></div></div>')
     steps = [("Sent", "1,712", 100, "#F2B33D"), ("Opened", "910", 86, "#E58A2E"), ("Clicked", "325", 72, "#C9622A"), ("Leads", "46", 58, "#A2473A"), ("Quotations", "31", 46, "#714B67")]
@@ -168,12 +168,12 @@ def build(g):
     switch = "".join('<button type="button" class="ox-vbtn%s" data-e4view="%s" aria-label="%s view" title="%s" aria-pressed="%s">%s</button>'
                      % (" is-on" if k == "kanban" else "", k, n, n, "true" if k == "kanban" else "false", svg) for k, n, svg in views)
     out += sec(head("CREATE &amp; SCHEDULE", "What Can Odoo Email Marketing Software Do for Campaign Creation and Scheduling?",
-                    "Below is the Email Marketing app as it runs for Amudha Spices. Switch between Kanban, List, Calendar and Graph views, open any mailing to see its results, "
+                    "Below is the Email Marketing app as it runs for Thenvayal Spices. Switch between Kanban, List, Calendar and Graph views, open any mailing to see its results, "
                     "or press <b>New</b>: pick a template, send yourself a test, then schedule it or send it now.</p><p class=\"em-sub\">"
                     "The drag-and-drop editor works as an email template builder, with blocks for product grids, coupons and events. A built-in email scheduler queues the Diwali price list "
                     "for Tuesday 07:30 while the recipe newsletter waits for Thursday evening.", "is-center")
                + '<div class="ox em-ox em-app" data-e4box><div class="ox-nav"><span class="ox-app">%s<b>Email Marketing</b></span><span class="ox-menu">Mailings</span><span class="ox-menu">Mailing Lists</span>'
-                 '<span class="ox-menu">Reporting</span><span class="ox-menu">Configuration</span><span class="ox-nav-r"><span class="ox-company">Amudha Spices</span><span class="ox-av" style="--c:#B5541B">P</span></span></div>'
+                 '<span class="ox-menu">Reporting</span><span class="ox-menu">Configuration</span><span class="ox-nav-r"><span class="ox-company">Thenvayal Spices</span><span class="ox-av" style="--c:#B5541B">P</span></span></div>'
                  '<div class="ox-cp"><div class="ox-cp-l"><button type="button" class="ox-new" data-e4new>New</button><span class="ox-crumb" data-e4crumb>Mailings</span></div>'
                  '<label class="ox-search">%s<input type="search" placeholder="Search..." aria-label="Search mailings" data-e4q></label><div class="ox-views">%s</div></div>'
                  '<div class="ox-body em-app-b" data-e4body></div><div data-e4dlg></div><div class="em-toast" data-e4toast aria-live="polite"></div></div>'
@@ -289,9 +289,9 @@ def build(g):
                + data("em-mails", mails), "em-sec--meas")
 
     # 10 ---- A/B testing and tracking
-    links = [["amudhaspices.in/shop/festive-gift-box", "Diwali 2026", "Email", "Diwali trade offer", 214],
-             ["amudhaspices.in/trade/bulk-order", "Diwali 2026", "Email", "Diwali trade offer", 141],
-             ["amudhaspices.in/recipes/chettinad-sambar", "Sambar Mix launch", "Email", "New: Chettinad Sambar Mix", 388],
+    links = [["thenvayalspices.in/shop/festive-gift-box", "Diwali 2026", "Email", "Diwali trade offer", 214],
+             ["thenvayalspices.in/trade/bulk-order", "Diwali 2026", "Email", "Diwali trade offer", 141],
+             ["thenvayalspices.in/recipes/chettinad-sambar", "Sambar Mix launch", "Email", "New: Chettinad Sambar Mix", 388],
              ["wa.me/919800000000", "Diwali 2026", "Email", "Diwali trade offer", 37]]
     ab = {"n": 1736, "a": "Diwali gift boxes: 15% off for your store", "b": "Your Diwali shelf, sorted: gift boxes at trade price",
           "res": {"open": [44.1, 51.8, "%"], "click": [12.3, 11.6, "%"], "lead": [9, 13, ""], "rev": [310000, 422000, "inr"]}}
@@ -309,8 +309,8 @@ def build(g):
     # 11 ---- deliverability and unsubscriptions
     recs = [["SPF", "TXT", "@", "v=spf1 include:_spf.odoo.com ~all", 12, "Tells inboxes Odoo may send for your domain"],
             ["DKIM", "CNAME", "odoo._domainkey", "odoo._domainkey.odoo.com", 14, "Signs every email so it cannot be forged"],
-            ["DMARC", "TXT", "_dmarc", "v=DMARC1; p=quarantine; rua=mailto:dmarc@amudhaspices.in", 8, "Tells inboxes what to do with failures, and reports them"],
-            ["From address", "", "", "offers@amudhaspices.in, not a Gmail address", 6, "Your own authenticated domain, not a Gmail address"],
+            ["DMARC", "TXT", "_dmarc", "v=DMARC1; p=quarantine; rua=mailto:dmarc@thenvayalspices.in", 8, "Tells inboxes what to do with failures, and reports them"],
+            ["From address", "", "", "offers@thenvayalspices.in, not a Gmail address", 6, "Your own authenticated domain, not a Gmail address"],
             ["Bounce handling", "", "", "Hard bounces blocklisted automatically", 7, "Hard bounces blocklisted automatically, keeping your email bounce rate low"],
             ["List hygiene", "", "", "Contacts with no opens in 12 months moved to a quiet list", 7, "Contacts with no opens in 12 months moved to a quiet list"]]
     rc = "".join('<li><label class="em-dns"><input type="checkbox" data-e11="%d"><span class="em-sw" aria-hidden="true"></span><span class="em-dns-t"><b>%s%s</b><code>%s</code><small>%s</small></span></label></li>'
@@ -467,8 +467,8 @@ JS = r'''<script>
         '</div></div><p class="ox-legend"><i></i>'+MS.filter(function(x){return x[0]===k;})[0][1]+' rate by mailing</p>';}
     /* the mailing form */
     function mail(m){var s=name(m),t=m.tpl;
-      if(t==='plain')return '<div class="em-e is-plain"><p>Dear Sri Murugan Stores,</p><p>'+s+'.</p><p>Our festive gift boxes are back, at trade price with 15% off on orders of 20 boxes or more. Reply to this email or call me to book your stock.</p><p>Regards,<br>'+PPL[m.resp][0]+'<br>Amudha Spices</p></div>';
-      var hd='<div class="em-e-hd"><b>Amudha<span>Spices</span></b><small>View in browser</small></div>',ft='<p class="em-e-ft">Amudha Spices, Madurai 625001 &middot; <u>Unsubscribe</u> &middot; <u>Manage preferences</u></p>';
+      if(t==='plain')return '<div class="em-e is-plain"><p>Dear Sri Murugan Stores,</p><p>'+s+'.</p><p>Our festive gift boxes are back, at trade price with 15% off on orders of 20 boxes or more. Reply to this email or call me to book your stock.</p><p>Regards,<br>'+PPL[m.resp][0]+'<br>Thenvayal Spices</p></div>';
+      var hd='<div class="em-e-hd"><b>Thenvayal<span>Spices</span></b><small>View in browser</small></div>',ft='<p class="em-e-ft">Thenvayal Spices, Madurai 625001 &middot; <u>Unsubscribe</u> &middot; <u>Manage preferences</u></p>';
       if(t==='welcome')return '<div class="em-e">'+hd+'<div class="em-e-ban is-g"><small>WELCOME</small><h4>'+s+'</h4><p>Thank you for joining. Here&rsquo;s our free e-book of 30 South Indian recipes.</p><a>Download the e-book</a></div>'+ft+'</div>';
       if(t==='news')return '<div class="em-e">'+hd+'<div class="em-e-ban"><small>FROM OUR KITCHEN</small><h4>'+s+'</h4></div><div class="em-e-2"><span><i style="--h:18"></i><b>Chettinad chicken</b><small>Read the recipe</small></span><span><i style="--h:42"></i><b>Quick lemon rasam</b><small>Read the recipe</small></span></div>'+ft+'</div>';
       if(t==='promo')return '<div class="em-e">'+hd+'<div class="em-e-ban is-o"><small>LIMITED OFFER</small><h4>'+s+'</h4><a>Shop the offer</a></div><div class="em-e-3"><span><i style="--h:18"></i><b>Sambar Masala</b><small>&#8377; 85</small></span><span><i style="--h:4"></i><b>Rasam Powder</b><small>&#8377; 70</small></span><span><i style="--h:38"></i><b>Festive Gift Box</b><small>&#8377; 1,620</small></span></div><div class="em-e-cp"><small>Use code</small><b>TRADE15</b></div>'+ft+'</div>';
@@ -480,7 +480,7 @@ JS = r'''<script>
       if(m.st==='done')btn='<button type="button" class="ox-sbtn" data-e4="dup">Duplicate</button>';
       var R=m.st==='done'?[[m.s[0]+'%','Received'],[m.s[1]+'%','Opened'],[m.s[2]+'%','Replied'],[m.s[3]+'%','Clicked'],[m.s[4]+'%','Bounced'],[m.lead,'Leads'],[m.quo,'Quotations'],[inr(m.rev),'Revenues']]:[];
       if(st.tab==='ab')tb='<p class="em-tab-n">Turn on <b>Allow A/B Testing</b> to send two versions to a sample and the winner to everyone else. <a href="#ab-test">See it below</a>.</p>';
-      else if(st.tab==='set')tb='<dl class="em-set"><div><dt>Email From</dt><dd>Amudha Spices &lt;offers@amudhaspices.in&gt;</dd></div><div><dt>Reply To</dt><dd>sales@amudhaspices.in (creates a lead)</dd></div><div><dt>Responsible</dt><dd>'+av(m.resp,'is-sm')+' '+PPL[m.resp][0]+'</dd></div><div><dt>Mail Server</dt><dd>Bulk mail server</dd></div><div><dt>Campaign</dt><dd>Festive 2026</dd></div><div><dt>Medium / Source</dt><dd>Email / '+(m.sub?esc(m.sub.split(':')[0]):'New mailing')+'</dd></div></dl>';
+      else if(st.tab==='set')tb='<dl class="em-set"><div><dt>Email From</dt><dd>Thenvayal Spices &lt;offers@thenvayalspices.in&gt;</dd></div><div><dt>Reply To</dt><dd>sales@thenvayalspices.in (creates a lead)</dd></div><div><dt>Responsible</dt><dd>'+av(m.resp,'is-sm')+' '+PPL[m.resp][0]+'</dd></div><div><dt>Mail Server</dt><dd>Bulk mail server</dd></div><div><dt>Campaign</dt><dd>Festive 2026</dd></div><div><dt>Medium / Source</dt><dd>Email / '+(m.sub?esc(m.sub.split(':')[0]):'New mailing')+'</dd></div></dl>';
       else if(!m.tpl)tb='<p class="em-tab-n">Choose a template to start, or design from scratch.</p><div class="em-tpls">'+TPL.map(function(t){return '<button type="button" class="em-tpl" data-e4t="'+t[0]+'"><span class="em-tpl-i is-'+t[0]+'"><i></i><i></i><i></i></span>'+t[1]+'</button>';}).join('')+'</div>';
       else tb='<div class="em-ebox">'+mail(m)+'</div>'+(m.st==='draft'?'<button type="button" class="em-chg" data-e4="tpl">Change template</button>':'');
       return '<div class="em-mf-bar"><span class="em-mf-btns">'+btn+'</span><span class="ox-sbar">'+COLS.map(function(c){return '<span class="ox-sb'+(m.st===c[0]?' is-cur':'')+'">'+c[1]+'</span>';}).join('')+'</span></div>'+
@@ -489,7 +489,7 @@ JS = r'''<script>
         '<div class="em-mf-f"><label><span>Subject</span><input data-e4s value="'+esc(m.sub)+'" placeholder="e.g. Our new Sambar Mix is here"'+(ro?' readonly':'')+'></label><label><span>Preview Text</span><input data-e4p value="'+esc(m.prev)+'" placeholder="Catchy preview sentence"'+(ro?' readonly':'')+'></label>'+
         '<div class="em-mf-r"><span>Recipients</span><span><b>Mailing List</b> <span class="em-pill">'+m.list+'</span> <small class="ox-muted">'+num(m.n)+' records</small></span></div></div>'+
         '<div class="ox-ftabs em-ftabs">'+[['body','Mail Body'],['ab','A/B Tests'],['set','Settings']].map(function(t){return '<button type="button" class="'+(st.tab===t[0]?'is-on':'')+'" data-e4tab="'+t[0]+'">'+t[1]+'</button>';}).join('')+'</div><div class="em-mf-body">'+tb+'</div></div>';}
-    function dialog(){if(st.dlg==='test')return '<div class="em-dlg" role="dialog" aria-label="Test Mailing"><div><p class="em-dlg-h"><b>Test Mailing</b><button type="button" data-e4="close" aria-label="Close">&times;</button></p><label><span>Recipients</span><input value="priya@amudhaspices.in, design@amudhaspices.in" aria-label="Test recipients"></label><p class="em-dlg-f"><button type="button" class="ox-pbtn" data-e4="dotest">Send Sample Mail</button><button type="button" class="ox-sbtn" data-e4="close">Discard</button></p></div></div>';
+    function dialog(){if(st.dlg==='test')return '<div class="em-dlg" role="dialog" aria-label="Test Mailing"><div><p class="em-dlg-h"><b>Test Mailing</b><button type="button" data-e4="close" aria-label="Close">&times;</button></p><label><span>Recipients</span><input value="priya@thenvayalspices.in, design@thenvayalspices.in" aria-label="Test recipients"></label><p class="em-dlg-f"><button type="button" class="ox-pbtn" data-e4="dotest">Send Sample Mail</button><button type="button" class="ox-sbtn" data-e4="close">Discard</button></p></div></div>';
       if(st.dlg==='schedule')return '<div class="em-dlg" role="dialog" aria-label="When do you want to send your mailing?"><div><p class="em-dlg-h"><b>When do you want to send your mailing?</b><button type="button" data-e4="close" aria-label="Close">&times;</button></p><div class="em-whens">'+['13 Oct, 07:30','15 Oct, 19:00','17 Oct, 10:00'].map(function(w,i){return '<label><input type="radio" name="em-when" value="'+w+'"'+(i?'':' checked')+'>'+['Tue','Thu','Sat'][i]+' '+w+'</label>';}).join('')+'</div><p class="em-dlg-f"><button type="button" class="ox-pbtn" data-e4="doschedule">Schedule</button><button type="button" class="ox-sbtn" data-e4="close">Discard</button></p></div></div>';
       return '';}
     function render(){bx.querySelectorAll('[data-e4view]').forEach(function(b){var on=!st.open&&b.getAttribute('data-e4view')===st.view;b.classList.toggle('is-on',on);b.setAttribute('aria-pressed',on);});
@@ -566,9 +566,9 @@ JS = r'''<script>
   (function(){var bx=document.querySelector('[data-e11ubox]');if(!bx)return;var S=J('em-subs'),RS=J('em-reasons'),u=bx.querySelector('[data-e11u]'),rec=bx.querySelector('[data-e11rec]'),
     st={page:false,subs:S.map(function(s){return s[1];}),reason:null,block:false,saved:false};
     function draw(){
-      if(!st.page)u.innerHTML='<p class="em-u-h"><b>October recipe newsletter</b><small>From Amudha Spices &middot; to lakshmi.r@gmail.com</small></p><div class="em-u-mail"><span class="em-u-hint">Click <b>Unsubscribe</b> below to opt out as Lakshmi &darr;</span><span></span><span class="is-s"></span></div><p class="em-u-ft">Amudha Spices, Madurai &middot; <button type="button" data-e11go>Unsubscribe</button> &middot; Manage preferences</p>';
+      if(!st.page)u.innerHTML='<p class="em-u-h"><b>October recipe newsletter</b><small>From Thenvayal Spices &middot; to lakshmi.r@gmail.com</small></p><div class="em-u-mail"><span class="em-u-hint">Click <b>Unsubscribe</b> below to opt out as Lakshmi &darr;</span><span></span><span class="is-s"></span></div><p class="em-u-ft">Thenvayal Spices, Madurai &middot; <button type="button" data-e11go>Unsubscribe</button> &middot; Manage preferences</p>';
       else{var off=S.some(function(s,i){return s[1]&&!st.subs[i];})||st.block;
-        u.innerHTML='<div class="em-u-url mono">amudhaspices.in/mailing/my</div><p class="em-u-h"><b>Manage your mailing subscriptions</b><small>lakshmi.r@gmail.com</small></p>'+
+        u.innerHTML='<div class="em-u-url mono">thenvayalspices.in/mailing/my</div><p class="em-u-h"><b>Manage your mailing subscriptions</b><small>lakshmi.r@gmail.com</small></p>'+
         '<ul class="em-u-subs">'+S.map(function(s,i){return '<li><label><input type="checkbox" data-e11s="'+i+'"'+(st.subs[i]?' checked':'')+(st.block?' disabled':'')+'><span class="em-sw" aria-hidden="true"></span>'+s[0]+'</label></li>';}).join('')+'</ul>'+
         '<label class="em-u-bl"><input type="checkbox" data-e11b'+(st.block?' checked':'')+'> Exclude me from all mailings (blocklist)</label>'+
         (off?'<p class="em-u-q">Please let us know why you updated your subscription.</p><div class="em-u-rs">'+RS.map(function(r,i){return '<label><input type="radio" name="em-rs" data-e11r="'+i+'"'+(st.reason===i?' checked':'')+'>'+r+'</label>';}).join('')+'</div>':'')+
