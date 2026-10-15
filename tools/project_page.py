@@ -271,14 +271,10 @@ def build(g):
              ("Team Member", "Project: User", "Lands on My Tasks. Moves tasks and logs time, but never sees rates or margins."),
              ("Client", "Portal user", "Sees only their project. Approves work or requests changes, without internal notes or costs."),
              ("Accounts", "Invoicing: Billing", "Invoices timesheets and milestones, but cannot edit tasks or plans.")]
-    reqs = [("Stages and milestones per project type", "cfg"), ("Clients approve work in the portal", "cfg"), ("Templates for repeat jobs", "cfg"),
-            ("Extra fields and client status PDFs", "studio"), ("No handover until the checklist is complete", "custom"), ("Sync tasks with a client's Jira", "custom")]
-    lab = {"cfg": "Configuration", "studio": "Studio", "custom": "Customization"}
     out += sec(head("DATA, ROLES &amp; CUSTOMIZATION", "How Does Unisas Handle Project Data, Roles and Odoo Customization?",
                     "Each person sees what their role needs and nothing more. We configure first, use Odoo Studio for light changes, and write code only when the process truly needs it.", "is-center")
-               + '<ul class="pl-grid is-side" style="--cols:4">%s</ul><div class="pl-card" style="margin-top:20px"><p class="pl-k">Typical requests and how we meet them</p><div class="pl-scroll"><table class="pl-table"><thead><tr><th>Request</th><th style="text-align:right">How we deliver it</th></tr></thead><tbody>%s</tbody></table></div></div>'
-               % ("".join('<li><b>%s</b><em>%s</em><p>%s</p></li>' % r for r in roles),
-                  "".join('<tr><th>%s</th><td style="text-align:right"><span class="pl-chip%s">%s</span></td></tr>' % (t, {"cfg": " is-ok", "studio": "", "custom": " is-gold"}[k], lab[k]) for t, k in reqs)), "pj-sec--roles")
+               + '<ul class="pl-grid is-side" style="--cols:4">%s</ul>'
+               % "".join('<li><b>%s</b><em>%s</em><p>%s</p></li>' % r for r in roles), "pj-sec--roles")
 
     # 8 ---- connected apps
     apps = [("Timesheets", "#1F9E80", "Hours by task, billed or costed.", "Rahul logs 3:30 on cabling; it shows on the task, the SO and the margin."),
@@ -660,10 +656,10 @@ FAQ = [("How long does it take to set up project management in Odoo?",
        ("Can Odoo replace tools like Asana, Trello or Jira?",
         "For most delivery teams, yes. Odoo covers tasks, Kanban boards, Gantt planning and timesheets, then adds the billing and accounting that standalone tools lack. We migrate open projects, owners, dates and hours from your current project management tool."),
        ("Is Odoo suitable for small teams?",
-        "Yes. Teams of five to fifty use it as project management software for small business because they pay only for the apps they need. Start with Project and Timesheets, then add Sales, Planning or Field Service later."),
+        "Yes. Teams of five to fifty use it as project management software for small business."),
        ("Can clients see project progress without seeing internal costs?",
         "Yes. Clients log into the portal and see only their own project, including task progress, documents and approvals. Internal notes, hourly costs and margins stay hidden, while managers keep a live project management dashboard of every job."),
        ("Does Odoo handle timesheets and billing for client work?",
         "It does. Hours are logged against tasks from web, mobile or a timer, and each Odoo timesheet entry flows straight into a draft invoice. Billed hours lock automatically, so delivered and invoiced time always match without manual reconciliation."),
        ("Will we need custom development?",
-        "Rarely. Most Odoo Project requirements are met through standard settings such as stages, milestones, templates, portal access and billing rules. We use Odoo Studio for extra fields or reports, and write code only for needs like Jira sync.")]
+        "Rarely. Most Odoo Project requirements are met through standard settings such as stages, milestones, templates, portal access and billing rules. We use Odoo Studio for extra fields or reports, and write code only when deemed necessary.")]

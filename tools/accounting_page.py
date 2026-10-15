@@ -235,7 +235,7 @@ def build(g):
              ("Open invoices", "318 &middot; " + inr(18640200, False), ""), ("Open bills", "164 &middot; " + inr(7215400, False), "With due dates"),
              ("Opening trial balance", "31 Mar 2026", "Tallied to the audited books"), ("History", "2 years", "Monthly balances")]
     out += sec(head("DATA MIGRATION", "How Does Unisas Migrate Your Existing Accounting Data From Tally to Odoo?",
-                    "Most of our clients come from Tally, so tally data migration is routine work for us. We map every ledger group to an Odoo account, bring across what is still open, and prove the opening trial balance before cut-over.", "is-center")
+                    "We map every ledger group to an Odoo account, bring across what is still open, and prove the opening trial balance before cut-over.", "is-center")
                + '<div class="ac-mig"><div class="ox ac-ox" data-tb><div class="ox-cp"><div class="ox-cp-l"><span class="ox-crumb ox-crumb--stack"><a>Migration</a><span>Tally ledger groups &rarr; Odoo accounts</span></span></div></div>'
                  '<div class="ox-scroll"><table class="ox-table ac-map"><thead><tr><th>Tally group</th><th></th><th>Odoo account type</th><th>Odoo account</th></tr></thead><tbody data-tb-map>%s</tbody></table></div>'
                  '<div class="ac-tb"><p class="ac-tb-h"><b>Opening trial balance check</b><small>As of 31 Mar 2026</small></p>'
@@ -583,13 +583,13 @@ CTA = ("Let's Build Your Accounting System in Odoo",
        "Tell us how you invoice, pay, reconcile and close today. We&rsquo;ll show the same month in Odoo Accounting.")
 
 FAQ = [("Which is the best accounting software in India?",
-        "There is no single winner. Tally suits standalone bookkeeping, Zoho Books suits small online teams, and Odoo suits growing companies that want their books connected to sales, purchase and inventory, with GST, e-Invoicing and e-Way Bills built in."),
+        "Odoo suits growing companies that want their books connected to sales, purchase and inventory, with GST, e-Invoicing and e-Way Bills built in."),
        ("Which accounting software is best for a small business?",
         "Pick one that grows with you. A five-person firm can start with Odoo Invoicing and add inventory, purchase and payroll later on the same database, so moving off spreadsheets never means another migration two years on."),
        ("Is Odoo good for accounting?",
         "Yes, for businesses that want finance tied to operations. Odoo accounting software handles GST invoicing, bank reconciliation, vendor bills, assets, budgets and live reports, and every sale, delivery and bill posts its own journal entry automatically."),
        ("Can Odoo replace Tally?",
-        "For most growing businesses, yes. Unisas maps Tally ledgers to Odoo accounts, migrates open invoices, bills and two years of balances, then runs both systems in parallel for a month, so switching to a Tally alternative carries little risk."),
+        "For most growing businesses, yes. Unisas maps Tally ledgers to Odoo accounts, migrates open invoices, bills and balances, then runs both systems in parallel for a month, so switching to a Tally alternative carries little risk."),
        ("Is Odoo accounting free?",
         "Odoo Community works as free bookkeeping software for invoicing and payments, while full accounting features such as bank synchronization, financial reports and assets need Odoo Enterprise. Check Odoo's current pricing page before budgeting."),
        ("How long does it take to implement Odoo accounting?",

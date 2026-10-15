@@ -137,7 +137,7 @@ def build(g):
              ("plan", "Planning office", "Bills of materials kept in Excel, in several versions",
               "Engineering changed the capacitor last month. The shop floor is still building from the old sheet.",
               "Variants, sub-assemblies and revisions change while orders run.",
-              "One BoM per product, sub-assemblies as their own BoMs, and changes via engineering change orders."),
+              "Maintain products and all their sub-assemblies within a single BoM. Manage multi-level components, including sub-assemblies and their parts, in the same BoM."),
              ("store", "Stores", "Shortages found at the machine",
               "Assembly starts the order and stops two hours later: the canopy kits are in another warehouse.",
               "Component reservation only works when stock levels are right, and they rarely are on day one.",
@@ -378,12 +378,14 @@ def build(g):
     # 13 ---- plan your implementation
     out += sec('<div class="mf-plan2"><div>%s<div class="cta-row"><a href="#get-demo" class="btn btn-primary btn-red" data-svc-cta="implementation">Plan my manufacturing ERP %s</a></div></div>'
                '<div class="mf-pl ox-solo" data-planner><p class="mf-pl-h"><b>Implementation planner</b><small>A first estimate. We confirm it after a shop-floor visit.</small></p>'
+               '<div class="mf-pl-pre" role="group" aria-label="Start from a typical plant"><span>Start from</span><button type="button" data-preset="0">Small workshop</button><button type="button" data-preset="1">Growing plant</button><button type="button" data-preset="2">Multi-plant group</button></div>'
                '<div class="mf-pl-in"><label><span>Production model</span><select data-pl="model"><option value="0">Make to stock</option><option value="1">Make to order</option><option value="2">Batch &amp; process</option><option value="3">Engineer to order</option></select></label>'
                '<label><span>Products with a BoM <b data-pl-out="boms">200</b></span><input type="range" min="10" max="2000" step="10" value="200" data-pl="boms"></label>'
                '<label><span>Work centres <b data-pl-out="wcs">8</b></span><input type="range" min="1" max="40" value="8" data-pl="wcs"></label>'
                '<div class="mf-pl-seg"><span>Plants</span><span class="mf-seg" role="group" aria-label="Plants"><button type="button" data-plants="1" class="is-on" aria-pressed="true">1</button><button type="button" data-plants="2" aria-pressed="false">2</button><button type="button" data-plants="3" aria-pressed="false">3+</button></span></div>'
-               '<div class="mf-pl-chk"><label><input type="checkbox" data-pl-x="2"> Machine or IoT integration</label><label><input type="checkbox" data-pl-x="1"> Quality &amp; maintenance</label><label><input type="checkbox" data-pl-x="2"> Migration from another ERP</label></div></div>'
-               '<div class="mf-pl-out"><ol class="mf-pl-bars" data-pl-bars></ol><p class="mf-pl-tot" data-pl-tot aria-live="polite"></p></div></div></div>'
+               '<div class="mf-pl-chk"><label><input type="checkbox" data-pl-x="2"><span>Machine or IoT integration</span></label><label><input type="checkbox" data-pl-x="1"><span>Quality &amp; maintenance</span></label><label><input type="checkbox" data-pl-x="2"><span>Migration from another ERP</span></label></div></div>'
+               '<div class="mf-pl-out"><p class="mf-pl-hint">Tap a phase to see what happens in it.</p><ol class="mf-pl-bars" data-pl-bars></ol><div class="mf-pl-ax" data-pl-ax aria-hidden="true"></div>'
+               '<div class="mf-pl-det" data-pl-det aria-live="polite"></div><p class="mf-pl-tot" data-pl-tot aria-live="polite"></p></div></div></div>'
                % (head("PLAN YOUR PROJECT", "How Can You Plan Your Manufacturing ERP Software Implementation?",
                        "Start with one plant and your key products, get shop-floor reporting right, then add the rest. Phasing keeps risk low for MSMEs and gives multi-plant groups a proven template. "
                        "Use the planner for a first estimate of your manufacturing ERP software rollout; we confirm it after a shop-floor visit."), g["ARROW"]), "mf-sec--plan")
@@ -627,17 +629,49 @@ JS = r'''<script>
 
   /* --- 13 planner --- */
   var pn=document.querySelector('[data-planner]');
-  if(pn){var plants=1;
-    function pd(){var model=+pn.querySelector('[data-pl="model"]').value,boms=+pn.querySelector('[data-pl="boms"]').value,wcs=+pn.querySelector('[data-pl="wcs"]').value,x=0;
-      pn.querySelectorAll('[data-pl-x]:checked').forEach(function(c){x+=+c.getAttribute('data-pl-x');});
+  if(pn){var plants=1,sel='Configure',lastKey='',shown=0,raf=0,
+      still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,
+      pb=pn.querySelector('[data-pl-bars]'),pt=pn.querySelector('[data-pl-tot]'),pdt=pn.querySelector('[data-pl-det]'),pax=pn.querySelector('[data-pl-ax]'),
+      pbt=[].slice.call(pn.querySelectorAll('[data-plants]')),ppr=[].slice.call(pn.querySelectorAll('[data-preset]')),pxs=[].slice.call(pn.querySelectorAll('[data-pl-x]')),
+      MODELS=['make-to-stock','make-to-order','batch and process','engineer-to-order'],
+      PRESETS=[[0,150,5,1,[]],[1,600,15,1,[1]],[2,1500,30,3,[0,1,2]]];
+    function setPlants(n){plants=n;press(pbt,pbt[Math.min(n,3)-1]);}
+    function tween(to){if(still||!window.requestAnimationFrame){shown=to;return paintTot(to);}
+      cancelAnimationFrame(raf);var from=shown,t0=0;
+      function step(t){t0=t0||t;var k=Math.min(1,(t-t0)/450),e=1-Math.pow(1-k,3);shown=Math.round(from+(to-from)*e);paintTot(shown);if(k<1)raf=requestAnimationFrame(step);}
+      raf=requestAnimationFrame(step);}
+    var golive='';
+    function paintTot(w){pt.innerHTML='About <b>'+w+' weeks</b> to go live'+(plants>1?' with the first plant, then 4 to 6 weeks for each further plant':'')+'.'+golive;}
+    function pd(){var model=+pn.querySelector('[data-pl="model"]').value,boms=+pn.querySelector('[data-pl="boms"]').value,wcs=+pn.querySelector('[data-pl="wcs"]').value,x=0,xs=[];
+      pxs.forEach(function(c,i){c.closest('label').classList.toggle('is-on',c.checked);if(c.checked){x+=+c.getAttribute('data-pl-x');xs.push(i);}});
       pn.querySelector('[data-pl-out="boms"]').textContent=num(boms);pn.querySelector('[data-pl-out="wcs"]').textContent=wcs;
-      var ph=[['Discover &amp; design',2+(model===3?1:0)+(plants>1?1:0)],['Configure',2+Math.round(wcs/12)+(model>=2?1:0)],['Data migration',1+Math.round(boms/600)],
-              ['Integrations',x?Math.ceil(x/1.5):0],['Test cycles',2+(plants>2?1:0)],['Go live &amp; hypercare',2+(plants-1)]].filter(function(p){return p[1]>0;});
+      ppr.forEach(function(b,i){var p=PRESETS[i],on=p[0]===model&&p[1]===boms&&p[2]===wcs&&p[3]===plants&&p[4].join()===xs.join();b.classList.toggle('is-on',on);b.setAttribute('aria-pressed',on);});
+      var ph=[['Discover &amp; design',2+(model===3?1:0)+(plants>1?1:0),'Workshops on your shop floor to map routings, approvals and costing. You sign off a fixed scope before any build starts.'],
+              ['Configure',2+Math.round(wcs/12)+(model>=2?1:0),'Your '+wcs+' work centre'+(wcs>1?'s':'')+', routings and '+MODELS[model]+' flow set up in Odoo and shown back to you every week.'],
+              ['Data migration',1+Math.round(boms/600),num(boms)+' BoMs, products, opening stock and open orders cleaned and test-loaded'+(pxs[2].checked?' from your current ERP':'')+'.'],
+              ['Integrations',x?Math.ceil(x/1.5):0,[pxs[0].checked?'machines and IoT devices':'',pxs[1].checked?'quality checks and maintenance plans':'',pxs[2].checked?'the legacy ERP during cut-over':''].filter(Boolean).join(', ').replace(/^./,function(c){return 'Connecting '+c;})+'.'],
+              ['Test cycles',2+(plants>2?1:0),'Your team runs real orders end to end. Issues are fixed and re-tested before go-live sign-off.'],
+              ['Go live &amp; hypercare',2+(plants-1),'Cut-over, then a consultant on the floor or on call at every shift change'+(plants>1?' at each plant':'')+'.']].filter(function(p){return p[1]>0;});
       var start=0,total=0;ph.forEach(function(p,i){p.s=start;start+=Math.max(1,p[1]-(i>1&&i<ph.length-1?1:0));});total=ph.reduce(function(a,p){return Math.max(a,p.s+p[1]);},0);
-      pn.querySelector('[data-pl-bars]').innerHTML=ph.map(function(p){return '<li><span>'+p[0]+'</span><span class="mf-pl-tr"><i style="--s:'+(p.s/total*100)+';--l:'+(p[1]/total*100)+'"></i></span><b>'+p[1]+' wk</b></li>';}).join('');
-      pn.querySelector('[data-pl-tot]').innerHTML='About <b>'+total+' weeks</b> to go live'+(plants>1?' with the first plant, then 4 to 6 weeks for each further plant':'')+'.';}
+      var key=ph.map(function(p){return p[0];}).join('|');
+      if(key!==lastKey){lastKey=key;
+        pb.innerHTML=ph.map(function(p){return '<li><button type="button" data-ph="'+p[0]+'"><span>'+p[0]+'</span><span class="mf-pl-tr"><i style="--s:0;--l:0"></i></span><b></b></button></li>';}).join('');
+        pb.offsetWidth;}
+      if(!ph.some(function(p){return p[0]===sel;}))sel=ph[1][0];
+      var rows=pb.querySelectorAll('[data-ph]');
+      ph.forEach(function(p,i){var r=rows[i],on=p[0]===sel,bar=r.querySelector('i');bar.style.setProperty('--s',p.s/total*100);bar.style.setProperty('--l',p[1]/total*100);
+        r.querySelector('b').textContent=p[1]+' wk';r.classList.toggle('is-on',on);r.setAttribute('aria-pressed',on);
+        if(on)pdt.innerHTML='<p class="mf-pl-det-k">'+p[0]+' &middot; week '+(p.s+1)+(p[1]>1?' to '+(p.s+p[1]):'')+'</p><p>'+p[2]+'</p>';});
+      var tk=total>16?4:2,ax='';for(var w=0;w<=total;w+=tk)ax+='<span style="--x:'+(w/total*100)+'">'+(w?'Wk '+w:'Start')+'</span>';pax.innerHTML=ax;
+      var d=new Date();d.setDate(d.getDate()+((8-d.getDay())%7||7)+total*7);
+      golive=' <span>Starting next Monday, that is '+(d.getDate()<=10?'early':d.getDate()<=20?'mid':'late')+' '+d.toLocaleDateString('en-IN',{month:'long',year:'numeric'})+'.</span>';
+      tween(total);}
     pn.addEventListener('input',pd);pn.addEventListener('change',pd);
-    pn.querySelectorAll('[data-plants]').forEach(function(b,i,all){b.addEventListener('click',function(){plants=+b.getAttribute('data-plants');press([].slice.call(all),b);pd();});});pd();}
+    pb.addEventListener('click',function(e){var r=e.target.closest('[data-ph]');if(r){sel=r.getAttribute('data-ph');pd();}});
+    pbt.forEach(function(b){b.addEventListener('click',function(){setPlants(+b.getAttribute('data-plants'));pd();});});
+    ppr.forEach(function(b,i){b.addEventListener('click',function(){var p=PRESETS[i];pn.querySelector('[data-pl="model"]').value=p[0];pn.querySelector('[data-pl="boms"]').value=p[1];pn.querySelector('[data-pl="wcs"]').value=p[2];
+      setPlants(p[3]);pxs.forEach(function(c,j){c.checked=p[4].indexOf(j)>-1;});pd();});});
+    pd();}
 })();
 </script>
 '''
@@ -652,7 +686,7 @@ FAQ = [("What is manufacturing ERP software?",
        ("Is Odoo a good fit for manufacturing companies in India?",
         "Yes, for most discrete and batch producers. It handles GST, e-Way bills, HSN codes, job work and multi-plant stock, which makes it a practical ERP for manufacturing companies that have outgrown Tally and Excel."),
        ("How long does an Odoo manufacturing implementation take?",
-        "It depends on your products, work centres, plants and integrations. Our planner gives a first estimate, and Unisas confirms the timeline after a shop-floor visit. Each Odoo ERP implementation is fixed-scope, so the plan doesn't drift."),
+        "It depends on your products, work centres, plants and integrations. Unisas gives you a first estimate, then confirms the timeline after a shop-floor visit."),
        ("Can Odoo schedule production by machine and work-centre capacity?",
         "Yes. Work orders are planned against each work centre's calendar and capacity, shown on a Gantt chart, and moved to alternative lines when one is full. It replaces separate production scheduling software for most plants."),
        ("Can you migrate our data from Tally, Excel or another ERP?",

@@ -337,7 +337,7 @@ def build(g):
                '<div class="ox-ftabs"><span class="is-on">Products</span><span>Other Information</span></div>'
                '<div class="ox-scroll"><table class="pu-scope-t"><thead><tr><th>Product</th><th class="ox-num">Quantity</th><th>Price</th><th></th></tr></thead><tbody>%s</tbody></table></div></div></div></div>'
                % (head("WHAT'S INCLUDED", "What Does an Odoo Purchase Implementation With Unisas Include?",
-                       "Our standard scope is written as an Odoo RFQ, at a fixed price agreed after discovery. As an Odoo implementation partner for manufacturers and distributors across India, "
+                       "Our standard scope is written as an Odoo RFQ, at a fixed price agreed after discovery. As an Odoo implementation partner for manufacturers, distributors, construction, food and other businesses across India, "
                        "we keep every deliverable visible. Press <b>Confirm Order</b> to get one priced for your business.", "is-center"), body), "pu-sec--scope")
 
     # 11 ---- testing, training, go-live
