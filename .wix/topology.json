@@ -1,11 +1,11 @@
 {
   "production": {
-    "id": "648a2c36-4039-4b72-a8e4-65ac5d25c47b",
+    "id": "a06bb499-2787-4716-bced-036399a939b5",
     "site": {
-      "main": "https://14jisn-unisas-headless-1-avinash2889-110b.wix-site-host.com"
+      "main": "https://icpta1-unisas-headless-1-avinash2889-110b.wix-site-host.com"
     },
     "dashboard": {
-      "main": "https://manage.wix.com/dashboard/2ad39ba4-63fe-41d2-a77e-849cd6409deb?apps-override=648a2c36-4039-4b72-a8e4-65ac5d25c47b"
+      "main": "https://manage.wix.com/dashboard/2ad39ba4-63fe-41d2-a77e-849cd6409deb?apps-override=a06bb499-2787-4716-bced-036399a939b5"
     }
   }
 }
