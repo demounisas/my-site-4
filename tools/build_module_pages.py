@@ -580,6 +580,8 @@ PAGES = [
          faq=pos_page.FAQ, faq_title="Frequently Asked Questions About Odoo Point of Sale Software"),
 ]
 ALL_PAGES = PAGES + SERVICES + COMPANY
+# service pages are hidden for now: they stay in BY_SLUG but are not built
+BUILD_PAGES = PAGES + COMPANY  # + SERVICES
 
 
 def page_cta(page):
@@ -626,7 +628,7 @@ SERVICE_LINK = re.compile(r'href="(odoo-(?:consulting|implementation|customizati
 # optional: build only the pages named on the command line, e.g. `python tools/build_module_pages.py odoo-project`
 ONLY = set(sys.argv[1:])
 
-for page in ALL_PAGES:
+for page in BUILD_PAGES:
     if ONLY and page["slug"] not in ONLY:
         continue
     # the contact page puts the form straight under the hero

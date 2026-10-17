@@ -365,7 +365,7 @@ def build(g):
 
 
 FAQ = [("Is Odoo the best HR software for small business teams of 10 to 50 people?",
-        "For most teams that size, yes. Odoo works well as an HRMS for small business because you pay only for the apps you need. Most clients start with Employees, Time Off and Attendances, then add Payroll later."),
+        "Odoo is a great choice for small teams of 10–50 people because it offers multiple HR features in one integrated platform, with the flexibility to expand as your business grows."),
        ("Can employees apply for leave and check in from their phones?",
         "Yes. Staff use the Odoo mobile app or a browser to request time off, see their balance and check in, with geolocation if you want it. Managers approve from the same employee leave management system, even on the road."),
        ("Can Odoo connect to our biometric attendance machine?",

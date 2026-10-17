@@ -14,8 +14,8 @@ CONTACT_DETAILS = dict(
     phone="044-46042744",
     phone_href="+914446042744",
     whatsapp="",  # digits with country code, e.g. "91XXXXXXXXXX"
-    address="7/61, First Floor, Mookambika Complex,<br>New no.7, Old no.4, Sir Desika Road,<br>Mylapore, Chennai - 600004",
-    hours="Monday to Saturday, 9:30 AM – 6:30 PM IST",
+    address="Unisas ITBusiness Solutions Private Limited<br>F5, First Floor, Mookambika Complex,<br>#4, Lady Desika Road, Mylapore, Chennai,<br>Tamilnadu - 600004, India",
+    hours="Monday to Friday, 9:30 AM – 6:30 PM IST",
 )
 
 ICON_ABOUT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="17" cy="9" r="2.4" stroke="currentColor" stroke-width="1.6"/><path d="M16.5 14.2c2.6.3 4.5 2.6 4.5 5.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'

@@ -52,7 +52,7 @@
   "telephone": "+91-44-46042744",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "7/61, First Floor, Mookambika Complex, New no.7, Old no.4, Sir Desika Road, Mylapore",
+    "streetAddress": "F5, First Floor, Mookambika Complex, #4, Lady Desika Road, Mylapore",
     "addressLocality": "Chennai",
     "addressRegion": "Tamil Nadu",
     "postalCode": "600004",
@@ -67,15 +67,13 @@
     "availableLanguage": ["English", "Tamil"],
     "hoursAvailable": {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       "opens": "09:30",
       "closes": "18:30"
     }
   }
 }
 </script>
-
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -671,6 +669,7 @@
   .stats-band .stats-rail-item:hover{padding-left:10px;}
   .stats-band .stats-rail-num{font-size:clamp(1.5rem,2.4vw,1.95rem);font-weight:700;letter-spacing:-0.03em;color:#fff;width:6ch;}
   .stats-band .stats-rail-label{font-size:0.95rem;color:rgba(255,255,255,0.78);}
+  .stats-band .stats-rail-num--word{width:12rem;font-size:clamp(1.15rem,1.7vw,1.4rem);letter-spacing:-0.01em;}
   .stats-band .stats-lead{border-left-color:#9EC5F8;}
   @media (max-width:540px){ .stats-band .stats-rail-item{align-items:flex-start;gap:6px;} }
   @media (prefers-reduced-motion:reduce){ .stats-band .stats-rail-item,.stats-band .stats-rail-item::before{transition:none;} }
@@ -998,7 +997,7 @@
   .sticky-cta-close svg{width:11px;height:11px;}
 
   /* ---------- 15. footer ---------- */
-  .site-footer{padding:64px 0 96px;border-top:1px solid var(--border);}
+  .site-footer{padding:64px 0 32px;border-top:1px solid var(--border);}
   .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
   @media (max-width:820px){ .footer-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);row-gap:36px;} }
   @media (max-width:520px){ .footer-grid{grid-template-columns:1fr;} }
@@ -1024,6 +1023,18 @@
   .footer-bottom-links{display:flex;gap:20px;flex-wrap:wrap;}
   .footer-bottom-links a{text-decoration:none;color:var(--text-muted);}
   .footer-bottom-links a:hover{color:var(--text);}
+  .footer-disclaimer{margin:0;text-align:center;color:var(--text);font-size:0.92rem;line-height:1.65;}
+  /* copyright | disclaimer | legal links on one row */
+  .footer-bottom.has-disclaimer{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:24px;padding-top:22px;}
+  .footer-bottom.has-disclaimer > span,.footer-bottom.has-disclaimer > .footer-bottom-links{margin-top:4px;}
+  .footer-bottom.has-disclaimer .footer-bottom-links{justify-self:end;}
+  @media (max-width:1100px){ .footer-bottom.has-disclaimer{grid-template-columns:1fr;justify-items:center;text-align:center;gap:14px;} .footer-bottom.has-disclaimer .footer-bottom-links{justify-self:center;} }
+  .footer-disclaimer-label{margin:0 0 6px;font-size:1rem;font-weight:700;color:var(--text);}
+  .footer-disclaimer ol{margin:0;padding:0;list-style:none;}
+  .footer-disclaimer li{margin:2px 0;}
+  .footer-disclaimer li::before,.footer-disclaimer li::after{content:"\2022";font-weight:700;color:#E4402E;opacity:0.7;}
+  .footer-disclaimer li::before{margin-right:8px;}
+  .footer-disclaimer li::after{margin-left:8px;}
 
   /* ============================================================
      ENHANCEMENTS — patterns adopted from leading Odoo partner sites
@@ -1289,11 +1300,30 @@
   @media (max-width:620px){ .footer-grid.footer-grid-6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);} }
   /* Solutions mega menu: wider, three columns, anchored left so it stays on screen */
   @media (min-width:821px){
-    .nav-dd--wide .nav-dd-panel{width:min(860px,calc(100vw - 48px));grid-template-columns:repeat(3,minmax(0,1fr));left:-140px;transform:translate(0,6px);}
-    .nav-dd--wide:hover .nav-dd-panel,.nav-dd--wide:focus-within .nav-dd-panel,.nav-dd--wide.is-open .nav-dd-panel{transform:translate(0,0);}
+    /* anchor to the centred header (not the button) so the panel sits in the middle of the page */
+    .nav-dd--wide{position:static;}
+    .nav-dd--wide .nav-dd-panel{width:min(1160px,calc(100vw - 48px));grid-template-columns:repeat(3,minmax(0,1fr));top:calc(100% - 6px);left:50%;transform:translate(-50%,6px);padding:26px;gap:10px 16px;border-radius:18px;}
+    .nav-dd--wide .nav-dd-panel::before{top:-24px;height:24px;}
+    .nav-dd--wide:hover .nav-dd-panel,.nav-dd--wide:focus-within .nav-dd-panel,.nav-dd--wide.is-open .nav-dd-panel{transform:translate(-50%,0);}
   }
-  @media (min-width:821px) and (max-width:1180px){ .nav-dd--wide .nav-dd-panel{width:620px;grid-template-columns:repeat(2,minmax(0,1fr));} }
-  .nav-dd--wide .nav-dd-panel .icon-badge svg{width:22px;height:22px;}
+  @media (min-width:821px) and (max-width:1180px){ .nav-dd--wide .nav-dd-panel{width:780px;grid-template-columns:repeat(2,minmax(0,1fr));} }
+  .nav-dd--wide .nav-dd-panel .icon-badge svg{width:26px;height:26px;}
+  /* roomy Solutions menu */
+  .nav-dd--wide .nav-dd-panel a{padding:16px;gap:16px;}
+  .nav-dd--wide .nav-dd-panel .icon-badge{width:46px;height:46px;border-radius:12px;flex-shrink:0;}
+  .nav-dd--wide .nav-dd-panel a > span:last-child{min-width:0;}
+  .nav-dd--wide .nav-dd-title{font-size:0.98rem;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .nav-dd--wide .nav-dd-desc{font-size:0.84rem;line-height:1.5;}
+  .nav-dd--wide .nav-dd-foot{margin-top:10px;padding:10px 18px;font-size:0.84rem;position:relative;overflow:hidden;}
+  .nav-dd--wide .nav-dd-foot a{padding:0;gap:0;display:inline-flex;align-items:center;position:relative;z-index:1;transition:color .2s ease, transform .2s ease;}
+  .nav-dd--wide .nav-dd-foot a:hover{color:#F6CF6B;transform:translateX(3px);}
+  /* soft light sweeping across the bar while the menu is open */
+  .nav-dd--wide .nav-dd-foot::after{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;pointer-events:none;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,0.10),transparent);transform:translateX(-120%);}
+  @media (prefers-reduced-motion: no-preference){
+    .nav-dd--wide:hover .nav-dd-foot::after,.nav-dd--wide:focus-within .nav-dd-foot::after,.nav-dd--wide.is-open .nav-dd-foot::after{animation:dd-foot-shine 3.2s ease-in-out .3s infinite;}
+  }
+  @keyframes dd-foot-shine{0%{transform:translateX(-120%);}55%,100%{transform:translateX(320%);}}
   .footer-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
   .footer-badges span{font-size:0.68rem;font-weight:600;padding:5px 9px;border-radius:6px;border:1px solid var(--border);color:var(--text-muted);font-family:"IBM Plex Mono",monospace;}
 
@@ -1410,6 +1440,7 @@
           <div class="nav-dd-foot"><span>Every Odoo app shares one database.</span><a href="#modules">See all Odoo modules →</a></div>
         </div>
       </div>
+      <!-- Services menu hidden for now
       <div class="nav-dd" id="nav-dd">
         <button class="nav-dd-btn" type="button" aria-expanded="false" aria-controls="nav-dd-panel">
           Services
@@ -1425,6 +1456,7 @@
           <div class="nav-dd-foot"><span>Not sure where to start?</span><a href="#get-demo">Book a free consultation →</a></div>
         </div>
       </div>
+      -->
       <a href="about-us.html">About</a>
       <a href="contact.html">Contact</a>
     </nav>
@@ -1643,16 +1675,16 @@
     </div>
     <div class="stats-rail">
       <div class="stats-rail-item">
-        <span class="stats-rail-num mono" data-count-end="1.8" data-count-decimals="1" data-count-prefix="$" data-count-suffix="B">$1.8B</span>
-        <span class="stats-rail-label">Processed through the platform annually</span>
+        <span class="stats-rail-num stats-rail-num--word">One platform</span>
+        <span class="stats-rail-label">Sales, stock, accounting and HR in a single system</span>
       </div>
       <div class="stats-rail-item">
-        <span class="stats-rail-num mono" data-count-end="38" data-count-suffix="%">38%</span>
-        <span class="stats-rail-label">Average reduction in admin overhead</span>
+        <span class="stats-rail-num stats-rail-num--word">Smarter workflows</span>
+        <span class="stats-rail-label">Manual steps automated, so teams spend less time on admin</span>
       </div>
       <div class="stats-rail-item">
-        <span class="stats-rail-num mono" data-count-end="99.98" data-count-decimals="2" data-count-suffix="%">99.98%</span>
-        <span class="stats-rail-label">Platform uptime, backed by SLA</span>
+        <span class="stats-rail-num stats-rail-num--word">Reliable support</span>
+        <span class="stats-rail-label">Secure hosting and ongoing help, backed by SLA</span>
       </div>
     </div>
   </div>
@@ -2453,7 +2485,7 @@
           <a href="#" class="social-btn" aria-label="Unisas on LinkedIn">in</a>
           <a href="#" class="social-btn" aria-label="Unisas on X">X</a>
         </div>
-        <div class="footer-badges"><span>ODOO v16–v19</span><span>COMMUNITY</span><span>ENTERPRISE</span></div>
+        <div class="footer-badges"><span>COMMUNITY</span><span>ENTERPRISE</span></div>
       </div>
       <div class="footer-col">
         <h4>Solutions</h4>
@@ -2496,14 +2528,21 @@
       </div>
       <div class="footer-col footer-contact">
         <dl>
-          <div><dt>Address</dt><dd>7/61, First Floor, Mookambika Complex,<br>New no.7, Old no.4, Sir Desika Road<br>Mylapore, Chennai - 600004</dd></div>
+          <div><dt>Address</dt><dd>Unisas ITBusiness Solutions Private Limited<br>F5, First Floor, Mookambika Complex,<br>#4, Lady Desika Road, Mylapore, Chennai,<br>Tamilnadu - 600004, India</dd></div>
           <div><dt>Tel.</dt><dd><a href="tel:+914446042744">044-46042744</a></dd></div>
           <div><dt>Email</dt><dd><a href="mailto:avinash@unisasitbiz.com">avinash@unisasitbiz.com</a></dd></div>
         </dl>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2024 by UNISAS.</span>
+    <div class="footer-bottom has-disclaimer">
+      <span>© 2024 UNISAS. All rights reserved.</span>
+      <div class="footer-disclaimer">
+        <p class="footer-disclaimer-label">Disclaimer</p>
+        <ol>
+          <li>Customisation depends on the Odoo version in use.</li>
+          <li>Business names and figures shown on this website are hypothetical and for illustration only.</li>
+        </ol>
+      </div>
       <div class="footer-bottom-links">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>
